@@ -48,7 +48,7 @@ class ProductManager {
       return product
     }
 
-    console.log("Not found");
+    throw new Error("Not Found");
   };
 }
 
