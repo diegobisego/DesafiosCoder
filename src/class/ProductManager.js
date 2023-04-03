@@ -31,21 +31,21 @@ class ProductManager {
       console.log("El codigo de producto ya existe");
       return;
     }
+    
 
     //pushea si todo ok
     this.products.push({ id: this.products.length + 1, ...newProduct });
   };
 
   // get products
-  getProducts = () => console.log(this.products);
+  getProducts = () => this.products;
 
   //get product by id
   getProductById = (id) => {
     const product = this.products.find((value) => value.id == id);
 
     if (product) {
-      console.log(product);
-      return;
+      return product
     }
 
     console.log("Not found");
