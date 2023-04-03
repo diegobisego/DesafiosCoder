@@ -20,7 +20,7 @@ class ProductManager {
 
     for (const key in newProduct) {
       if (newProduct[key] == undefined) {
-        console.log("Debe contar con todas las propiedades del objeto");
+        throw new Error("Debe contar con todas las propiedades del objeto");
         return;
       }
     }
@@ -28,7 +28,7 @@ class ProductManager {
     // verifica si el codigo existe
     const exist = this.products.some((value) => value.code == code);
     if (exist) {
-      console.log("El codigo de producto ya existe");
+      throw new Error("El codigo de producto ya existe");
       return;
     }
     
