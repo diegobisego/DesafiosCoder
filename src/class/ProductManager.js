@@ -34,7 +34,7 @@ class ProductManager {
       // verifica si el codigo existe
       const exist = products.some((value) => value.code == code);
       if (exist) {
-        throw new Error("El codigo de producto ya existe");
+        return console.error("El codigo de producto ya existe");
       }
 
       const id = products.length + 1;
@@ -68,34 +68,65 @@ class ProductManager {
 
   // get products
   getProducts = async () => {
-    const products = await fs.promises.readFile(this.path, "utf-8");
-    return JSON.parse(products);
+    try {
+      const products = await fs.promises.readFile(this.path, "utf-8");
+      // console.log(JSON.parse(products))
+      return JSON.parse(products);
+    } catch (error) {
+      throw new Error(
+        `Se produjo un error al intentar leer el archivo: ${error}`
+      );
+    }
   };
 
   // get product by id
   getProductById = async (id) => {
-    const data = await fs.promises.readFile(this.path, "utf-8");
-    const products = JSON.parse(data);
+    try {
+      const data = await fs.promises.readFile(this.path, "utf-8");
+      const products = JSON.parse(data);
 
-    // verifica si el codigo existe
-    const productFind = products.find((value) => value.id == id);
-    if (!productFind) {
-      throw new Error("El producto no se encuentra dentro de la lista");
+      // verifica si el codigo existe
+      const productFind = products.find((value) => value.id == id);
+      if (!productFind) {
+        throw new Error("El producto no se encuentra dentro de la lista");
+      }
+      // console.log(productFind)
+      return productFind;
+    } catch (error) {
+      throw new Error(
+        `Se produjo un error al intentar leer el archivo: ${error}`
+      );
     }
-    return productFind
-
   };
 
   // update product
-  updateProduct = async (id,object) => {
-    const products = await fs.promises.readFile(this.path, "utf-8");
+  updateProduct = async (id, object) => {
+    try {
+      const data = await fs.promises.readFile(this.path, "utf-8");
+      const products = JSON.parse(data);
+
+      const newProducts = products.map((value) =>
+        value.id == id ? { ...value, ...object } : value
+      );
+
+      await fs.promises.writeFile(this.path, JSON.stringify(newProducts))
+      .then('Producto actualizado con exito!')
+
+    } catch (error) {
+      `Se produjo un error al intentar leer el archivo: ${error}`
+    }
+  };
+
+  // delete product
+  deleteProduct = async (id) => {
+    const data = await fs.promises.readFile(this.path, "utf-8");
+    const products = JSON.parse(data);
+
+    const newProducts = products.filter((value) => value.id != id)
+
+    await fs.promises.writeFile(this.path, JSON.stringify(newProducts))
+    .then('Producto eliminado con exito!')
   }
-
-
-
-
-
-
 }
 
 /*************** INSTRUCCIONES **********************/
@@ -105,13 +136,25 @@ const filePath = path.resolve("src/class/db/products.json");
 
 // ejecucion de clase
 const prodManager = new ProductManager(filePath);
-// prodManager.addProduct(
-//   "producto1",
-//   "producto descripcion 1",
-//   "price 1",
-//   "thumbnail 1",
-//   "code 2",
-//   "stock 1"
-// );
+
+// agregar un producto
+prodManager.addProduct(
+  "producto 1",
+  "producto descripcion 1",
+  "price 1",
+  "thumbnail 1",
+  "code 1",
+  "stock 1"
+);
+
+// obtener todos los productos
 // prodManager.getProducts();
-prodManager.getProductById(4)
+
+// obtener un producto por id
+// prodManager.getProductById(2)
+
+// actualizar un producto por id
+// prodManager.updateProduct(1, { stock: "123456" });
+
+// eliminar un producto
+// prodManager.deleteProduct(1)
