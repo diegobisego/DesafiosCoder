@@ -1,12 +1,15 @@
+import fs from "fs";
+import path from "path";
+
 class ProductManager {
-  constructor() {
-    this.products = [];
+  constructor(path) {
+    this.path = path;
   }
 
   // methods
 
   // add products
-  addProduct = (title, description, price, thumbnail, code, stock) => {
+  addProduct = async (title, description, price, thumbnail, code, stock) => {
     const newProduct = {
       title,
       description,
@@ -17,71 +20,98 @@ class ProductManager {
     };
 
     // verifica si todos los campos estan completos
-
     for (const key in newProduct) {
       if (newProduct[key] == undefined) {
         throw new Error("Debe contar con todas las propiedades del objeto");
       }
     }
 
-    // verifica si el codigo existe
-    const exist = this.products.some((value) => value.code == code);
-    if (exist) {
-      throw new Error("El codigo de producto ya existe");
-    }
-    
+    // verificacion y save de producto
+    try {
+      const data = await fs.promises.readFile(this.path, "utf-8");
+      const products = JSON.parse(data);
 
-    //pushea si todo ok
-    this.products.push({ id: this.products.length + 1, ...newProduct });
+      // verifica si el codigo existe
+      const exist = products.some((value) => value.code == code);
+      if (exist) {
+        throw new Error("El codigo de producto ya existe");
+      }
+
+      const id = products.length + 1;
+
+      products.push({ id, ...newProduct });
+
+      const productsArray = JSON.stringify(products);
+
+      await fs.promises
+        .writeFile(this.path, productsArray)
+        .then(() => console.log("El producto se agrego con exito"))
+        .catch((err) =>
+          console.error(`Hubo un error al intentar agregar el producto ${err}`)
+        );
+    } catch (error) {
+      // si da error crea el archivo
+      const arrayProducts = [];
+      const id = 1;
+      arrayProducts.push({ id, ...newProduct });
+
+      await fs.promises
+        .writeFile(this.path, JSON.stringify(arrayProducts))
+        .then(() => console.log("El archivo se creó con éxito!"))
+        .catch((err) =>
+          console.error(
+            `Se produjo un error al intentar agregar un producto: ${err}`
+          )
+        );
+    }
   };
 
   // get products
-  getProducts = () => this.products;
-
-  //get product by id
-  getProductById = (id) => {
-    const product = this.products.find((value) => value.id == id);
-
-    if (product) {
-      return product
-    }
-
-    throw new Error("Not Found");
+  getProducts = async () => {
+    const products = await fs.promises.readFile(this.path, "utf-8");
+    return JSON.parse(products);
   };
+
+  // get product by id
+  getProductById = async (id) => {
+    const data = await fs.promises.readFile(this.path, "utf-8");
+    const products = JSON.parse(data);
+
+    // verifica si el codigo existe
+    const productFind = products.find((value) => value.id == id);
+    if (!productFind) {
+      throw new Error("El producto no se encuentra dentro de la lista");
+    }
+    return productFind
+
+  };
+
+  // update product
+  updateProduct = async (id,object) => {
+    const products = await fs.promises.readFile(this.path, "utf-8");
+  }
+
+
+
+
+
+
 }
 
+/*************** INSTRUCCIONES **********************/
+
+// Colocar la ruta relativa deseada dentro de resolve('ruta deseada')
+const filePath = path.resolve("src/class/db/products.json");
+
 // ejecucion de clase
-const productos = new ProductManager();
-
-productos.getProducts();
-productos.addProduct(
-  "producto1",
-  "producto descripcion 1",
-  "price 1",
-  "thumbnail 1",
-  "code 1",
-  "stock 1"
-);
-productos.getProducts();
-productos.addProduct(
-  "producto2",
-  "producto descripcion 2",
-  "price 2",
-  "thumbnail 2",
-  "code 2",
-  "stock 2"
-);
-productos.getProducts();
-productos.addProduct(
-  "producto3",
-  "producto descripcion 3",
-  "price 3",
-  "thumbnail 3",
-  "code 3",
-  "stock 3"
-);
-productos.getProducts();
-
-
-// por id
-productos.getProductById(5);
+const prodManager = new ProductManager(filePath);
+// prodManager.addProduct(
+//   "producto1",
+//   "producto descripcion 1",
+//   "price 1",
+//   "thumbnail 1",
+//   "code 2",
+//   "stock 1"
+// );
+// prodManager.getProducts();
+prodManager.getProductById(4)
