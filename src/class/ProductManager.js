@@ -8,6 +8,19 @@ class ProductManager {
 
   // methods
 
+  // get products
+  getProducts = async () => {
+    try {
+      const products = await fs.promises.readFile(this.path, "utf-8");
+      // console.log(JSON.parse(products))
+      return JSON.parse(products);
+    } catch (error) {
+      throw new Error(
+        `Se produjo un error al intentar leer el archivo: ${error}`
+      );
+    }
+  };
+
   // add products
   addProduct = async (title, description, price, thumbnail, code, stock) => {
     const newProduct = {
@@ -28,8 +41,7 @@ class ProductManager {
 
     // verificacion y save de producto
     try {
-      const data = await fs.promises.readFile(this.path, "utf-8");
-      const products = JSON.parse(data);
+      const products = await this.getProducts();
 
       // verifica si el codigo existe
       const exist = products.some((value) => value.code == code);
@@ -66,24 +78,10 @@ class ProductManager {
     }
   };
 
-  // get products
-  getProducts = async () => {
-    try {
-      const products = await fs.promises.readFile(this.path, "utf-8");
-      // console.log(JSON.parse(products))
-      return JSON.parse(products);
-    } catch (error) {
-      throw new Error(
-        `Se produjo un error al intentar leer el archivo: ${error}`
-      );
-    }
-  };
-
   // get product by id
   getProductById = async (id) => {
     try {
-      const data = await fs.promises.readFile(this.path, "utf-8");
-      const products = JSON.parse(data);
+      const products = await this.getProducts();
 
       // verifica si el codigo existe
       const productFind = products.find((value) => value.id == id);
@@ -102,31 +100,38 @@ class ProductManager {
   // update product
   updateProduct = async (id, object) => {
     try {
-      const data = await fs.promises.readFile(this.path, "utf-8");
-      const products = JSON.parse(data);
+      const products = await this.getProducts();
 
       const newProducts = products.map((value) =>
         value.id == id ? { ...value, ...object } : value
       );
 
-      await fs.promises.writeFile(this.path, JSON.stringify(newProducts))
-      .then('Producto actualizado con exito!')
-
+      await fs.promises
+        .writeFile(this.path, JSON.stringify(newProducts))
+        .then("Producto actualizado con exito!");
     } catch (error) {
-      `Se produjo un error al intentar leer el archivo: ${error}`
+      throw new Error(
+        `Se produjo un error al intentar leer el archivo: ${error}`
+      );
     }
   };
 
   // delete product
   deleteProduct = async (id) => {
-    const data = await fs.promises.readFile(this.path, "utf-8");
-    const products = JSON.parse(data);
+    try {
+      const products = await this.getProducts();
 
-    const newProducts = products.filter((value) => value.id != id)
+      const newProducts = products.filter((value) => value.id != id);
 
-    await fs.promises.writeFile(this.path, JSON.stringify(newProducts))
-    .then('Producto eliminado con exito!')
-  }
+      await fs.promises
+        .writeFile(this.path, JSON.stringify(newProducts))
+        .then("Producto eliminado con exito!");
+    } catch (error) {
+      throw new Error(
+        `Se produjo un error al intentar leer el archivo: ${error}`
+      );
+    }
+  };
 }
 
 /*************** INSTRUCCIONES **********************/
