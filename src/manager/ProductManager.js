@@ -85,9 +85,7 @@ class ProductManager {
 
       // verifica si el codigo existe
       const productFind = products.find((value) => value.id == id);
-      if (!productFind) {
-        throw new Error("El producto no se encuentra dentro de la lista");
-      }
+      
       // console.log(productFind)
       return productFind;
     } catch (error) {
