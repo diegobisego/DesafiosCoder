@@ -49,7 +49,7 @@ class ProductManager {
         return console.error("El codigo de producto ya existe");
       }
 
-      const id = products.length + 1;
+      const id = products[products.length - 1].id + 1;
 
       products.push({ id, ...newProduct });
 
@@ -137,20 +137,20 @@ class ProductManager {
 /*************** INSTRUCCIONES **********************/
 
 // Colocar la ruta relativa deseada dentro de resolve('ruta deseada')
-const filePath = path.resolve("src/class/db/products.json");
+// const filePath = path.resolve("src/class/db/products.json");
 
-// ejecucion de clase
-const prodManager = new ProductManager(filePath);
+// // ejecucion de clase
+// const prodManager = new ProductManager(filePath);
 
-// agregar un producto
-prodManager.addProduct(
-  "producto 1",
-  "producto descripcion 1",
-  "price 1",
-  "thumbnail 1",
-  "code 1",
-  "stock 1"
-);
+// // agregar un producto
+// prodManager.addProduct(
+//   "producto 1",
+//   "producto descripcion 1",
+//   "price 1",
+//   "thumbnail 1",
+//   "code 1",
+//   "stock 1"
+// );
 
 // obtener todos los productos
 // prodManager.getProducts();
@@ -163,3 +163,5 @@ prodManager.addProduct(
 
 // eliminar un producto
 // prodManager.deleteProduct(1)
+
+export default ProductManager
