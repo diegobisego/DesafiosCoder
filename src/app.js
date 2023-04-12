@@ -21,22 +21,21 @@ app.get("/health", (req, res) => {
 // rutas
 
 // obtener productos
-app.get("/products/:limit", async (req, res) => {
+app.get("/products/:limit?", async (req, res) => {
   try {
     const limit = req.params.limit;
-    const data = await products.getProducts();
+    let data = await products.getProducts();
 
-    const arrayProducts = [];
-
-    for (let i = 0; i < limit; i++) {
-      arrayProducts.push(data[i]);
+    if (limit) {
+        data = data.slice(0, limit);
     }
-
+    
     res.status(200).send({
       success: true,
       messege: "Productos encontrados con exito",
-      data: arrayProducts,
+      data: data,
     });
+
   } catch (error) {
     console.error(
       `Se verifica un error al intentar obtener los productos: ${error}`
@@ -44,6 +43,6 @@ app.get("/products/:limit", async (req, res) => {
   }
 });
 
-//
+// 
 
 export default app;
