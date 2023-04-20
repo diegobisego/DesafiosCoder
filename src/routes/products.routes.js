@@ -66,14 +66,23 @@ router.post('/', [
     return res.status(422).json({ errors: errors.array() });
   }
   try {
-    const { title, description, code, price, category, thumbnails } = req.body
+    const { title, description, code, price, stock, category, thumbnails } = req.body
 
-    await products.addProduct(title, description, code, price, category, thumbnails)
+    const result = await products.addProduct(title, description, code, price, stock, category, thumbnails)
 
-    res.status(200).json({
-      success: true,
-      messege: 'El producto se creo con exito'
-    })
+    console.log(result)
+
+    if (result.success) {
+      res.status(200).json({
+        success: true,
+        messege: 'El producto se creo con exito'
+      })
+    } else {
+      res.status(404).json({
+        success: false,
+        messege: `Se produjo un error al crear el producto: ${result.message}`
+      })
+    }
 
   } catch (error) {
     res.status(500).json({

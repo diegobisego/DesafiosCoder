@@ -22,56 +22,80 @@ class ProductManager {
   };
 
   // add products
-  addProduct = async (title, description, code, price, category, thumbnails) => {
+  addProduct = async (title,description,code,price,stock,category,thumbnails) => {
     const newProduct = {
       title,
       description,
       code,
       price,
-      stock: true,
+      status: true,
+      stock,
       category,
       thumbnails: thumbnails || [],
-
     };
-
     // verificacion y save de producto
     try {
+      
+      //si no existe ningun productos
+      if (!fs.existsSync(this.path)) {
+         const arrayProducts = [];
+         const id = 1;
+         arrayProducts.push({ id, ...newProduct });
+ 
+         const result = await fs.promises
+           .writeFile(this.path, JSON.stringify(arrayProducts))
+           .then(() => {
+             return { success: true };
+           })
+           .catch((err) => {
+             return {
+               success: false,
+               message: `Error al crear el archivo: ${err}`
+             };
+           });
+        return result
+      }
+
       const products = await this.getProducts();
+
 
       // verifica si el codigo existe
       const exist = products.some((value) => value.code == code);
       if (exist) {
-        return console.error("El codigo de producto ya existe");
+        return {
+          success: false,
+          message: "El codigo de producto ya existe"
+        };
       }
 
+      //id del producto y push
       const id = products[products.length - 1].id + 1;
-
       products.push({ id, ...newProduct });
-
       const productsArray = JSON.stringify(products);
 
-      await fs.promises
+      //guardo en archivo
+      return await fs.promises
         .writeFile(this.path, productsArray)
-        .then(() => console.log("El producto se agrego con exito"))
-        .catch((err) =>
-          console.error(`Hubo un error al intentar agregar el producto ${err}`)
-        );
+        .then(() => {
+          return {
+            success: true
+          };
+        })
+        .catch((err) => {
+          return {
+            success: false,
+            message: `Hubo un error al intentar agregar el producto al archivo: ${err}`
+          };
+        });      
+      
     } catch (error) {
-      // si da error crea el archivo
-      const arrayProducts = [];
-      const id = 1;
-      arrayProducts.push({ id, ...newProduct });
-
-      await fs.promises
-        .writeFile(this.path, JSON.stringify(arrayProducts))
-        .then(() => console.log("El archivo se creó con éxito!"))
-        .catch((err) =>
-          console.error(
-            `Se produjo un error al intentar agregar un producto: ${err}`
-          )
-        );
+      return {
+        success: false,
+        message: `Hubo un error en addProducts: ${error}`
+      };
     }
-  };
+
+   };
 
   // get product by id
   getProductById = async (id) => {
@@ -80,7 +104,7 @@ class ProductManager {
 
       // verifica si el codigo existe
       const productFind = products.find((value) => value.id == id);
-      
+
       // console.log(productFind)
       return productFind;
     } catch (error) {
@@ -127,34 +151,4 @@ class ProductManager {
   };
 }
 
-/*************** INSTRUCCIONES **********************/
-
-// Colocar la ruta relativa deseada dentro de resolve('ruta deseada')
-// const filePath = path.resolve("src/class/db/products.json");
-
-// // ejecucion de clase
-// const prodManager = new ProductManager(filePath);
-
-// // agregar un producto
-// prodManager.addProduct(
-//   "producto 1",
-//   "producto descripcion 1",
-//   "price 1",
-//   "thumbnail 1",
-//   "code 1",
-//   "stock 1"
-// );
-
-// obtener todos los productos
-// prodManager.getProducts();
-
-// obtener un producto por id
-// prodManager.getProductById(2)
-
-// actualizar un producto por id
-// prodManager.updateProduct(1, { stock: "123456" });
-
-// eliminar un producto
-// prodManager.deleteProduct(1)
-
-export default ProductManager
+export default ProductManager;
