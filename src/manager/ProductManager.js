@@ -116,6 +116,15 @@ class ProductManager {
 
   // update product
   updateProduct = async (id, object) => {
+
+    //validamos que no contenga id
+    if (object.hasOwnProperty("id")) {
+      return {
+        success: false,
+        message: 'No se puede modificar el ID del producto'
+      };
+    }
+
     try {
       const products = await this.getProducts();
 
@@ -123,13 +132,19 @@ class ProductManager {
         value.id == id ? { ...value, ...object } : value
       );
 
-      await fs.promises
+      return await fs.promises
         .writeFile(this.path, JSON.stringify(newProducts))
-        .then("Producto actualizado con exito!");
+        .then(() => {
+          return {
+            success: true,
+            message: 'Producto actualizado con exito'          
+          }
+        })
     } catch (error) {
-      throw new Error(
-        `Se produjo un error al intentar leer el archivo: ${error}`
-      );
+      return {
+        success: false,
+        message: `Se produjo un error al intentar leer el archivo: ${error}`
+      }
     }
   };
 

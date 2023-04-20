@@ -70,10 +70,8 @@ router.post('/', [
 
     const result = await products.addProduct(title, description, code, price, stock, category, thumbnails)
 
-    console.log(result)
-
     if (result.success) {
-      res.status(200).json({
+      res.status(201).json({
         success: true,
         messege: 'El producto se creo con exito'
       })
@@ -90,6 +88,31 @@ router.post('/', [
       messege: `Se produjo un error en la peticion: ${error}`
     })
   }
+})
+
+//editar un producto
+router.put('/:pid', async (req,res) => {
+  //parametro y body
+  const { pid } = req.params
+  const object = req.body
+
+  //actualizacion de producto
+  const result = await products.updateProduct(pid,object)
+  console.log(result)
+
+  //respuesta segun result
+  if (result.success) {
+    return res.status(200).json({
+      success: true,
+      message: 'Se modifico el producto en forma correcta'
+    })
+  }
+
+  return res.status(404).json({
+    success: false,
+    message: result.message
+  })
+
 })
 
 export default router
