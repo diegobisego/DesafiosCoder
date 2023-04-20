@@ -1,16 +1,10 @@
+import ProductManager from "./../manager/ProductManager.js";
 import { Router } from 'express'
+import { body, validationResult } from 'express-validator'
 const router = Router()
-import ProductManager from "./Manager/ProductManager.js";
 
 const products = new ProductManager("src/db/products.json");
 
-// alive
-router.get("/health", (_req, res) => {
-  res.status(200).send({
-    success: true,
-    messege: "UP",
-  });
-});
 
 // obtener productos
 router.get("/", async (req, res) => {
@@ -58,5 +52,35 @@ router.get("/:pid", async (req, res) => {
     );
   }
 });
+
+//agregar un productos
+router.post('/', [
+  body('title').notEmpty().withMessage('El campo title no puede estar vacío'),
+  body('description').notEmpty().withMessage('El campo description no puede estar vacío'),
+  body('code').notEmpty().withMessage('El campo code no puede estar vacío'),
+  body('price').notEmpty().withMessage('El campo price no puede estar vacío'),
+  body('category').notEmpty().withMessage('El campo category no puede estar vacío')
+], async (req,res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(422).json({ errors: errors.array() });
+  }
+  try {
+    const { title, description, code, price, category, thumbnails } = req.body
+
+    await products.addProduct(title, description, code, price, category, thumbnails)
+
+    res.status(200).json({
+      success: true,
+      messege: 'El producto se creo con exito'
+    })
+
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      messege: `Se produjo un error en la peticion: ${error}`
+    })
+  }
+})
 
 export default router

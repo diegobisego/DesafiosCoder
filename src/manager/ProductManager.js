@@ -22,22 +22,17 @@ class ProductManager {
   };
 
   // add products
-  addProduct = async (title, description, price, thumbnail, code, stock) => {
+  addProduct = async (title, description, code, price, category, thumbnails) => {
     const newProduct = {
       title,
       description,
-      price,
-      thumbnail,
       code,
-      stock,
-    };
+      price,
+      stock: true,
+      category,
+      thumbnails: thumbnails || [],
 
-    // verifica si todos los campos estan completos
-    for (const key in newProduct) {
-      if (newProduct[key] == undefined) {
-        throw new Error("Debe contar con todas las propiedades del objeto");
-      }
-    }
+    };
 
     // verificacion y save de producto
     try {
