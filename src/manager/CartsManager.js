@@ -1,4 +1,7 @@
 import fs from "fs";
+import ProductManager from './ProductManager.js'
+
+const products = new ProductManager("src/db/products.json");
 
 class CartManager {
   constructor(path) {
@@ -125,6 +128,19 @@ class CartManager {
           }
     }
   };
+
+  //post products in carts
+  postProductsInCarts = async (cid,pid) => {
+
+    
+
+  }
+
+
+
+
+
+
 }
 
 export default CartManager;
