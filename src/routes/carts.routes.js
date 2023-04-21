@@ -9,7 +9,7 @@ const newCartsManager = new CartsManager("src/db/carts.json");
 router.get("/", async (_req, res) => {
   const result = await newCartsManager.getCarts();
   if (result.success) {
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
       message: result.message,
       data: result.data,
@@ -27,7 +27,7 @@ router.post("/", async (_req, res) => {
   const result = await newCartsManager.addCarts();
 
   if (result.success) {
-    res.status(201).json({
+    return res.status(201).json({
       success: result.success,
       message: result.message,
     });
@@ -40,5 +40,23 @@ router.post("/", async (_req, res) => {
 });
 
 //get carts by ID
+router.get("/:cid", async (req, res) => {
+  const { cid } = req.params;
+
+  const result = await newCartsManager.getCartsById(cid);
+
+  if (result.success) {
+    return res.status(200).json({
+      success: result.success,
+      message: result.message,
+      data: result.data,
+    });
+    
+  }
+  res.status(404).json({
+    success: result.success,
+    message: result.message,
+  });
+});
 
 export default router;

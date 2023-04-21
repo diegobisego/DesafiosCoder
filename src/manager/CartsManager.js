@@ -101,22 +101,27 @@ class CartManager {
   // get cart by id
   getCartsById = async (id) => {
     try {
-      const cart = await this.getCarts();
+      const result = await this.getCarts();
+      const carts = result.data;
 
       // verifica si el codigo existe
-      const cartFind = cart.find((value) => value.id == id);
+      const cartFind = carts.find((value) => value.id == id);
 
-      // console.log(productFind)
-      return {
-        success: true,
-        message: 'Carrito encontrado con exito',
-        data: cartFind
+      if (cartFind) {
+        return {
+          success: true,
+          message: "Carrito encontrado con exito",
+          data: cartFind,
+        };
       }
-
+      return {
+        success: false,
+        message: `No se encontro el carrito con id: ${id}`,
+      };
     } catch (error) {
         return {
             success: false,
-            message: `No se encontro el carrito con id: ${id}`
+            message: `Error en la peticion del carrito: ${error}`
           }
     }
   };
