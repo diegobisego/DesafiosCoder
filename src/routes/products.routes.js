@@ -73,12 +73,12 @@ router.post('/', [
     if (result.success) {
       res.status(201).json({
         success: true,
-        messege: 'El producto se creo con exito'
+        messege: result.message
       })
     } else {
       res.status(404).json({
         success: false,
-        messege: `Se produjo un error al crear el producto: ${result.message}`
+        messege: result.message
       })
     }
 
@@ -104,7 +104,7 @@ router.put('/:pid', async (req,res) => {
   if (result.success) {
     return res.status(200).json({
       success: true,
-      message: 'Se modifico el producto en forma correcta'
+      message: result.message
     })
   }
 
@@ -112,6 +112,27 @@ router.put('/:pid', async (req,res) => {
     success: false,
     message: result.message
   })
+
+})
+
+//delete de productos
+router.delete('/:pid', async (req, res) => {
+  const { pid } = req.params
+
+  const result = await products.deleteProduct(pid)
+
+    //respuesta segun result
+    if (result.success) {
+      return res.status(200).json({
+        success: true,
+        message: result.message
+      })
+    }
+  
+    return res.status(404).json({
+      success: false,
+      message: result.message
+    })
 
 })
 

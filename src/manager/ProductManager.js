@@ -45,7 +45,10 @@ class ProductManager {
          const result = await fs.promises
            .writeFile(this.path, JSON.stringify(arrayProducts))
            .then(() => {
-             return { success: true };
+             return { 
+              success: true ,
+              message: 'Archivo y producto creado con exito'
+            };
            })
            .catch((err) => {
              return {
@@ -78,7 +81,8 @@ class ProductManager {
         .writeFile(this.path, productsArray)
         .then(() => {
           return {
-            success: true
+            success: true,
+            message: 'Producto creado con exito'
           };
         })
         .catch((err) => {
@@ -149,19 +153,25 @@ class ProductManager {
   };
 
   // delete product
-  deleteProduct = async (id) => {
+  deleteProduct = async (pid) => {
     try {
       const products = await this.getProducts();
 
-      const newProducts = products.filter((value) => value.id != id);
+      const newProducts = products.filter((value) => value.id != pid);
 
-      await fs.promises
+      return await fs.promises
         .writeFile(this.path, JSON.stringify(newProducts))
-        .then("Producto eliminado con exito!");
+        .then(() => {
+          return {
+            success: true,
+            message: "Producto eliminado con exito"
+          }
+        });
     } catch (error) {
-      throw new Error(
-        `Se produjo un error al intentar leer el archivo: ${error}`
-      );
+      return {
+        success: false,
+        message: "Hubo un error al eliminar el producto"
+      }
     }
   };
 }
