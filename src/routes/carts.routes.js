@@ -59,4 +59,27 @@ router.get("/:cid", async (req, res) => {
   });
 });
 
+//post product in carts
+router.post('/:cid/product/:pid', async (req,res) => {
+
+  const { cid, pid } = req.params
+
+  const result = await newCartsManager.postProductsInCarts(cid,pid)
+
+  console.log(result)
+
+  if (result.success) {
+    return res.status(200).json({
+      success: result.success,
+      message: result.message
+    })
+  }
+
+  res.status(404).json({
+    success: result.success,
+    message: result.message
+  })
+
+})
+
 export default router;
