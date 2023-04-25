@@ -1,9 +1,9 @@
-<div>
-  <h1>Lista de productos</h1>
-  <ul>
+<div class="container">
+  <h1 class="text-center">PRODUCTOS</h1>
+  <ul class="list-group">
     {{#if products}}
       {{#each products}}
-        <li><p>{{this.title}} : $ {{this.price}}</p></li>
+        <li class="list-group-item text-center border border-success"><p>{{this.title}} : $ {{this.price}}</p></li>
       {{/each}}
     {{else}}
       <ul>

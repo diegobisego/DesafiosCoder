@@ -38,9 +38,9 @@ router.get("/", async (req, res) => {
 router.get("/:pid", async (req, res) => {
   try {
     const { pid } = req.params;
-    const data = await products.getProductById(pid);
+    const result = await products.getProductById(pid);
 
-    if (!data) {
+    if (!result) {
       return res.status(404).json({
         success: false,
         messege: "No se encontro el producto solicitado",
@@ -48,9 +48,9 @@ router.get("/:pid", async (req, res) => {
     }
 
     res.status(200).json({
-      success: true,
-      messege: "Se encontro el producto solicitado",
-      data,
+      success: result.success,
+      messege: result.message,
+      data: result.data,
     });
   } catch (error) {
     console.error(
