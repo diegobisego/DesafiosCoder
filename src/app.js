@@ -5,22 +5,13 @@ const app = express();
 
 //handlebars
 import handlebars from "express-handlebars";
+import viewsRouter from './routes/views.routes.js'
 app.engine("handlebars", handlebars.engine());
 app.set("views", `${__dirname}/views`);
 app.set("view engine", "handlebars");
+app.use('/', viewsRouter)
 
-import ProductManager from "./manager/ProductManager.js";
-const newProductManager = new ProductManager("src/db/products.json")
 
-app.get("/", async (_req, res) => {
-
-    const resultProducts = await newProductManager.getProducts() 
-    const products = resultProducts.data
-
-  res.render("home", {
-    products
-  });
-});
 
 //middlewares
 app.use(express.json());
