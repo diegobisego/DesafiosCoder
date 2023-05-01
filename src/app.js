@@ -40,8 +40,6 @@ app.use("/", routes);
 
 
 
-
-
 io.on('connection',socket=>{
     console.log('Socket conectado');
 })

@@ -92,7 +92,8 @@ router.post(
         thumbnails
       );
 
-      req.io.emit('products',meetings);
+      const arrayProducts = await products.getProducts()
+      req.io.emit("arrayProducts", arrayProducts)
 
       if (result.success) {
         res.status(201).json({
@@ -123,6 +124,9 @@ router.put("/:pid", async (req, res) => {
   //actualizacion de producto
   const result = await products.updateProduct(pid, object);
 
+  const arrayProducts = await products.getProducts()
+  req.io.emit("arrayProducts", arrayProducts)
+
   //respuesta segun result
   if (result.success) {
     return res.status(200).json({
@@ -142,6 +146,9 @@ router.delete("/:pid", async (req, res) => {
   const { pid } = req.params;
 
   const result = await products.deleteProduct(pid);
+
+  const arrayProducts = await products.getProducts()
+  req.io.emit("arrayProducts", arrayProducts)
 
   //respuesta segun result
   if (result.success) {
