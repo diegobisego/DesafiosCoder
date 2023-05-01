@@ -92,6 +92,8 @@ router.post(
         thumbnails
       );
 
+      req.io.emit('products',meetings);
+
       if (result.success) {
         res.status(201).json({
           success: true,
