@@ -3,9 +3,12 @@ import morgan from "morgan"; //morgan para debug
 import __dirname from "./utils.js";
 const app = express();
 import mongoose from "mongoose";
+import dotenv from 'dotenv'
+dotenv.config()
 
 //mongod
-const connection = mongoose.connect('mongodb+srv://diegobisego1:pellegrini927@coderhousebackend.rpsrxol.mongodb.net/?retryWrites=true&w=majority')
+const MONGOURI = process.env.MONGO_URI
+const connection = mongoose.connect(MONGOURI)
 
 
 //handlebars

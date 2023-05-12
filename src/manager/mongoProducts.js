@@ -139,8 +139,6 @@ class ProductManager {
   // delete product
   deleteProduct = async (pid) => {
     try {
-      const result = await this.getProducts();
-      const products = result.data;
 
       const exist = products.some((value) => value.id == pid);
 
