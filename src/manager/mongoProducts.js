@@ -11,7 +11,7 @@ class ProductManager {
     try {
       const result = await productModel.find();
 
-      if (result) {
+      if (!result == []) {
         return {
           success: true,
           message: "Productos obtenidos con exito",

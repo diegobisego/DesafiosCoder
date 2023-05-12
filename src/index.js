@@ -10,15 +10,17 @@ import productsRouter from './routes/products.routes.js'
 import cartsRouter from './routes/carts.routes.js' 
 import realTimeProductsRouter from './routes/realTimeProducts.routes.js'
 import mongoProducts from './routes/mongoProducts.routes.js' 
+import mongoCarts from './routes/mongoCarts.routes.js' 
 
 
 
 //use de rutas
 router.use('/api/health', healthRouter)
-      .use('/api/products', productsRouter)
-      .use('/api/carts', cartsRouter )
+      .use('/api/fs/products', productsRouter)
+      .use('/api/fs/carts', cartsRouter )
       .use('/realTimeProducts', realTimeProductsRouter)
-      .use('/api/mongo/products', mongoProducts)
+      .use('/api/products', mongoProducts)
+      .use('/api/carts', mongoCarts)
       
 
 export default router

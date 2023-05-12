@@ -58,7 +58,7 @@ router.post(
     body("description")
       .notEmpty()
       .withMessage("El campo description no puede estar vacío"),
-    body("code").notEmpty().withMessage("El campo code no puede estar vacío"),
+    // body("code").notEmpty().withMessage("El campo code no puede estar vacío"),
     body("price").notEmpty().withMessage("El campo price no puede estar vacío"),
     body("category")
       .notEmpty()

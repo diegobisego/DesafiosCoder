@@ -4,19 +4,18 @@ import mongoose from "mongoose";
 const collection = 'products'
 
 //esquema de products
-const schema = new mongoose.Schema({
-    title:String,
-    description:String,
+const productsSchema = new mongoose.Schema({
+    title: String,
+    description: String,
     code: String,
     price: Number,
     status: Boolean,
     stock: Number,
     category: String,
     thumbnails: Array
-}, {timestamps:{createdAt:'createDate', updatedAt:'updateDate'}})
+}, { timestamps: { createdAt: 'createDate', updatedAt: 'updateDate' } });
 
-
-const productModel = mongoose.model(collection,schema)
+const productModel = mongoose.model(collection,productsSchema)
 
 
 export default productModel

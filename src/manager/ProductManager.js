@@ -1,5 +1,6 @@
 import fs from "fs";
 
+
 class ProductManager {
   constructor(path) {
     this.path = path;
@@ -10,6 +11,10 @@ class ProductManager {
   // get products
   getProducts = async () => {
     try {
+
+
+
+
       const products = await fs.promises.readFile(this.path, "utf-8");
 
       const result = JSON.parse(products);
