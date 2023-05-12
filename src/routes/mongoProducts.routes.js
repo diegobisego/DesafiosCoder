@@ -127,26 +127,26 @@ router.put("/:pcode", async (req, res) => {
 });
 
 // //delete de productos
-// router.delete("/:pid", async (req, res) => {
-//   const { pid } = req.params;
+router.delete("/:pcode", async (req, res) => {
+  const { pcode } = req.params;
 
-//   const result = await products.deleteProduct(pid);
+  const result = await ProductManager.deleteProduct(pcode);
 
-//   const arrayProducts = await products.getProducts()
-//   req.io.emit("arrayProducts", arrayProducts)
+  // const arrayProducts = await products.getProducts()
+  // req.io.emit("arrayProducts", arrayProducts)
 
-//   //respuesta segun result
-//   if (result.success) {
-//     return res.status(200).json({
-//       success: true,
-//       message: result.message,
-//     });
-//   }
+  //respuesta segun result
+  if (result.success) {
+    return res.status(200).json({
+      success: result.success,
+      message: result.message,
+    });
+  }
 
-//   return res.status(404).json({
-//     success: false,
-//     message: result.message,
-//   });
-// });
+  return res.status(404).json({
+    success: result.success,
+    message: result.message,
+  });
+});
 
 export default router;

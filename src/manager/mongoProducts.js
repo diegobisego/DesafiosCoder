@@ -137,28 +137,21 @@ class ProductManager {
   };
 
   // delete product
-  deleteProduct = async (pid) => {
+  deleteProduct = async (code) => {
     try {
+      const exist = await productModel.findOneAndDelete({ code });
 
-      const exist = products.some((value) => value.id == pid);
-
-      if (!exist) {
+      if (exist) {
         return {
-          success: false,
-          message: "El producto a eliminar no se encuentra",
+          success: true,
+          message: "Producto eliminado con exito",
         };
       }
 
-      const newProducts = products.filter((value) => value.id != pid);
-
-      return await fs.promises
-        .writeFile(this.path, JSON.stringify(newProducts))
-        .then(() => {
-          return {
-            success: true,
-            message: "Producto eliminado con exito",
-          };
-        });
+      return {
+        success: false,
+        message: "Producto no encontrado",
+      };
     } catch (error) {
       return {
         success: false,
