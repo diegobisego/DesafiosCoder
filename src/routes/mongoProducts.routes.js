@@ -1,34 +1,22 @@
-import ProductManager from "./../manager/ProductManager.js";
+import MongoProductManager from "../manager/mongoProducts.js";
 import { Router } from "express";
 import { body, validationResult } from "express-validator";
 const router = Router();
 
 
-const products = new ProductManager("src/db/products.json");
+const ProductManager = new MongoProductManager()
 
 // obtener productos
-router.get("/", async (req, res) => {
+router.get("/", async (_req, res) => {
   try {
-    const { limit } = req.query;
-    let result = await products.getProducts();
+    
 
-    if (limit) {
-      result = result.slice(0, limit);
-    }
-
-    if (result.success) {
-      return res.status(200).json({
-        success: result.success,
-        messege: result.message,
-        data: result.data,
-      });
-    }
-    res.status(404).json({
-      success: result.success,
-      messege: result.message
-    });
-
-
+    const {success,message,data} = await ProductManager.getProducts()
+    res.status(200).json({
+      success,
+      message,
+      data
+    })
 
   } catch (error) {
     console.error(
@@ -37,11 +25,11 @@ router.get("/", async (req, res) => {
   }
 });
 
-// obtener 1 producto
+// // obtener 1 producto
 router.get("/:pid", async (req, res) => {
   try {
     const { pid } = req.params;
-    const result = await products.getProductById(pid);
+    const result = await ProductManager.getProductById(pid);
 
     if (!result) {
       return res.status(404).json({
@@ -62,7 +50,7 @@ router.get("/:pid", async (req, res) => {
   }
 });
 
-//agregar un productos
+// //agregar un productos
 router.post(
   "/",
   [
@@ -85,7 +73,7 @@ router.post(
       const { title, description, code, price, stock, category, thumbnails } =
         req.body;
 
-      const result = await products.addProduct(
+      const result = await ProductManager.addProduct(
         title,
         description,
         code,
@@ -94,9 +82,6 @@ router.post(
         category,
         thumbnails
       );
-
-      const arrayProducts = await products.getProducts()
-      req.io.emit("arrayProducts", arrayProducts)
 
       if (result.success) {
         res.status(201).json({
@@ -118,53 +103,50 @@ router.post(
   }
 );
 
-//editar un producto
-router.put("/:pid", async (req, res) => {
+// //editar un producto
+router.put("/:pcode", async (req, res) => {
   //parametro y body
-  const { pid } = req.params;
+  const { pcode } = req.params;
   const object = req.body;
 
   //actualizacion de producto
-  const result = await products.updateProduct(pid, object);
-
-  const arrayProducts = await products.getProducts()
-  req.io.emit("arrayProducts", arrayProducts)
+  const result = await ProductManager.updateProduct(pcode, object);
 
   //respuesta segun result
   if (result.success) {
     return res.status(200).json({
-      success: true,
+      success: result.success,
       message: result.message,
     });
   }
 
   return res.status(404).json({
-    success: false,
+    success: result.success,
     message: result.message,
   });
 });
 
-//delete de productos
-router.delete("/:pid", async (req, res) => {
-  const { pid } = req.params;
+// //delete de productos
+// router.delete("/:pid", async (req, res) => {
+//   const { pid } = req.params;
 
-  const result = await products.deleteProduct(pid);
+//   const result = await products.deleteProduct(pid);
 
-  const arrayProducts = await products.getProducts()
-  req.io.emit("arrayProducts", arrayProducts)
+//   const arrayProducts = await products.getProducts()
+//   req.io.emit("arrayProducts", arrayProducts)
 
-  //respuesta segun result
-  if (result.success) {
-    return res.status(200).json({
-      success: true,
-      message: result.message,
-    });
-  }
+//   //respuesta segun result
+//   if (result.success) {
+//     return res.status(200).json({
+//       success: true,
+//       message: result.message,
+//     });
+//   }
 
-  return res.status(404).json({
-    success: false,
-    message: result.message,
-  });
-});
+//   return res.status(404).json({
+//     success: false,
+//     message: result.message,
+//   });
+// });
 
 export default router;

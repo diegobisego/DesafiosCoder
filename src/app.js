@@ -2,6 +2,10 @@ import express from "express";
 import morgan from "morgan"; //morgan para debug
 import __dirname from "./utils.js";
 const app = express();
+import mongoose from "mongoose";
+
+//mongod
+const connection = mongoose.connect('mongodb+srv://diegobisego1:pellegrini927@coderhousebackend.rpsrxol.mongodb.net/?retryWrites=true&w=majority')
 
 
 //handlebars
@@ -31,6 +35,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(morgan("dev"));
 app.use(express.static(`${__dirname}/public`))
+
 
 
 
