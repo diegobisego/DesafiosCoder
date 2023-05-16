@@ -85,72 +85,33 @@ class CartManager {
   };
 
   //   //post products in carts
-  //   postProductsInCarts = async (cid, pid) => {
-  //     try {
-  //       //traigo productos
-  //       const resultProducts = await this.newProductsManager.getProducts();
-  //       const products = resultProducts.data;
+  postProductsInCarts = async (cid, pid) => {
+    try {
+      const { data } = await mongoManagerProducts.getProductById(pid);
 
-  //       //traigo carritos
-  //       const resultCarts = await this.getCarts();
-  //       const carts = resultCarts.data;
+      if (data) {
+        await cartModel.findOneAndUpdate(
+          { id: cid },
+          { $push: { products: data } }
+        );
 
-  //       //guardo producto y carrito solicitado
-  //       const existProduct = products.find((value) => value.id == pid);
-  //       const existCart = carts.find((value) => value.id == cid);
+        return {
+          success: true,
+          message: "Se agrego el producto en forma correcta",
+        };
+      }
 
-  //       //verifico q exista producto y carrito
-  //       if (!existProduct) {
-  //         return {
-  //           success: false,
-  //           message: "El producto solicitado no existe",
-  //         };
-  //       }
-
-  //       if (!existCart) {
-  //         return {
-  //           success: false,
-  //           message: "El carrito solicitado no existe",
-  //         };
-  //       }
-
-  //       //realizo una copia de carts para trabajarla
-  //       const newCarts = JSON.parse(JSON.stringify(carts));
-
-  //       //busco el index del carrito y del producto
-  //       const cartIndex = newCarts.findIndex((cart) => cart.id == cid);
-  //       const productIndex = newCarts[cartIndex].products.findIndex(
-  //         (product) => product.product == pid
-  //       );
-
-  //       //si es distinto a -1 el resultado,agrego el producto, sino le sumo 1
-  //       if (productIndex !== -1) {
-  //         newCarts[cartIndex].products[productIndex].quantity += 1;
-  //       } else {
-  //         newCarts[cartIndex].products.push({
-  //           product: pid,
-  //           quantity: 1,
-  //         });
-  //       }
-
-  //       //realizo el writefile y retorno el resultado
-  //       const result = await fs.promises
-  //         .writeFile(this.path, JSON.stringify(newCarts))
-  //         .then(() => {
-  //           return {
-  //             success: true,
-  //             message: "Se agrego el producto en forma correcta",
-  //           };
-  //         });
-
-  //       return result;
-  //     } catch (error) {
-  //       return {
-  //         success: false,
-  //         message: `Se produjo un error al intentar agregar un producto al carrito: ${error}`,
-  //       };
-  //     }
-  //   };
+      return {
+        success: false,
+        message: "El producto no existe",
+      };
+    } catch (error) {
+      return {
+        success: false,
+        message: `Se produjo un error al intentar agregar un producto al carrito: ${error}`,
+      };
+    }
+  };
 }
 
 export default CartManager;

@@ -8,7 +8,11 @@ dotenv.config()
 
 //mongod
 const MONGOURI = process.env.MONGO_URI
-const connection = mongoose.connect(MONGOURI)
+const connection = mongoose.connect(MONGOURI,{
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    dbName: 'ecommerce'
+})
 
 
 //handlebars

@@ -83,6 +83,9 @@ router.post(
         thumbnails
       );
 
+      const arrayProductsMongo = await ProductManager.getProducts()
+      req.io.emit("arrayProductsMongo", arrayProductsMongo)
+
       if (result.success) {
         res.status(201).json({
           success: true,
