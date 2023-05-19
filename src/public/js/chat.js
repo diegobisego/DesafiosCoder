@@ -1,16 +1,27 @@
-const socket = io();//inicializa el socket y pide info del handshake
+const socket = io(); //inicializa el socket y pide info del handshake
 
-const chatMessage = document.getElementById('chatMessage')
-const email = document.getElementById('email')
-const message = document.getElementById('message')
+const chatMessage = document.getElementById("chatMessage");
+const email = document.getElementById("email");
+const message = document.getElementById("message");
+const button = document.getElementById("btnMessage");
 
-socket.on('chat', data => {
+// Manejar el evento click del boton
+button.addEventListener("click", async () => {
+  const userEmail = email.value;
+  const userMessage = message.value;
 
-    let chats = ''
-    
-    data.data.forEach(value => {
-        chats += `<li>user: ${value.email.value} | message: ${value.message.value}</li>`
-    })
+  socket.emit("chat:saveMessage", { user: userEmail, message: userMessage });
 
-    listProducts.innerHTML = chats
-})
+  email.value = "";
+  message.value = "";
+});
+
+socket.on("chat:allMessage", (dataChat) => {
+  let chats = "";
+
+  dataChat.forEach((value) => {
+    chats += `<li>user: ${value.user} | message: ${value.message}</li>`;
+  });
+
+  chatMessage.innerHTML = chats;
+});

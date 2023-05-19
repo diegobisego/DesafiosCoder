@@ -5,7 +5,7 @@ const collection = 'messages'
 
 //esquema de products
 const schema = new mongoose.Schema({
-    user: { type: String, unique: true },
+    user: String,
     message: String
 }, {timestamps:{createdAt:'createDate', updatedAt:'updateDate'}})
 

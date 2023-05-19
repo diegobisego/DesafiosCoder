@@ -5,35 +5,28 @@ class Chat {
 
   addMessage = async (user, message) => {
     try {
-      const newMessage = {
-        user,
-        message,
-      };
-
       if (user == "" || message == "") {
         return {
           success: false,
-          message: "El usuario o mensahe no pueden estar vacios",
+          message: "El usuario o mensaje no pueden estar vacios",
         };
       }
-
-      await chatModel.create(newMessage);
-
+  
+      await chatModel.create({ user, message });
+  
       return {
         success: true,
-        message: "Mensaje creado con exito",
+        message: "Mensaje creado con éxito",
       };
     } catch (error) {
-      return {
-        success: false,
-        message: `Ocurrio un errror al intentar crear el mensaje: ${error}`,
-      };
+      console.log('Error: ' + error);
     }
   };
+  
 
   getMessage = async () => {
     try {
-      const messageChat = await chatModel.find();
+      const messageChat = await chatModel.find(); //aca viene bien la data
 
       return {
         success: true,

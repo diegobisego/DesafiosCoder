@@ -11,7 +11,7 @@ import cartsRouter from './routes/carts.routes.js'
 import realTimeProductsRouter from './routes/realTimeProducts.routes.js'
 import mongoProducts from './routes/mongoProducts.routes.js' 
 import mongoCarts from './routes/mongoCarts.routes.js' 
-import chats from './routes/chats.routes.js' 
+// import views from './routes/views.routes.js' 
 
 
 
@@ -22,7 +22,7 @@ router.use('/api/health', healthRouter)
       .use('/realTimeProducts', realTimeProductsRouter)
       .use('/api/products', mongoProducts)
       .use('/api/carts', mongoCarts)
-      .use('/chats', chats)
+      // .use('/', views)
       
 
 export default router
