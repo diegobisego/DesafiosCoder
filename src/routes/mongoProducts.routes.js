@@ -1,4 +1,4 @@
-import MongoProductManager from "../manager/mongoProducts.js";
+import MongoProductManager from "../dao/manager/mongoProducts.js";
 import { Router } from "express";
 import { body, validationResult } from "express-validator";
 const router = Router();

@@ -1,5 +1,5 @@
 //mongoose
-import productModel from "../models/product.js";
+import productModel from "../../models/product.js";
 
 class ProductManager {
   constructor() {}

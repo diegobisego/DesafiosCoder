@@ -1,4 +1,4 @@
-import ProductManager from "./../manager/ProductManager.js";
+import ProductManager from "./../dao/manager/ProductManager.js";
 import { Router } from "express";
 import { body, validationResult } from "express-validator";
 const router = Router();
