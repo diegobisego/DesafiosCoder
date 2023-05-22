@@ -32,7 +32,7 @@ class CartManager {
     }
   };
 
-  //   // add Carts
+  // add Carts
   addCarts = async () => {
     try {
       const carts = await this.getCarts();
@@ -59,7 +59,7 @@ class CartManager {
     }
   };
 
-  //   // get cart by id
+  // get cart by id
   getCartsById = async (id) => {
     try {
       // busca el carrito
@@ -84,7 +84,7 @@ class CartManager {
     }
   };
 
-  //   //post products in carts
+  // post products in carts
   postProductsInCarts = async (cid, pid) => {
     try {
       const { data } = await mongoManagerProducts.getProductById(pid);
@@ -112,6 +112,63 @@ class CartManager {
       };
     }
   };
+
+  // delete cart
+  deleteCart = async (cid) => {
+    const result = await cartModel.findOneAndDelete({ id: cid });
+
+    if (result) {
+      return {
+        success: true,
+        message: "Carrito eliminado con exito",
+      };
+    }
+
+    return {
+      success: false,
+      message: "Carrito no encontrado",
+    };
+  };
+
+  // delete product in cart
+  deleteProductInCart = async (cid,pid) => {
+
+    try {
+
+      const updateCart = {$pull: { products: {code: pid}}}
+
+      const result = await cartModel.findOneAndUpdate(
+        {id:cid}, 
+        updateCart
+      )
+
+    if (result) {
+      return {
+        success: true,
+        message: 'Producto eliminado con exito'
+      }
+    }
+
+    return {
+      success: false,
+      message: 'El producto no existe dentro del carrito'
+    }
+
+
+    } catch (error) {
+      return {
+        success: false,
+        message: `Error en manager: ${error}`
+      }
+    }
+    
+    
+
+    
+
+
+
+  }
 }
 
 export default CartManager;

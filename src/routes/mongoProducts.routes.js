@@ -25,7 +25,7 @@ router.get("/", async (_req, res) => {
   }
 });
 
-// // obtener 1 producto
+// obtener 1 producto
 router.get("/:pid", async (req, res) => {
   try {
     const { pid } = req.params;
@@ -50,7 +50,7 @@ router.get("/:pid", async (req, res) => {
   }
 });
 
-// //agregar un productos
+// agregar un productos
 router.post(
   "/",
   [
@@ -106,7 +106,7 @@ router.post(
   }
 );
 
-// //editar un producto
+// editar un producto
 router.put("/:pcode", async (req, res) => {
   //parametro y body
   const { pcode } = req.params;
@@ -129,7 +129,7 @@ router.put("/:pcode", async (req, res) => {
   });
 });
 
-// //delete de productos
+// delete de productos
 router.delete("/:pcode", async (req, res) => {
   const { pcode } = req.params;
 
