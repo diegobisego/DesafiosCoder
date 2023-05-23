@@ -7,11 +7,12 @@ const router = Router();
 const ProductManager = new MongoProductManager()
 
 // obtener productos
-router.get("/", async (_req, res) => {
+router.get("/:limit?/:page?/:sort?", async (req, res) => {
   try {
     
+    const { limit, page, sort } = req.params
 
-    const {success,message,data} = await ProductManager.getProducts()
+    const {success,message,data} = await ProductManager.getProducts(limit,page,sort)
     res.status(200).json({
       success,
       message,

@@ -7,17 +7,34 @@ class ProductManager {
   // methods
 
   // get products
-  getProducts = async () => {
+  getProducts = async (limit, page, sort) => {
     try {
-      const result = await productModel.find();
-
-      if (!result == []) {
+      const limitOptions = limit || 10
+      const skipCount = limit * (page - 1) || 0;
+      const sortOptions = {};
+  
+      if (sort === 'asc' ) {
+        sortOptions.price = 1; // Orden ascendente por precio
+      } else if (sort === 'desc') {
+        sortOptions.price = -1; // Orden descendente por precio
+      }
+  
+      const totalProducts = await productModel.countDocuments();
+      const result = await productModel
+        .find()
+        .sort(sortOptions)
+        .skip(skipCount)
+        .limit(limitOptions);
+  
+      if (result) {
         return {
           success: true,
-          message: "Productos obtenidos con exito",
+          message: "Productos obtenidos con éxito",
           data: result,
+          totalProducts: totalProducts,
         };
       }
+  
       return {
         success: false,
         message: "No hay productos para mostrar",
@@ -25,7 +42,7 @@ class ProductManager {
     } catch (error) {
       return {
         success: false,
-        message: `Error en la peticion de productos: ${error}`,
+        message: `Error en la petición de productos: ${error}`,
       };
     }
   };
@@ -122,7 +139,7 @@ class ProductManager {
         };
       }
 
-      await productModel.findOneAndUpdate(code, object);
+      await productModel.findOneAndUpdate({code}, object);
 
       return {
         success: true,
