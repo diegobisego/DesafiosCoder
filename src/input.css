@@ -1,0 +1,19 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.pagination-button {
+  margin: 0 5px;
+  padding: 5px 10px;
+  background-color: lightgray;
+  border: none;
+  cursor: pointer;
+}
+.current-page {
+  font-weight: bold;
+}

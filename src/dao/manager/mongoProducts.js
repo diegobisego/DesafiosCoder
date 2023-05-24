@@ -1,5 +1,7 @@
 //mongoose
 import productModel from "../../models/product.js";
+import dotenv from "dotenv";
+dotenv.config();
 
 class ProductManager {
   constructor() {}
@@ -24,7 +26,57 @@ class ProductManager {
         .find()
         .sort(sortOptions)
         .skip(skipCount)
-        .limit(limitOptions);
+        .limit(limitOptions)
+        .lean();
+
+      // los parametros de respuesta
+      const totalPages = Math.ceil(totalProducts / limit)  // total de paginas
+      const actuallyPage = skipCount + 1
+      const prevPage = actuallyPage - 1
+
+      // verifica si la pagina seleccionada existe
+      if (actuallyPage > totalPages) {
+        return {
+          success: false,
+          message: 'La pagina seleccionada no existe'
+        }
+      }
+
+      // comprueba si la pagina siguiente existe y setea el valor
+      let nextPage = 0
+      if (actuallyPage < totalPages) {
+        nextPage = prevPage + 2
+      } else {
+        nextPage = -1
+      }
+
+      // comprueba si la pagina anterior existe y setea el estado
+      let hasPrevPage = false
+      if (prevPage > 0) {
+        hasPrevPage = true
+      }
+
+      // comprueba si la pagina posterior existe y setea el estado
+      let hasNextPage = false
+      if (nextPage !== -1) {
+        hasNextPage = true
+      }
+      
+      // seteo link pagina previa
+      let prevLink = ''
+      if (hasPrevPage) {
+        prevLink = `${process.env.URL_BASE}/${limit}/${prevPage}/${sort}` 
+      } else {
+        prevLink = null
+      }
+
+      // seteo link pagina posterior
+      let nextLink = ''
+      if (hasNextPage) {
+        nextLink = `${process.env.URL_BASE}/${limit}/${nextPage}/${sort}` 
+      } else {
+        nextLink = null
+      }
   
       if (result) {
         return {
@@ -32,6 +84,14 @@ class ProductManager {
           message: "Productos obtenidos con éxito",
           data: result,
           totalProducts: totalProducts,
+          totalPages,
+          prevPage,
+          nextPage,
+          page: actuallyPage,
+          hasPrevPage,
+          hasNextPage,
+          prevLink,
+          nextLink
         };
       }
   
