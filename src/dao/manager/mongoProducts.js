@@ -8,76 +8,82 @@ class ProductManager {
 
   // methods
 
-  // get products
+  // get products        3     2
   getProducts = async (limit, page, sort) => {
     try {
-      const limitOptions = limit || 10
-      const skipCount = limit * (page - 1) || 0;
+      const limitOptions = limit || 10; // se van a mostrar de a 2 productos
+      const skipCount = limit * (page - 1) || 0; // documentos q tiene que skipear
       const sortOptions = {};
-  
-      if (sort === 'asc' ) {
+      const sortPrice = sort || "";
+
+      if (sortPrice === "asc") {
         sortOptions.price = 1; // Orden ascendente por precio
-      } else if (sort === 'desc') {
+      } else if (sortPrice === "desc") {
         sortOptions.price = -1; // Orden descendente por precio
       }
-  
+
       const totalProducts = await productModel.countDocuments();
       const result = await productModel
         .find()
-        .sort(sortOptions)
+        .sort(sortOptions.price)
         .skip(skipCount)
         .limit(limitOptions)
         .lean();
 
       // los parametros de respuesta
-      const totalPages = Math.ceil(totalProducts / limit)  // total de paginas
-      const actuallyPage = skipCount + 1
-      const prevPage = actuallyPage - 1
+      const totalPages = Math.ceil(totalProducts / limitOptions); // total de paginas
+      const actuallyPage = Number(page) - 1;
+      const prevPage = actuallyPage - 1;
 
       // verifica si la pagina seleccionada existe
       if (actuallyPage > totalPages) {
         return {
           success: false,
-          message: 'La pagina seleccionada no existe'
-        }
+          message: "La pagina seleccionada no existe",
+        };
       }
 
       // comprueba si la pagina siguiente existe y setea el valor
-      let nextPage = 0
+      let nextPage = 0;
       if (actuallyPage < totalPages) {
-        nextPage = prevPage + 2
+        nextPage = actuallyPage + 1;
       } else {
-        nextPage = -1
+        nextPage = -1;
       }
 
       // comprueba si la pagina anterior existe y setea el estado
-      let hasPrevPage = false
+      let hasPrevPage = false;
       if (prevPage > 0) {
-        hasPrevPage = true
+        hasPrevPage = true;
       }
 
       // comprueba si la pagina posterior existe y setea el estado
-      let hasNextPage = false
+      let hasNextPage = false;
       if (nextPage !== -1) {
-        hasNextPage = true
+        hasNextPage = true;
       }
-      
+
       // seteo link pagina previa
-      let prevLink = ''
-      if (hasPrevPage) {
-        prevLink = `${process.env.URL_BASE}/${limit}/${prevPage}/${sort}` 
+      let prevLink = "";
+      if (hasPrevPage && sortOptions.price) {
+        prevLink = `${process.env.URL_BASE}/${limitOptions}/${prevPage}/${sortOptions.price}`;
+      } else if (hasPrevPage) {
+        prevLink = `${process.env.URL_BASE}/${limitOptions}/${prevPage}`;
       } else {
-        prevLink = null
+        prevLink = null;
       }
 
       // seteo link pagina posterior
-      let nextLink = ''
-      if (hasNextPage) {
-        nextLink = `${process.env.URL_BASE}/${limit}/${nextPage}/${sort}` 
+      let nextLink = "";
+
+      if (hasNextPage && sortOptions.price) {
+        nextLink = `${process.env.URL_BASE}/${limitOptions}/${nextPage}/${sortOptions.price}`;
+      } else if (hasNextPage) {
+        nextLink = `${process.env.URL_BASE}/${limitOptions}/${nextPage}`;
       } else {
-        nextLink = null
+        nextLink = null;
       }
-  
+
       if (result) {
         return {
           success: true,
@@ -91,10 +97,10 @@ class ProductManager {
           hasPrevPage,
           hasNextPage,
           prevLink,
-          nextLink
+          nextLink,
         };
       }
-  
+
       return {
         success: false,
         message: "No hay productos para mostrar",
@@ -199,7 +205,7 @@ class ProductManager {
         };
       }
 
-      await productModel.findOneAndUpdate({code}, object);
+      await productModel.findOneAndUpdate({ code }, object);
 
       return {
         success: true,
