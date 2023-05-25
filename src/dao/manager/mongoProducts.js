@@ -14,18 +14,19 @@ class ProductManager {
       const limitOptions = limit || 10; // se van a mostrar de a 2 productos
       const skipCount = limit * (page - 1) || 0; // documentos q tiene que skipear
       const sortOptions = {};
+      console.log(typeof(sort))
       const sortPrice = sort || "";
 
-      if (sortPrice === "asc") {
+      if (sortPrice == "asc") {
         sortOptions.price = 1; // Orden ascendente por precio
-      } else if (sortPrice === "desc") {
+      } else if (sortPrice == "desc") {
         sortOptions.price = -1; // Orden descendente por precio
       }
-
+      console.log(typeof(sortOptions))
       const totalProducts = await productModel.countDocuments();
       const result = await productModel
         .find()
-        .sort(sortOptions.price)
+        .sort(sortOptions)
         .skip(skipCount)
         .limit(limitOptions)
         .lean();
@@ -65,10 +66,10 @@ class ProductManager {
 
       // seteo link pagina previa
       let prevLink = "";
-      if (hasPrevPage && sortOptions.price) {
-        prevLink = `${process.env.URL_BASE}/${limitOptions}/${prevPage}/${sortOptions.price}`;
+      if (hasPrevPage && sortOptions.price ) {
+        prevLink = `${process.env.URL_BASE}?limit=${limitOptions}&page=${prevPage}&sort=${sortPrice}`;
       } else if (hasPrevPage) {
-        prevLink = `${process.env.URL_BASE}/${limitOptions}/${prevPage}`;
+        prevLink = `${process.env.URL_BASE}?limit=${limitOptions}&page=${prevPage}`
       } else {
         prevLink = null;
       }
@@ -77,9 +78,9 @@ class ProductManager {
       let nextLink = "";
 
       if (hasNextPage && sortOptions.price) {
-        nextLink = `${process.env.URL_BASE}/${limitOptions}/${nextPage}/${sortOptions.price}`;
+        nextLink = `${process.env.URL_BASE}?limit=${limitOptions}&page=${nextPage}&sort=${sortPrice}`;
       } else if (hasNextPage) {
-        nextLink = `${process.env.URL_BASE}/${limitOptions}/${nextPage}`;
+        nextLink = `${process.env.URL_BASE}?limit=${limitOptions}&page=${nextPage}`;
       } else {
         nextLink = null;
       }

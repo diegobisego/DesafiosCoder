@@ -17,9 +17,9 @@ router.get("/", async (_req, res) => {
 });
 
 // products con mongo
-router.get("/products/:limit?/:page?/:sort?", async (req, res) => {
+router.get("/products", async (req, res) => {
   try {
-    const { limit, page, sort } = req.params;
+    const { limit, page, sort } = req.query;
 
     const result = await newProductManager.getProducts(limit, page, sort);
     console.log(result)
