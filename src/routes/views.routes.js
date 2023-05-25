@@ -24,8 +24,13 @@ router.get("/products/:limit?/:page?/:sort?", async (req, res) => {
     const result = await newProductManager.getProducts(limit, page, sort);
     console.log(result)
     const products = result.data;
+
+    const prevLink = result.prevLink
+    const nextLink = result.nextLink
+    const hasPrevPage = result.hasPrevPage
+    const hasNextPage = result.hasNextPage
     
-    res.render("products", { products });
+    res.render("products", { products,prevLink,nextLink,hasPrevPage,hasNextPage });
   } catch (error) {
     res.render(`Se produjo un error en la obtencion de productos: ${error}`);
   }

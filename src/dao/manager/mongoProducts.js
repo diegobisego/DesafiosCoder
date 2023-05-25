@@ -32,7 +32,7 @@ class ProductManager {
 
       // los parametros de respuesta
       const totalPages = Math.ceil(totalProducts / limitOptions); // total de paginas
-      const actuallyPage = Number(page) - 1;
+      const actuallyPage = Number(page) || 1;
       const prevPage = actuallyPage - 1;
 
       // verifica si la pagina seleccionada existe
