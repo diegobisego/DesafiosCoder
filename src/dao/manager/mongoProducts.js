@@ -8,24 +8,32 @@ class ProductManager {
 
   // methods
 
-  // get products        3     2
-  getProducts = async (limit, page, sort) => {
+  // get products
+  getProducts = async (limit, page, sort, query) => {
     try {
       const limitOptions = limit || 10; // se van a mostrar de a 2 productos
       const skipCount = limit * (page - 1) || 0; // documentos q tiene que skipear
       const sortOptions = {};
-      console.log(typeof(sort))
       const sortPrice = sort || "";
+      const querySearch = {};
 
       if (sortPrice == "asc") {
         sortOptions.price = 1; // Orden ascendente por precio
       } else if (sortPrice == "desc") {
         sortOptions.price = -1; // Orden descendente por precio
       }
-      console.log(typeof(sortOptions))
+
+      if (query) {
+        if (query === "true" || query === "false") {
+          querySearch.status = query;
+        } else {
+          querySearch.category = query;
+        }
+      }
+
       const totalProducts = await productModel.countDocuments();
       const result = await productModel
-        .find()
+        .find(querySearch)
         .sort(sortOptions)
         .skip(skipCount)
         .limit(limitOptions)
@@ -64,12 +72,17 @@ class ProductManager {
         hasNextPage = true;
       }
 
+      //armando links
+      const limitLink = limit ? `limit=${limitOptions}` : ''
+      const pagePrevLink = page ? `&page=${prevPage}` : ''
+      const pageNextLink = page ? `&page=${nextPage}` : ''
+      const sortLink = sort ? `&sort=${sortPrice}` : ''
+      const queryLink = query ? `&query=${query}` : ''
+
       // seteo link pagina previa
       let prevLink = "";
-      if (hasPrevPage && sortOptions.price ) {
-        prevLink = `${process.env.URL_BASE}?limit=${limitOptions}&page=${prevPage}&sort=${sortPrice}`;
-      } else if (hasPrevPage) {
-        prevLink = `${process.env.URL_BASE}?limit=${limitOptions}&page=${prevPage}`
+      if (hasPrevPage) {
+        prevLink = `${process.env.URL_BASE}?${limitLink}${pagePrevLink}${sortLink}${queryLink}`;
       } else {
         prevLink = null;
       }
@@ -77,10 +90,8 @@ class ProductManager {
       // seteo link pagina posterior
       let nextLink = "";
 
-      if (hasNextPage && sortOptions.price) {
-        nextLink = `${process.env.URL_BASE}?limit=${limitOptions}&page=${nextPage}&sort=${sortPrice}`;
-      } else if (hasNextPage) {
-        nextLink = `${process.env.URL_BASE}?limit=${limitOptions}&page=${nextPage}`;
+      if (hasNextPage) {
+        nextLink = `${process.env.URL_BASE}?${limitLink}${pageNextLink}${sortLink}${queryLink}`;
       } else {
         nextLink = null;
       }
