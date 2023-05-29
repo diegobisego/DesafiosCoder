@@ -6,11 +6,11 @@ const collection = 'carts'
 //esquema de products
 const schema = new mongoose.Schema({
     id: { type: Number, unique: true },
-    products: Array
-}, {timestamps:{createdAt:'createDate', updatedAt:'updateDate'}})
+    products: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Products' }]
+  }, { timestamps: { createdAt: 'createDate', updatedAt: 'updateDate' } });
 
 
-const productModel = mongoose.model(collection,schema)
+const cartModel = mongoose.model(collection,schema)
 
 
-export default productModel
+export default cartModel

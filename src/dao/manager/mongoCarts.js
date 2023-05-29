@@ -126,10 +126,10 @@ class CartManager {
   };
 
   // get cart by id
-  getCartsById = async (id) => {
+  getCartsById = async (cid) => {
     try {
       // busca el carrito
-      const cartFind = await cartModel.findOne({ id }).lean();
+      const cartFind = await cartModel.findOne({id:cid}).populate('products');
 
       if (cartFind) {
         return {
