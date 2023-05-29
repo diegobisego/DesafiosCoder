@@ -1,5 +1,5 @@
 //mongoose
-import productModel from "../../models/product.js";
+import productModel from "../models/product.js";
 import dotenv from "dotenv";
 dotenv.config();
 
@@ -226,7 +226,7 @@ class ProductManager {
     } catch (error) {
       return {
         success: false,
-        message: `Se produjo un error al intentar leer el archivo: ${error}`,
+        message: `Se produjo un error al intentar actualizar el producto: ${error}`,
       };
     }
   };

@@ -1,4 +1,4 @@
-import cartModel from "../../models/carts.js";
+import cartModel from "../models/carts.js";
 import ProductManager from "./mongoProducts.js";
 
 const mongoManagerProducts = new ProductManager();
@@ -6,6 +6,72 @@ const mongoManagerProducts = new ProductManager();
 class CartManager {
   constructor() {}
 
+  // delete product in cart
+  deleteProductInCart = async (cid, pid) => {
+    try {
+      const updateCart = { $pull: { products: { code: pid } } };
+
+      const result = await cartModel.findOneAndUpdate({ id: cid }, updateCart);
+
+      if (result) {
+        return {
+          success: true,
+          message: "Producto eliminado con exito",
+        };
+      }
+
+      return {
+        success: false,
+        message: "El producto no existe dentro del carrito",
+      };
+    } catch (error) {
+      return {
+        success: false,
+        message: `Error en manager: ${error}`,
+      };
+    }
+  };
+
+  // update quantity product in cart
+  putProductInCart = async (cid, pcode, quantity) => {
+    try {
+      const exist = await cartModel.findOne({ id: cid });
+
+      if (!exist) {
+        return {
+          success: false,
+          message: "El carrito con codigo indicado no existe",
+        };
+      }
+
+      const cart = { id: cid }; // Consulta para encontrar el carrito
+      const updateQuantity = {
+        $set: { "products.$[elem].stock": quantity },
+      }; // El campo stock y su nuevo valor
+      const findProduct = { arrayFilters: [{ "elem.code": pcode }] }; // Filtro para identificar el producto dentro del array
+
+      const result = await cartModel.findOneAndUpdate(cart, updateQuantity, findProduct);
+
+      if (result.products[0].code == pcode) {
+        return {
+          success: true,
+          message: "Producto actualizado con exito",
+        };
+      }
+
+      return {
+        success: false,
+        message: "El producto no existe dentro del carrito",
+      }
+    }
+    catch(error) {
+      return {
+        success: false,
+        message: `Error en manager: ${error}`,
+      };
+    }
+  
+  }
   // get carts
   getCarts = async () => {
     try {
@@ -115,7 +181,8 @@ class CartManager {
 
   // delete cart
   deleteCart = async (cid) => {
-    const result = await cartModel.findOneAndDelete({ id: cid });
+    try {
+      const result = await cartModel.findOneAndDelete({ id: cid });
 
     if (result) {
       return {
@@ -128,47 +195,14 @@ class CartManager {
       success: false,
       message: "Carrito no encontrado",
     };
-  };
-
-  // delete product in cart
-  deleteProductInCart = async (cid,pid) => {
-
-    try {
-
-      const updateCart = {$pull: { products: {code: pid}}}
-
-      const result = await cartModel.findOneAndUpdate(
-        {id:cid}, 
-        updateCart
-      )
-
-    if (result) {
-      return {
-        success: true,
-        message: 'Producto eliminado con exito'
-      }
-    }
-
-    return {
-      success: false,
-      message: 'El producto no existe dentro del carrito'
-    }
-
-
     } catch (error) {
       return {
         success: false,
-        message: `Error en manager: ${error}`
-      }
+        message: `Se produjo un error al intentar borrar el carrito: ${error}`,
+      };
     }
     
-    
-
-    
-
-
-
-  }
+  };
 }
 
 export default CartManager;
