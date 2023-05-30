@@ -22,15 +22,9 @@ router.get("/products", async (req, res) => {
     const { limit, page, sort, query } = req.query;
 
     const result = await newProductManager.getProducts(limit, page, sort, query);
-    console.log(result)
     const products = result.data;
-
-    const prevLink = result.prevLink
-    const nextLink = result.nextLink
-    const hasPrevPage = result.hasPrevPage
-    const hasNextPage = result.hasNextPage
     
-    res.render("products", { products,prevLink,nextLink,hasPrevPage,hasNextPage });
+    res.render("products", { products});
   } catch (error) {
     res.render(`Se produjo un error en la obtencion de productos: ${error}`);
   }

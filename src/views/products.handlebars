@@ -3,29 +3,42 @@
   <div class="grid grid-cols-3 gap-4" id="product-list">
     {{#each products}}
       <div class="bg-white rounded-lg shadow-lg p-6 m-4">
-        <h2 class="text-xl font-bold mb-2">{{title}}</h2>
-        <p class="text-gray-600">{{description}}</p>
-        <p class="text-green-600 font-bold mt-4">${{price}}</p>
+        <h2 class="text-xl font-bold mb-2">{{this.title}}</h2>
+        <p class="text-gray-600">{{this.description}}</p>
+        <p class="text-green-600 font-bold mt-4">${{this.price}}</p>
+        <button class="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded" id="btn-{{this._id}}">
+          Detalle
+        </button>
       </div>
     {{/each}}
   </div>
+
   <div class="inline-flex">
-    
+
     {{#if hasPrevPage}}
       <a
         href={{prevLink}}
         class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
       >Anterior</a>
     {{else}}
-      <a class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Anterior</a>
+      <a
+        class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
+      >Anterior</a>
     {{/if}}
 
     {{#if hasNextPage}}
-      <a href={{nextLink}} class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
+      <a
+        href={{nextLink}}
+        class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
       >Siguiente</a>
     {{else}}
-      <a class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Siguiente</a>
+      <a
+        class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
+      >Siguiente</a>
     {{/if}}
 
   </div>
 </div>
+
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script src="js/detailsProduct.js" type="module"></script>
