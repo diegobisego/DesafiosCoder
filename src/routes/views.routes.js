@@ -21,14 +21,14 @@ router.get("/products", async (req, res) => {
   try {
     const { limit, page, sort, query } = req.query;
 
-    const result = await newProductManager.getProducts(limit, page, sort, query);
-    const products = result.data;
+    const products = await newProductManager.getProducts(limit, page, sort, query);
     
     res.render("products", { products});
   } catch (error) {
     res.render(`Se produjo un error en la obtencion de productos: ${error}`);
   }
 });
+
 
 // realtime products
 router.get("/", async (_req, res) => {

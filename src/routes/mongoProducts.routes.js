@@ -6,28 +6,8 @@ const router = Router();
 
 const ProductManager = new MongoProductManager()
 
-// obtener productos
-router.get("/:limit?/:page?/:sort?", async (req, res) => {
-  try {
-    
-    const { limit, page, sort } = req.params
-
-    const {success,message,data} = await ProductManager.getProducts(limit,page,sort)
-    res.status(200).json({
-      success,
-      message,
-      data
-    })
-
-  } catch (error) {
-    console.error(
-      `Se verifica un error al intentar obtener los productos: ${error}`
-    );
-  }
-});
-
 // obtener 1 producto
-router.get("/:pid", async (req, res) => {
+router.get("/product/:pid", async (req, res) => {
   try {
     const { pid } = req.params;
     const result = await ProductManager.getProductById(pid);
@@ -47,6 +27,29 @@ router.get("/:pid", async (req, res) => {
   } catch (error) {
     console.error(
       `Se verifica un error al intentar obtener el producto: ${error}`
+    );
+  }
+});
+
+// obtener productos
+router.get("/:limit?/:page?/:sort?", async (req, res) => {
+  try {
+    
+    const { limit, page, sort } = req.params
+
+    const result = await ProductManager.getProducts(limit,page,sort)
+
+    console.log(result)
+
+    res.status(200).json({
+      success: result.success,
+      message: result.message,
+      data: result.data
+    })
+
+  } catch (error) {
+    console.error(
+      `Se verifica un error al intentar obtener los productos: ${error}`
     );
   }
 });

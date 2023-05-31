@@ -1,7 +1,7 @@
 <div class="container mx-auto">
   <h1 class="text-5xl font-bold my-4 text-center">PRODUCTOS</h1>
   <div class="grid grid-cols-3 gap-4" id="product-list">
-    {{#each products}}
+    {{#each products.data}}
       <div class="bg-white rounded-lg shadow-lg p-6 m-4">
         <h2 class="text-xl font-bold mb-2">{{this.title}}</h2>
         <p class="text-gray-600">{{this.description}}</p>
@@ -15,9 +15,9 @@
 
   <div class="inline-flex">
 
-    {{#if hasPrevPage}}
+    {{#if products.hasPrevPage}}
       <a
-        href={{prevLink}}
+        href={{products.prevLink}}
         class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
       >Anterior</a>
     {{else}}
@@ -26,9 +26,9 @@
       >Anterior</a>
     {{/if}}
 
-    {{#if hasNextPage}}
+    {{#if products.hasNextPage}}
       <a
-        href={{nextLink}}
+        href={{products.nextLink}}
         class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
       >Siguiente</a>
     {{else}}

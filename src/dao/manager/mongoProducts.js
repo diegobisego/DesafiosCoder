@@ -172,9 +172,9 @@ class ProductManager {
   };
 
   // get product by id
-  getProductById = async (code) => {
+  getProductById = async (pid) => {
     try {
-      const exist = await productModel.findOne({ code });
+      const exist = await productModel.findById(pid);
 
       // console.log(productFind)
       if (exist) {
