@@ -1,10 +1,12 @@
 import express from "express";
 import morgan from "morgan"; //morgan para debug
-import __dirname from "./utils.js";
+import __dirname from "./dirname.js";
 const app = express();
 import mongoose from "mongoose";
 import dotenv from "dotenv";
 dotenv.config();
+
+
 
 //mongod
 const MONGOURI = process.env.MONGO_URI;

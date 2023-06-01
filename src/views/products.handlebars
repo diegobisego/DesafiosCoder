@@ -1,13 +1,14 @@
+
 <div class="container mx-auto">
-  <h1 class="text-5xl font-bold my-4 text-center">PRODUCTOS</h1>
+  <h1 class="text-5xl font-bold my-4 text-center">PRODUCTS</h1>
   <div class="grid grid-cols-3 gap-4" id="product-list">
     {{#each products.data}}
       <div class="bg-white rounded-lg shadow-lg p-6 m-4">
         <h2 class="text-xl font-bold mb-2">{{this.title}}</h2>
         <p class="text-gray-600">{{this.description}}</p>
-        <p class="text-green-600 font-bold mt-4">${{this.price}}</p>
+        <p class="text-green-600 font-bold mt-4">Price: ${{this.price}}</p>
         <button class="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded" id="btn-{{this._id}}">
-          Detalle
+          Details
         </button>
       </div>
     {{/each}}
@@ -19,22 +20,22 @@
       <a
         href={{products.prevLink}}
         class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
-      >Anterior</a>
+      >Prev</a>
     {{else}}
       <a
         class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
-      >Anterior</a>
+      >Prev</a>
     {{/if}}
 
     {{#if products.hasNextPage}}
       <a
         href={{products.nextLink}}
         class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
-      >Siguiente</a>
+      >Next</a>
     {{else}}
       <a
         class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
-      >Siguiente</a>
+      >Next</a>
     {{/if}}
 
   </div>

@@ -1,3 +1,8 @@
+import alertDetailsProduct from "./alerts.js";
+
+const productsCart = []
+
+
 document.addEventListener("DOMContentLoaded", function () {
   const buttons = document.querySelectorAll('[id^="btn-"]');
 
@@ -7,18 +12,15 @@ document.addEventListener("DOMContentLoaded", function () {
       const id = buttonId.slice(4)
 
       axios
-        .get(`/api/products/${id}`)
+        .get(`/api/products/product/${id}`)
         .then(function (response) {
-
-          console.log(response);
+          const { title,description,price,stock, thumbnails } = response.data.data
+          const result = alertDetailsProduct(title,description,price,stock,thumbnails[0])
+          console.log(result)
         })
         .catch(function (error) {
-
-          console.log(error);
+          console.log('Error en la peticion Axios: ' + error);
         })
-        .finally(function () {
-
-        });
     });
   });
 });
