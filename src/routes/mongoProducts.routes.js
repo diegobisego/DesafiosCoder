@@ -7,10 +7,10 @@ const router = Router();
 const ProductManager = new MongoProductManager()
 
 // obtener 1 producto
-router.get("/product/:pid", async (req, res) => {
+router.get("/:id", async (req, res) => {
   try {
-    const { pid } = req.params;
-    const result = await ProductManager.getProductById(pid);
+    const { id } = req.params;
+    const result = await ProductManager.getProductById(id);
 
     if (!result) {
       return res.status(404).json({
@@ -32,14 +32,14 @@ router.get("/product/:pid", async (req, res) => {
 });
 
 // obtener productos
-router.get("/:limit?/:page?/:sort?", async (req, res) => {
+router.get("/", async (req, res) => {
   try {
     
-    const { limit, page, sort } = req.params
+    const { limit, page, sort, query } = req.query
 
-    const result = await ProductManager.getProducts(limit,page,sort)
+    const result = await ProductManager.getProducts(limit,page,sort, query)
 
-    console.log(result)
+
 
     res.status(200).json({
       success: result.success,
@@ -111,13 +111,13 @@ router.post(
 );
 
 // editar un producto
-router.put("/:pcode", async (req, res) => {
+router.put("/:id", async (req, res) => {
   //parametro y body
-  const { pcode } = req.params;
+  const { id } = req.params;
   const object = req.body;
 
   //actualizacion de producto
-  const result = await ProductManager.updateProduct(pcode, object);
+  const result = await ProductManager.updateProduct(id, object);
 
   //respuesta segun result
   if (result.success) {
@@ -134,10 +134,10 @@ router.put("/:pcode", async (req, res) => {
 });
 
 // delete de productos
-router.delete("/:pcode", async (req, res) => {
-  const { pcode } = req.params;
+router.delete("/:id", async (req, res) => {
+  const { id } = req.params;
 
-  const result = await ProductManager.deleteProduct(pcode);
+  const result = await ProductManager.deleteProduct(id);
 
   // const arrayProducts = await products.getProducts()
   // req.io.emit("arrayProducts", arrayProducts)

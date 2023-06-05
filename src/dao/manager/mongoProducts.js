@@ -74,8 +74,8 @@ class ProductManager {
 
       //armando links
       const limitLink = limit ? `limit=${limitOptions}` : ''
-      const pagePrevLink = page ? `&page=${prevPage}` : ''
-      const pageNextLink = page ? `&page=${nextPage}` : ''
+      const pagePrevLink = prevPage ? `&page=${prevPage}` : ''
+      const pageNextLink = nextPage ? `&page=${nextPage}` : ''
       const sortLink = sort ? `&sort=${sortPrice}` : ''
       const queryLink = query ? `&query=${query}` : ''
 
@@ -172,9 +172,9 @@ class ProductManager {
   };
 
   // get product by id
-  getProductById = async (pid) => {
+  getProductById = async (id) => {
     try {
-      const exist = await productModel.findById(pid);
+      const exist = await productModel.findById(id);
 
       // console.log(productFind)
       if (exist) {
@@ -198,7 +198,7 @@ class ProductManager {
   };
 
   // update product
-  updateProduct = async (code, object) => {
+  updateProduct = async (id, object) => {
     //validamos que no contenga id el body
     if (object.hasOwnProperty("_id")) {
       return {
@@ -208,7 +208,7 @@ class ProductManager {
     }
 
     try {
-      const exist = await productModel.findOne({ code });
+      const exist = await productModel.findById({ id });
 
       if (!exist) {
         return {
@@ -232,9 +232,9 @@ class ProductManager {
   };
 
   // delete product
-  deleteProduct = async (code) => {
+  deleteProduct = async (id) => {
     try {
-      const exist = await productModel.findOneAndDelete({ code });
+      const exist = await productModel.findByIdAndDelete({ id });
 
       if (exist) {
         return {

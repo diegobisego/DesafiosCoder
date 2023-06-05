@@ -102,10 +102,8 @@ class CartManager {
   addCarts = async () => {
     try {
       const carts = await this.getCarts();
-      const countCarts = carts.data.length + 1;
 
       const newCart = {
-        id: countCarts,
         products: [],
       };
 
@@ -156,7 +154,7 @@ class CartManager {
       const { data } = await mongoManagerProducts.getProductById(pid);
 
       if (data) {
-        await cartModel.findOneAndUpdate(
+        await cartModel.findByIdAndUpdate(
           { id: cid },
           { $push: { products: data } }
         );
@@ -182,7 +180,7 @@ class CartManager {
   // delete cart
   deleteCart = async (cid) => {
     try {
-      const result = await cartModel.findOneAndDelete({ id: cid });
+      const result = await cartModel.findByIdAndDelete({ cid });
 
     if (result) {
       return {
