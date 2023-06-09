@@ -6,6 +6,11 @@ const router = Router();
 // const newProductManager = new ProductManager("src/db/products.json")
 const newProductManager = new ProductManager();
 
+// register
+router.get('/login', async (req,res) => {
+  res.render('login')
+})
+
 // home de products con fs
 router.get("/", async (_req, res) => {
   const resultProducts = await newProductManager.getProducts();
@@ -19,6 +24,11 @@ router.get("/", async (_req, res) => {
 // products con mongo
 router.get("/products", async (req, res) => {
   try {
+
+    // se genera la sesion, aca deberian venir los datos del user una vez 
+    // validados que exista en mongo
+    req.session.papa = {conqueso:true}
+
     const { limit, page, sort, query } = req.query;
 
     const products = await newProductManager.getProducts(limit, page, sort, query);

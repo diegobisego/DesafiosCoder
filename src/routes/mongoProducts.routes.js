@@ -34,7 +34,8 @@ router.get("/:id", async (req, res) => {
 // obtener productos
 router.get("/", async (req, res) => {
   try {
-    
+  
+
     const { limit, page, sort, query } = req.query
 
     const result = await ProductManager.getProducts(limit,page,sort, query)
