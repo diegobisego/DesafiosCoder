@@ -4,6 +4,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
 
+    {{! axios }}
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
     {{! sweetalert2 }}
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <title>{{title}}</title>
@@ -13,22 +16,19 @@
       rel="stylesheet"
       href="https://unpkg.com/tailwindcss@2.2.19/dist/tailwind.min.css"
     />
-    {{! bttn css }}
-    <link rel="stylesheet" href="https://cdnjs.com/libraries/bttn.css" />
 
-    {{!-- axios --}}
-    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    {{!-- animejs --}}
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"
+    ></script>
+    <link rel="stylesheet" href="css/bienvenida.css">
 
   </head>
   <body>
 
     {{{body}}}
 
-    {{! para welcome }}
-    <script
-      src="https://cdnjs.cloudflare.com/ajax/libs/animejs/2.0.2/anime.min.js"
-    ></script>
     <script src="js/alerts.js"></script>
-    <script src="js/login.js"></script>
+
   </body>
 </html>

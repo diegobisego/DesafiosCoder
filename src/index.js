@@ -9,6 +9,7 @@ import cartsRouter from './routes/carts.routes.js'
 import realTimeProductsRouter from './routes/realTimeProducts.routes.js'
 import mongoProducts from './routes/mongoProducts.routes.js' 
 import mongoCarts from './routes/mongoCarts.routes.js' 
+import sessions from './routes/sessions.routes.js' 
 
 
 //use de rutas
@@ -18,6 +19,7 @@ router.use('/api/health', healthRouter)
       .use('/realTimeProducts', realTimeProductsRouter)
       .use('/api/products', mongoProducts)
       .use('/api/carts', mongoCarts)
+      .use('/api/session', sessions)
 
       
 

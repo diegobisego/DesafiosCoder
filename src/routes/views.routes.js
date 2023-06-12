@@ -1,6 +1,7 @@
 import { Router } from "express";
 // import ProductManager from "./../dao/manager/ProductManager.js";
 import ProductManager from "./../dao/manager/mongoProducts.js";
+import { requireLogin } from "../helpers/midSession.js";
 
 const router = Router();
 // const newProductManager = new ProductManager("src/db/products.json")
@@ -9,6 +10,13 @@ const newProductManager = new ProductManager();
 // register
 router.get('/login', async (req,res) => {
   res.render('login')
+})
+
+// bienvenido
+router.get('/welcome', (req,res) => {
+  res.render('welcome', {
+    user: req.session.user
+  })
 })
 
 // home de products con fs

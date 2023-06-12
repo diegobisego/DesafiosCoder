@@ -1,5 +1,3 @@
-import alertDetailsProduct from "./alerts.js";
-
 document.addEventListener("DOMContentLoaded", function () {
   const buttons = document.querySelectorAll('[id^="btn-"]');
 

@@ -4,6 +4,7 @@ import { body, validationResult } from "express-validator";
 const router = Router();
 
 
+
 const ProductManager = new MongoProductManager()
 
 // obtener 1 producto

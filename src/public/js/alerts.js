@@ -46,22 +46,50 @@ const alertRegister = () => {
     focusConfirm: false,
     preConfirm: () => {
       const name = Swal.getPopup().querySelector('#name').value;
-      const lastname = Swal.getPopup().querySelector('#lastname').value;
-      const login = Swal.getPopup().querySelector('#login').value;
+      const lastName = Swal.getPopup().querySelector('#lastname').value;
+      const email = Swal.getPopup().querySelector('#login').value;
       const password = Swal.getPopup().querySelector('#password').value;
-      
-      if (!name || !lastname || !login || !password) {
-        Swal.showValidationMessage(`Por favor, complete todos los`);
+  
+      // Expresión regular para validar el formato de correo electrónico
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  
+      if (!name || !lastName || !email || !password) {
+        Swal.showValidationMessage('Por favor, complete todos los datos');
+        return false;
       }
-      
-      return { name: name, lastname: lastname, login: login, password: password };
+  
+      if (!email.match(emailRegex)) {
+        Swal.showValidationMessage('El correo electrónico ingresado no es válido');
+        return false;
+      }
+  
+      return { name, lastName, email, password };
     }
+  
   }).then((result) => {
     if (result.dismiss !== Swal.DismissReason.cancel) {
       const newUser = result.value
-      console.log(newUser)
-      axios.post('/register', {newUser})
-      .then((response) => console.log('usuario agregado con exito'))
+      axios.post('/api/session/register', newUser)
+      .then((response) => {
+        console.log(response.data)
+        if (response.data.success) {
+          Swal.fire({
+            position: 'top',
+            icon: 'success',
+            title: `${response.data.message}`,
+            showConfirmButton: false,
+            timer: 1500,
+            toast: true
+          })
+        } else {
+          Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: `${response.data.message}`,
+            footer: '<a href="http://localhost:8080/login">Has click aqui para ir al logIn</a>'
+          })
+        }
+      })
       .catch((err) => `Hubo un error al agregar al usuario: ${err}`)
     }
   });

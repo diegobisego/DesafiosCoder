@@ -82,7 +82,7 @@ class ProductManager {
       // seteo link pagina previa
       let prevLink = "";
       if (hasPrevPage) {
-        prevLink = `${process.env.URL_BASE}?${limitLink}${pagePrevLink}${sortLink}${queryLink}`;
+        prevLink = `${process.env.URL_BASE}/products?${limitLink}${pagePrevLink}${sortLink}${queryLink}`;
       } else {
         prevLink = null;
       }
@@ -91,7 +91,7 @@ class ProductManager {
       let nextLink = "";
 
       if (hasNextPage) {
-        nextLink = `${process.env.URL_BASE}?${limitLink}${pageNextLink}${sortLink}${queryLink}`;
+        nextLink = `${process.env.URL_BASE}/products?${limitLink}${pageNextLink}${sortLink}${queryLink}`;
       } else {
         nextLink = null;
       }
