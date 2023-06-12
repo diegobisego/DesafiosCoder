@@ -6,9 +6,10 @@ const collection = 'users'
 //esquema de products
 const schema = new mongoose.Schema({
     name: { type: String},
-    lastName: { type: String},
+    lastname: { type: String},
     email: { type: String, unique: true},
     password: { type: String},
+    role:{ type: String},
   }, { timestamps: { createdAt: 'createDate', updatedAt: 'updateDate' } });
 
 

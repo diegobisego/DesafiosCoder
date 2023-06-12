@@ -1,33 +1,32 @@
 import { Router } from "express";
-import userModel from "../dao/models/user.js";
+import User from "../dao/manager/mongoUsers.js";
 
 const router = Router();
 
+const newUser = new User();
+
 router.post("/register", async (req, res) => {
   try {
-    const { name, lastName, email, password } = req.body;
+    const { name, lastName, email, password, role } = req.body;
 
-    const exist = await userModel.findOne({ email });
-
-    if (exist) {
-      return res.status(200).json({
-        success: false,
-        message: "El usuario que intenta crear ya existe",
-      });
-    }
-
-    const result = await userModel.create({ name, lastName, email, password });
+    const result = await newUser.createUser(
+      name,
+      lastName,
+      email,
+      password,
+      role
+    );
 
     if (result) {
       return res.status(201).json({
-        success: true,
-        message: "Usuario creado con exito",
+        success: result.success,
+        message: result.message,
       });
     }
 
     res.status(500).json({
-      success: false,
-      message: "Error al intentar crear un usuario",
+      success: result.success,
+      message: result.message,
     });
   } catch (error) {
     console.log(`Error en ruta registro: ${error}`);
@@ -35,32 +34,44 @@ router.post("/register", async (req, res) => {
 });
 
 router.post("/login", async (req, res) => {
-  const { email, password } = req.body;
+  try {
+    const { email, password } = req.body;
 
-  const user = await userModel.findOne({ email });
+    const result = await newUser.loginUser( email, password );
 
-  if (user) {
-    if (user.password === password) {
+
+    if (result.success) {
       req.session.user = {
-        name: `${user.name} ${user.lastName}`,
+        name: `${result.data.name} ${result.data.lastname}`,
         email,
       };
-
+      //aca todo ok
       return res.status(200).json({
-        success: true, 
-        message: "Usuario y contraseña correctas",
-      });
-    } else {
-      return res.status(200).json({
-        success: false,
-        message: "Contraseña incorrecta",
+        success: result.success,
+        message: result.message,
       });
     }
-  }
 
-  return res
-    .status(404)
-    .json({ success: false, message: "El usuario ingresado no existe" });
+    res.status(404).json({
+      success: result.success,
+      message: result.message,
+    });
+  } catch (error) {
+    console.log(`Error en ruta login: ${error}`);
+  }
+});
+
+
+// Ruta para destruir la sesión
+router.post('/logout', (req, res) => {
+  req.session.destroy((error) => {
+    if (error) {
+      console.error('Error al destruir la sesión:', error);
+      return res.status(500).json({ message: 'Error al destruir la sesión' });
+    }
+    res.clearCookie('connect.sid'); // Elimina la cookie de sesión en el cliente
+    res.status(200).json({ success: true, message: 'Sesión destruida exitosamente' });
+  });
 });
 
 export default router;

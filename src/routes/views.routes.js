@@ -8,12 +8,12 @@ const router = Router();
 const newProductManager = new ProductManager();
 
 // register
-router.get('/login', async (req,res) => {
+router.get('/login', async (_req,res) => {
   res.render('login')
 })
 
 // bienvenido
-router.get('/welcome', (req,res) => {
+router.get('/welcome', requireLogin, (req,res) => {
   res.render('welcome', {
     user: req.session.user
   })
@@ -30,18 +30,18 @@ router.get("/", async (_req, res) => {
 });
 
 // products con mongo
-router.get("/products", async (req, res) => {
+router.get("/products",requireLogin, async (req, res) => {
   try {
 
-    // se genera la sesion, aca deberian venir los datos del user una vez 
-    // validados que exista en mongo
-    req.session.papa = {conqueso:true}
+    const user = req.session.user;
+    const userLetter = user.name.charAt(0).toUpperCase(); 
+
 
     const { limit, page, sort, query } = req.query;
 
     const products = await newProductManager.getProducts(limit, page, sort, query);
     
-    res.render("products", { products});
+    res.render("products", { products, userLetter });
   } catch (error) {
     res.render(`Se produjo un error en la obtencion de productos: ${error}`);
   }

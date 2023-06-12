@@ -25,3 +25,8 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 });
 
+const btnLogout = document.getElementById('btnUser')
+
+btnUser.addEventListener('click', () => {
+  alertLogout()
+})

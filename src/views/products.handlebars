@@ -1,20 +1,33 @@
+{{! navbar }}
 
 <div class="container mx-auto">
-  <h1 class="text-5xl font-bold my-4 text-center">PRODUCTS</h1>
+  <nav id="navUser" class="flex justify-end">
+    <button id="btnUser" class="flex items-center justify-center w-10 h-10 rounded-full bg-black text-white mr-2 mt-2">
+      <span class="text-xl font-bold">{{userLetter}}</span>
+    </button>
+  </nav>
+</div>
+
+{{! end navbar }}
+
+<div class="container mx-auto">
   <div class="grid grid-cols-3 gap-4" id="product-list">
     {{#each products.data}}
       <div class="bg-white rounded-lg shadow-lg p-6 m-4">
         <h2 class="text-xl font-bold mb-2">{{this.title}}</h2>
         <p class="text-gray-600">{{this.description}}</p>
         <p class="text-green-600 font-bold mt-4">Price: ${{this.price}}</p>
-        <button class="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded" id="btn-{{this._id}}">
+        <button
+          class="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded"
+          id="btn-{{this._id}}"
+        >
           Details
         </button>
       </div>
     {{/each}}
   </div>
 
-  <div class="inline-flex">
+  <div class="inline-flex justify-center">
 
     {{#if products.hasPrevPage}}
       <a
@@ -42,5 +55,4 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-{{!-- <script src="js/alerts.js"></script> --}}
-<script src="js/detailsProduct.js" type="module"></script>
+<script src="js/products.js" type="module"></script>
