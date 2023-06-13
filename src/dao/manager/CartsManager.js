@@ -108,7 +108,7 @@ class CartManager {
       const carts = result.data;
 
       // verifica si el codigo existe
-      const cartFind = carts.find((value) => value.id == id);
+      const cartFind = carts.find((value) => value._id == id);
 
       if (cartFind) {
         return {

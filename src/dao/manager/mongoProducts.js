@@ -1,5 +1,5 @@
 //mongoose
-import productModel from "../models/product.js";
+import productModel from "../models/products.js";
 import dotenv from "dotenv";
 dotenv.config();
 
@@ -208,7 +208,7 @@ class ProductManager {
     }
 
     try {
-      const exist = await productModel.findById({ id });
+      const exist = await productModel.findById( id );
 
       if (!exist) {
         return {
@@ -217,7 +217,7 @@ class ProductManager {
         };
       }
 
-      await productModel.findOneAndUpdate({ code }, object);
+      await productModel.findByIdAndUpdate(id, object);
 
       return {
         success: true,
@@ -234,7 +234,7 @@ class ProductManager {
   // delete product
   deleteProduct = async (id) => {
     try {
-      const exist = await productModel.findByIdAndDelete({ id });
+      const exist = await productModel.findByIdAndDelete( id );
 
       if (exist) {
         return {
@@ -250,7 +250,7 @@ class ProductManager {
     } catch (error) {
       return {
         success: false,
-        message: "Hubo un error al eliminar el producto",
+        message: `Hubo un error al eliminar el producto: ${error}`,
       };
     }
   };

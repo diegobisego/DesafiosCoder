@@ -6,11 +6,9 @@ import mongoose from "mongoose";
 import dotenv from "dotenv";
 dotenv.config();
 
-
-
 //mongod
 const MONGOURI = process.env.MONGO_URI;
-const connection = mongoose.connect(MONGOURI, {
+mongoose.connect(MONGOURI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
   dbName: "ecommerce",
@@ -22,6 +20,8 @@ import viewsRouter from "./routes/views.routes.js";
 app.engine("handlebars", handlebars.engine());
 app.set("views", `${__dirname}/views`);
 app.set("view engine", "handlebars");
+
+//ruta handlebars
 app.use("/", viewsRouter);
 
 //socket.io
@@ -32,7 +32,7 @@ const PORT = process.env.PORT || 8080;
 const server = app.listen(PORT, () => console.log(`Listening on ${PORT}`));
 const io = new Server(server);
 
-app.use((req, res, next) => {
+app.use((req, _res, next) => {
   //La intención será REFERENCIAR NUESTRO io
   req.io = io;
   next();
@@ -46,9 +46,7 @@ app.use(express.static(`${__dirname}/public`));
 
 //rutas
 import routes from "./index.js";
-app.use("/", routes)
-
-
+app.use("/", routes);
 
 //socket chat
 io.on("connection", (socket) => {
