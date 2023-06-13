@@ -22,7 +22,7 @@ class User {
         lastname,
         email,
         password,
-        role: role || "usuario",
+        role,
       });
 
       if (result) {

@@ -2,13 +2,14 @@ import { Router } from "express";
 // import ProductManager from "./../dao/manager/ProductManager.js";
 import ProductManager from "./../dao/manager/mongoProducts.js";
 import { requireLogin } from "../helpers/midSession.js";
+import {isLogin} from './../helpers/midSession.js'
 
 const router = Router();
 // const newProductManager = new ProductManager("src/db/products.json")
 const newProductManager = new ProductManager();
 
 // register
-router.get('/login', async (_req,res) => {
+router.get('/login',isLogin, async (_req,res) => {
   res.render('login')
 })
 

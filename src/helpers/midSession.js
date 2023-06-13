@@ -5,3 +5,7 @@ export const requireLogin = (req, res, next) => {
     next();
   };
   
+export const isLogin = (req,res,next) => {
+    if (!req.session.user) next()
+    else return res.redirect('/products')
+}  

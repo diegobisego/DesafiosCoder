@@ -1,6 +1,7 @@
 import { Router } from "express";
 import User from "../dao/manager/mongoUsers.js";
 
+
 const router = Router();
 
 const newUser = new User();
@@ -33,7 +34,7 @@ router.post("/register", async (req, res) => {
   }
 });
 
-router.post("/login", async (req, res) => {
+router.post("/login",  async (req, res) => {
   try {
     const { email, password } = req.body;
 
@@ -52,7 +53,7 @@ router.post("/login", async (req, res) => {
       });
     }
 
-    res.status(404).json({
+    res.status(401).json({
       success: result.success,
       message: result.message,
     });
