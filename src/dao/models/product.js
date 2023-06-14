@@ -1,21 +1,21 @@
 import mongoose from "mongoose";
 
-//a quien apunto a la base
-const collection = 'products'
+const productCollection = "products";
 
-//esquema de products
-const productsSchema = new mongoose.Schema({
+const productSchema = new mongoose.Schema(
+  {
     title: String,
     description: String,
     code: String,
     price: Number,
     status: Boolean,
-    stock: Number,
+    stock: {type: Number, default: 1},
     category: String,
     thumbnails: Array
-}, { timestamps: { createdAt: 'createDate', updatedAt: 'updateDate' } });
+  },
+  { timestamps: { createdAt: "createDate", updatedAt: "updateDate" } }
+);
 
-const productModel = mongoose.model(collection,productsSchema)
+const ProductModel = mongoose.model(productCollection, productSchema);
 
-
-export default productModel
+export default ProductModel;
