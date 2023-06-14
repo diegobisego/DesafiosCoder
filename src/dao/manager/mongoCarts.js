@@ -1,6 +1,7 @@
 import ProductModel from "../models/products.js";
 import CartModel from "../models/carts.js";
 
+
 class CartManager {
   constructor() {}
 
@@ -112,32 +113,42 @@ class CartManager {
   };
 
   // update quantity product in cart
-  putProductInCart = async (cid, pid, quantity) => {
+  putProductInCart = async (cid, pid, stock) => {
     try {
       const cart = await this.getCartById(cid);
-
-      if (!cart) {
+  
+      if (!cart.success) {
         return {
           success: false,
           message: "El carrito con el ID indicado no existe",
         };
       }
-
-      const productIndex = cart.products.findIndex(
+  
+      const productIndex = cart.data.products.findIndex(
         (product) => product._id.toString() === pid
       );
-
+  
       if (productIndex === -1) {
         return {
           success: false,
           message: "El producto no existe dentro del carrito",
         };
       }
+      
 
-      cart.products[productIndex].quantity = quantity;
 
-      await cart.save();
 
+
+      const updatedCart =  CartModel.updateOne({_id:cid, "products._id": pid},{$inc:{"products.$.stock":stock}})
+
+  
+      if (!updatedCart) {
+        return {
+          success: false,
+          message: "Error al actualizar el carrito",
+        };
+      }
+  
       return {
         success: true,
         message: "Producto actualizado con éxito",
@@ -149,6 +160,9 @@ class CartManager {
       };
     }
   };
+  
+  
+  
 
   // delete cart
   deleteCart = async (cid) => {
