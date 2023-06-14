@@ -1,12 +1,19 @@
 {{! navbar }}
 
-<div class="container mx-auto">
+<div class="container mx-auto flex justify-between items-center">
+  <div>
+    <span class="text-gray-500">Role: {{role}}</span>
+  </div>
   <nav id="navUser" class="flex justify-end">
-    <button id="btnUser" class="flex items-center justify-center w-10 h-10 rounded-full bg-black text-white mr-2 mt-2">
+    <button
+      id="btnUser"
+      class="flex items-center justify-center w-10 h-10 rounded-full bg-black text-white mr-2 mt-2">
       <span class="text-xl font-bold">{{userLetter}}</span>
     </button>
   </nav>
 </div>
+
+
 
 {{! end navbar }}
 

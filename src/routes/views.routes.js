@@ -41,8 +41,10 @@ router.get("/products",requireLogin, async (req, res) => {
     const { limit, page, sort, query } = req.query;
 
     const products = await newProductManager.getProducts(limit, page, sort, query);
+
+    const role = user.role
     
-    res.render("products", { products, userLetter });
+    res.render("products", { products, userLetter , role});
   } catch (error) {
     res.render(`Se produjo un error en la obtencion de productos: ${error}`);
   }

@@ -38,13 +38,30 @@ router.post("/login",  async (req, res) => {
   try {
     const { email, password } = req.body;
 
+    if (email === 'adminCoder@coder.com' && password === 'adminCod3r123') {
+      req.session.user = {
+        name: `Admin`,
+        email: 'adminCoder@coder.com',
+        role: 'Admin'
+      };
+
+      return res.status(200).json({
+        success: true,
+        message: 'Usuario Admin configurado con exito'
+      })
+    }
+
     const result = await newUser.loginUser( email, password );
 
 
+
     if (result.success) {
+
+      //creo la sesion
       req.session.user = {
         name: `${result.data.name} ${result.data.lastname}`,
         email,
+        role: result.data.role
       };
       //aca todo ok
       return res.status(200).json({

@@ -1,5 +1,5 @@
 //mongoose
-import productModel from "../models/product.js";
+import productModel from "../models/products.js";
 import dotenv from "dotenv";
 dotenv.config();
 
