@@ -72,7 +72,7 @@ const alertRegister = () => {
       axios
         .post("/api/session/register", newUser)
         .then((response) => {
-          console.log(response.data);
+
           if (response.data.success) {
             Swal.fire({
               position: "top",

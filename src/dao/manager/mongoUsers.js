@@ -29,6 +29,7 @@ class User {
         return {
           success: true,
           message: "Usuario creado con exito",
+          data: result
         };
       }
 

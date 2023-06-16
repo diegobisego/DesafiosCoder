@@ -8,7 +8,7 @@ const router = Router();
 // const newProductManager = new ProductManager("src/db/products.json")
 const newProductManager = new ProductManager();
 
-// register
+// login y register
 router.get('/login',isLogin, async (_req,res) => {
   res.render('login')
 })

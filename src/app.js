@@ -6,7 +6,10 @@ import mongoose from "mongoose";
 import dotenv from "dotenv";
 import session from "express-session";
 import MongoStore from "connect-mongo";
+import passport from "passport";
+import { inicializePassport } from "./config/passport.config.js";
 dotenv.config();
+
 
 
 //middlewares
@@ -46,6 +49,12 @@ const connection = mongoose.connect(MONGOURI, {
   useUnifiedTopology: true,
   dbName: "ecommerce",
 });
+
+//passport
+app.use(passport.initialize())
+inicializePassport()
+
+
 
 //handlebars
 import handlebars from "express-handlebars";
