@@ -9,6 +9,7 @@ const LocalStrategy = local.Strategy; //estategia local, user + pass
 
 // inicializador de estrategias
 export const inicializePassport = () => {
+
   //passport de register
   passport.use(
     "register",
@@ -64,6 +65,7 @@ export const inicializePassport = () => {
               name: `Admin`,
               email: "adminCoder@coder.com",
               role: "Admin",
+              id: 0
             };
 
             return done(null, user);
@@ -75,7 +77,7 @@ export const inicializePassport = () => {
             //no creo la sesion, devuelvo los usuarios
             const user = {
               name: `${result.data.name} ${result.data.lastname}`,
-              email,
+              email:  result.data.email,
               role: result.data.role,
               id: result.data._id
             };
@@ -98,6 +100,12 @@ export const inicializePassport = () => {
 
   passport.deserializeUser(async function (id, done) {
     try {
+      if (id == 0) {
+        return done(null, {
+          role:'Admin',
+          name: 'Admin'
+        })
+      }
       const user = await userModel.findOne({ _id: id }); // Busca el usuario por su _id
       return done(null, user); // Devuelve el objeto de usuario completo
     } catch (error) {

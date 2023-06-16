@@ -28,6 +28,7 @@ router.get("/registerFail", (req, res) => {
 
 // ruta login con passport
 router.post("/login", passport.authenticate('login', {failureRedirect:'/api/sessions/loginFail'}) ,async (req, res) => {
+  console.log('llego a crear la sesion?')
   req.session.User = {
     name: req.user.name,
     email: req.user.email,

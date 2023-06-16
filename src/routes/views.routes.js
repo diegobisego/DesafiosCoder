@@ -16,7 +16,7 @@ router.get('/login',isLogin, async (_req,res) => {
 // bienvenido
 router.get('/welcome', requireLogin, (req,res) => {
   res.render('welcome', {
-    user: req.session.user
+    user: req.session.User
   })
 })
 
@@ -34,7 +34,7 @@ router.get("/", async (_req, res) => {
 router.get("/products",requireLogin, async (req, res) => {
   try {
 
-    const user = req.session.user;
+    const user = req.session.User;
     const userLetter = user.name.charAt(0).toUpperCase(); 
 
 
