@@ -5,7 +5,7 @@ const app = express();
 import mongoose from "mongoose";
 import dotenv from "dotenv";
 import session from "express-session";
-import MongoStore from "connect-mongo";
+// import MongoStore from "connect-mongo";
 import passport from "passport";
 import { inicializePassport } from "./config/passport.config.js";
 dotenv.config();
@@ -20,7 +20,7 @@ app.use(express.static(`${__dirname}/public`));
 
 // // cookies
 import cookieParser from "cookie-parser";
-app.use(cookieParser());
+app.use(cookieParser()); 
 
 // sessions
 // app.use(session({
@@ -29,17 +29,17 @@ app.use(cookieParser());
 //   saveUninitialized: false // permite guardar cualquier objeto de session asi este vacia
 // }))
 
-app.use(
-  session({
-    store: new MongoStore({
-      mongoUrl: process.env.MONGO_URI,
-      ttl: 3600
-    }),
-    secret: "cursoCoder@", // palabra secreta para intercambiar informacion
-    resave: false, // mantiene la sesion activa
-    saveUninitialized: false, // permite guardar cualquier objeto de session asi este vacia
-  })
-);
+// app.use(
+//   session({
+//     store: new MongoStore({
+//       mongoUrl: process.env.MONGO_URI,
+//       ttl: 3600
+//     }),
+//     secret: "cursoCoder@", // palabra secreta para intercambiar informacion
+//     resave: false, // mantiene la sesion activa
+//     saveUninitialized: false, // permite guardar cualquier objeto de session asi este vacia
+//   })
+// );
 
 //mongod
 
@@ -51,7 +51,7 @@ const connection = mongoose.connect(MONGOURI, {
 });
 
 //passport
-app.use(passport.initialize())
+// app.use(passport.initialize())
 inicializePassport()
 
 

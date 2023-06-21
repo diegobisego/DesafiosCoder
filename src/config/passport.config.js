@@ -2,6 +2,10 @@ import passport from "passport";
 import local from "passport-local";
 import userModel from "../dao/models/user.js";
 import UserManager from "./../dao/manager/mongoUsers.js";
+import GithubStrategy from "passport-github2";
+import { Strategy, ExtractJwt } from "passport-jwt";
+import { cookieStractor } from "../helpers/passportCall.js";
+
 
 const newUser = new UserManager();
 
@@ -9,7 +13,6 @@ const LocalStrategy = local.Strategy; //estategia local, user + pass
 
 // inicializador de estrategias
 export const inicializePassport = () => {
-
   //passport de register
   passport.use(
     "register",
@@ -34,7 +37,7 @@ export const inicializePassport = () => {
           );
 
           if (result) {
-            console.log("usuario de result: " + JSON.stringify(result));
+            
             // si todo va bien, devuelvo el usuario
             return done(null, result.data, {
               message: "Usuario creado con exito",
@@ -65,7 +68,7 @@ export const inicializePassport = () => {
               name: `Admin`,
               email: "adminCoder@coder.com",
               role: "Admin",
-              id: 0
+              id: 0,
             };
 
             return done(null, user);
@@ -77,9 +80,9 @@ export const inicializePassport = () => {
             //no creo la sesion, devuelvo los usuarios
             const user = {
               name: `${result.data.name} ${result.data.lastname}`,
-              email:  result.data.email,
+              email: result.data.email,
               role: result.data.role,
-              id: result.data._id
+              id: result.data._id,
             };
             //aca todo ok
             return done(null, user);
@@ -93,23 +96,74 @@ export const inicializePassport = () => {
     )
   );
 
-  passport.serializeUser(function (user, done) {
-    console.log("EL SERIALIZABLE: " + JSON.stringify(user));
-    return done(null, user.id); // Serializa el usuario por su id
-  });
+  // passport github
+  passport.use(
+    "github",
+    new GithubStrategy(
+      {
+        clientID: "Iv1.7033fac6a316272c", //quien es el cliente q esta utilizando esta estrategia
+        clientSecret: "737d33aeefafdb2db25b1bd419526e7cc804645d", //clave generada en github
+        callbackURL: "http://localhost:8080/api/session/githubcallback", // endpoint de session
+      },
+      async (accessToken, refreshToken, profile, done) => {
+        try {
+          //tomo los datos que me sirven del profile, q son los datos q me manda github del perfil del usuario
+          const { name, email } = profile._json;
 
-  passport.deserializeUser(async function (id, done) {
-    try {
-      if (id == 0) {
-        return done(null, {
-          role:'Admin',
-          name: 'Admin'
-        })
+          const user = await userModel.findOne({ email }); // verifico si el usuario existe
+
+          if (user) {
+            // si existe lo devuelvo
+            return done(null, user);
+          }
+
+          // si no existe
+          const newUser = {
+            name,
+            email,
+            password: "",
+          };
+
+          const result = await userModel.create(newUser);
+
+          // devuelvo el user
+          done(null, result);
+        } catch (error) {
+          done(error);
+        }
       }
-      const user = await userModel.findOne({ _id: id }); // Busca el usuario por su _id
-      return done(null, user); // Devuelve el objeto de usuario completo
-    } catch (error) {
-      done(error);
-    }
-  });
+    )
+  );
+
+
+  // verificacion token con passport
+  passport.use('jwt', new Strategy({
+    jwtFromRequest: ExtractJwt.fromExtractors([cookieStractor]),
+    secretOrKey: 'jwtSecret'
+  }, async(payload, done)=> {
+    return done(null, payload)
+  }))
+  
+  // serializables, esto es copiar y pegar, es algo que tiene ya predefinido passport
+
+  // se desactiva para trabajar con passport y jwt
+
+  // passport.serializeUser(function (user, done) {
+  //   return done(null, user.id); // Serializa el usuario por su id
+  // });
+
+  // passport.deserializeUser(async function (id, done) {
+  //   try {
+  //     if (id == 0) {
+  //       return done(null, {
+  //         role: "Admin",
+  //         name: "Admin",
+  //       });
+  //     }
+  //     const user = await userModel.findOne({ _id: id }); // Busca el usuario por su _id
+  //     return done(null, user); // Devuelve el objeto de usuario completo
+  //   } catch (error) {
+  //     done(error);
+  //   }
+  // });
 };

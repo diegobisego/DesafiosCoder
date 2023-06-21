@@ -1,14 +1,12 @@
-//Funcion de bienvenida una vez que se loguea el usuario
-(function bienvenida () {
+//Función de bienvenida una vez que se loguea el usuario
+function bienvenida() {
+  const textWrapper = document.querySelector(".ml14 .letters");
+  textWrapper.innerHTML = textWrapper.textContent.replace(
+    /\S/g,
+    "<span class='letter'>$&</span>"
+  );
 
-    const textWrapper = document.querySelector(".ml14 .letters");
-    textWrapper.innerHTML = textWrapper.textContent.replace(
-      /\S/g,
-      "<span class='letter'>$&</span>"
-    );
-
-  anime
-    .timeline({ loop: false })
+  anime.timeline({ loop: false })
     .add({
       targets: ".ml14 .line",
       scaleX: [0, 1],
@@ -33,13 +31,31 @@
       duration: 1000,
       easing: "easeOutExpo",
       delay: 1000,
-    });
+      complete: function () {
+        debugger
+        // Obtener el token del almacenamiento local
+        // const authToken = localStorage.getItem("authToken");
+        
+        // Verificar si el token existe
+        // if (authToken) {
+          // Configurar el encabezado personalizado
+          // const headers = { Authorization: `Bearer ${authToken}` };
 
-  setTimeout(() => {
-    window.location.replace('http://localhost:8080/products');
-  }, 3000)
-}())
+          // Hacer una solicitud GET para redirigir a la página de bienvenida
+          // axios.get("/welcome", { headers })
+          //   .then(() => {
+              // Redirigir al usuario a la página de productos
+              window.location.href = "/products";
+            // })
+    //         .catch((error) => {
+    //           console.log(`Error en la solicitud GET a /welcome: ${error}`);
+    //         });
+    //     } else {
+    //       console.log("No se encontró el token en el almacenamiento local");
+    //     }
+    //   },
+    // });
+}
+})}
 
-
-// bienvenida()
-
+bienvenida();
