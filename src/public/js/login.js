@@ -14,29 +14,25 @@ loginForm.addEventListener("submit", (event) => {
   data.forEach((value, key) => (user[key] = value));
   const { email, password } = user;
 
-
   //post a jwt para verificar login y crear el token
-  axios.post("/api/session/login", { email, password })
-  .then((response) => {     
-     
-    if (response.status == 200) {
-      // Configurar el encabezado personalizado
-      // const headers = { Authorization: `Bearer ${response.data.token}` };
+  axios
+    .post("/api/session/login", { email, password })
+    .then((response) => {
 
-      // Guardar el token en el almacenamiento local
-      // localStorage.setItem('authToken', response.data.token);
+      if (!response.data.status) {
+        // Configurar el encabezado personalizado
+        // const headers = { Authorization: `Bearer ${response.data.token}` };
 
-      // Realizar una solicitud GET a la página de bienvenida con el encabezado personalizado
-      axios.get("/welcome")
-      .catch((error) => {
-         console.log(`Error en la peticion de axios en login a welcome: ${error}`);
-      });
-    } 
-  })
-  .catch((error) => {
-    console.log(error);
-  });
+        // Guardar el token en el almacenamiento local
+        // localStorage.setItem('authToken', response.data.token);
 
-
-
+        // Se realiza la redireccion
+        Swal.fire('El usuario no existe')
+      } else {
+        window.location.href = "/welcome";
+      }
+    })
+    .catch((error) => {
+      console.log(error);
+    });
 });

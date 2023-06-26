@@ -6,8 +6,10 @@ class User {
   constructor() {}
 
   // create user
-  createUser = async (name, lastname, email, password, role) => {
+  createUser = async (newUser) => {
     try {
+      const { name, lastname, email, password, role } = newUser;
+
       const exist = await userModel.findOne({ email });
 
       if (exist) {
@@ -29,7 +31,7 @@ class User {
         return {
           success: true,
           message: "Usuario creado con exito",
-          data: result
+          data: result,
         };
       }
 
@@ -43,7 +45,6 @@ class User {
   };
 
   loginUser = async (email, password) => {
-
     const user = await userModel.findOne({ email });
 
     if (user) {
@@ -51,7 +52,7 @@ class User {
         return {
           success: true,
           message: "Usuario y contraseña correctas",
-          data: user
+          data: user,
         };
       } else {
         return {
@@ -61,9 +62,10 @@ class User {
       }
     }
 
-    return res
-      .status(404)
-      .json({ success: false, message: "El usuario ingresado no existe" });
+    return {
+      success: false,
+      message: "El usuario ingresado no existe",
+    };
   };
 }
 

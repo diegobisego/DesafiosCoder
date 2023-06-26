@@ -16,8 +16,8 @@ router.get('/login', async (_req,res) => {
 })
 
 // bienvenido
-router.get('/welcome', passportCall('jwt') ,(req, res) => {
-  const { name } = req.user;
+router.get('/welcome',passportCall('jwt'),(req, res) => {
+  const name = req.user.user.name
   res.render('welcome', {
     name
   });
@@ -40,7 +40,9 @@ router.get("/", async (_req, res) => {
 router.get("/products",passportCall('jwt'), async (req, res) => {
   try {
 
-    const user = req.user;
+    const user = req.user.user
+
+
     const userLetter = user.name.charAt(0).toUpperCase(); 
 
 

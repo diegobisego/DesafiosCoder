@@ -5,7 +5,7 @@ import UserManager from "./../dao/manager/mongoUsers.js";
 import GithubStrategy from "passport-github2";
 import { Strategy, ExtractJwt } from "passport-jwt";
 import { cookieStractor } from "../helpers/passportCall.js";
-
+import { createHash, validatePassword } from "../helpers/bcrypt.js";  
 
 const newUser = new UserManager();
 
@@ -17,7 +17,7 @@ export const inicializePassport = () => {
   passport.use(
     "register",
     new LocalStrategy(
-      { passReqToCallback: true, usernameField: "email" },
+      { passReqToCallback: true, usernameField: "email", session:false },
       async (req, email, password, done) => {
         try {
           const { name, lastName, role } = req.body; //desde body se pide todo menos usuario y pass
@@ -27,20 +27,22 @@ export const inicializePassport = () => {
           if (exist) {
             return done(null, false, { message: "El usuario ya existe" }); // donde quiere devolverte un usuario en req.user (null: es el error, false: no devuelvo el user)
           }
+          const hashedPassword = await createHash(password);
 
-          const result = await newUser.createUser(
+          const newUserRegisrer = {
             name,
             lastName,
             email,
-            password,
-            role
-          );
+            password: hashedPassword,
+            role,
+          };
+
+          const result = await newUser.createUser(newUserRegisrer);
 
           if (result) {
-            
             // si todo va bien, devuelvo el usuario
             return done(null, result.data, {
-              message: "Usuario creado con exito",
+              message: result.message,
             });
           }
 
@@ -56,7 +58,7 @@ export const inicializePassport = () => {
   passport.use(
     "login",
     new LocalStrategy(
-      { usernameField: "email" },
+      { usernameField: "email", session: false },
       async (email, password, done) => {
         //passport solo debe devolver al usuario final, no es responsable de la sesion
         try {
@@ -75,9 +77,16 @@ export const inicializePassport = () => {
           }
 
           const result = await newUser.loginUser(email, password);
-
           if (result.success) {
-            //no creo la sesion, devuelvo los usuarios
+            // verifica validez password
+            const isValidPassword = await validatePassword(
+              password,
+              user.password
+            );
+
+            if (!isValidPassword)
+              return done(null, false, { message: "Incorrect credentials" });
+            //devuelvo los usuarios
             const user = {
               name: `${result.data.name} ${result.data.lastname}`,
               email: result.data.email,
@@ -88,7 +97,8 @@ export const inicializePassport = () => {
             return done(null, user);
           }
 
-          done(null, false, { message: "Credenciales incorrecta" });
+
+          done(null, false, { message: result.message });
         } catch (error) {
           console.log(`Error en ruta login: ${error}`);
         }
@@ -104,6 +114,7 @@ export const inicializePassport = () => {
         clientID: "Iv1.7033fac6a316272c", //quien es el cliente q esta utilizando esta estrategia
         clientSecret: "737d33aeefafdb2db25b1bd419526e7cc804645d", //clave generada en github
         callbackURL: "http://localhost:8080/api/session/githubcallback", // endpoint de session
+        session: false
       },
       async (accessToken, refreshToken, profile, done) => {
         try {
@@ -135,15 +146,20 @@ export const inicializePassport = () => {
     )
   );
 
-
   // verificacion token con passport
-  passport.use('jwt', new Strategy({
-    jwtFromRequest: ExtractJwt.fromExtractors([cookieStractor]),
-    secretOrKey: 'jwtSecret'
-  }, async(payload, done)=> {
-    return done(null, payload)
-  }))
-  
+  passport.use(
+    "jwt",
+    new Strategy(
+      {
+        jwtFromRequest: ExtractJwt.fromExtractors([cookieStractor]),
+        secretOrKey: "jwtSecret",
+      },
+      async (payload, done) => {
+        return done(null, payload);
+      }
+    )
+  );
+
   // serializables, esto es copiar y pegar, es algo que tiene ya predefinido passport
 
   // se desactiva para trabajar con passport y jwt

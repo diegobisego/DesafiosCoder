@@ -8,13 +8,8 @@ const newUser = new UserManager();
 
 const router = Router();
 
-//ruta con passport para register, si falla va a /registerFail
-router.post(
-  "/register",
-  passport.authenticate("register", {
-    failureRedirect: "/api/session/registerFail",
-  }),
-  async (_req, res) => {
+//ruta con passport para register
+router.post("/register", passport.authenticate("register", {failureRedirect: "/api/session/registerFail",}),async (_req, res) => {
     res.status(201).json({
       success: true,
       message: "Usuario creado con exito",
@@ -22,37 +17,44 @@ router.post(
   }
 );
 
-//ruta si falla register
+//ruta si falla register (esto en session)
 router.get("/registerFail", (req, res) => {
   res.status(400).json({
     success: false,
-    message: req.session.message,
+    message: 'Falla de registro',
   });
 });
 
 // ruta login con passport y cookies
 router.post(
   "/login",
-  passportCall('login'), // llamo a mi middleware y ya no me hace falta loginFaile
+  passportCall('login'), // llamo a mi middleware
   async (req, res) => {
     try {
-      const user = {
-        name: req.user.name,
-        email: req.user.email,
-        role: req.user.role,
-        id: req.user.id,
-      };
-      //aca todo ok
-      const accessToken = generateToken(user);
-
-      // envio desde una cookie
-      res
-        .cookie("authToken", accessToken, {
-          maxAge: 1000 * 60 * 60 * 24,
-          httpOnly: true // indica que la cookie no se va a poder acceder por ningun medio salvo por http (unicamnete por backend)
-        })
-        .sendStatus(200);
+      if (req.user) {
+        const user = {
+          name: req.user.name,
+          email: req.user.email,
+          role: req.user.role,
+          id: req.user.id,
+        };
+        //aca todo ok
+        const accessToken = generateToken(user);
+  
+        // envio desde una cookie
+        return res
+          .cookie("authToken", accessToken, {
+            maxAge: 1000 * 60 * 60 * 24,
+            httpOnly: true // indica que la cookie no se va a poder acceder por ningun medio salvo por http (unicamnete por backend)
+          })
+          .sendStatus(200);
+      }
+      
     } catch (error) {
+      res.status(404).json({
+        success: false,
+        message: 'Usuario no encontrado'
+      })
       console.log(`Error en ruta login: ${error}`);
     }
   }
@@ -68,18 +70,18 @@ router.post(
 // });
 
 // Ruta para destruir la sesión
-router.post("/logout", (req, res) => {
-  req.session.destroy((error) => {
-    if (error) {
-      console.error("Error al destruir la sesión:", error);
-      return res.status(500).json({ message: "Error al destruir la sesión" });
-    }
-    res.clearCookie("connect.sid"); // Elimina la cookie de sesión en el cliente
+router.post("/logout", (_req, res) => {
+  // req.session.destroy((error) => {
+  //   if (error) {
+  //     console.error("Error al destruir la sesión:", error);
+  //     return res.status(500).json({ message: "Error al destruir la sesión" });
+  //   }
+    res.clearCookie("authToken"); // Elimina la cookie de sesión en el cliente
     res
       .status(200)
       .json({ success: true, message: "Sesión destruida exitosamente" });
   });
-});
+
 
 // JWT  --> se muda a Login para trabajar con cookies
 

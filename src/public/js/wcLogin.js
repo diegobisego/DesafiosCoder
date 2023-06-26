@@ -32,7 +32,6 @@ function bienvenida() {
       easing: "easeOutExpo",
       delay: 1000,
       complete: function () {
-        debugger
         // Obtener el token del almacenamiento local
         // const authToken = localStorage.getItem("authToken");
         
@@ -42,7 +41,7 @@ function bienvenida() {
           // const headers = { Authorization: `Bearer ${authToken}` };
 
           // Hacer una solicitud GET para redirigir a la página de bienvenida
-          // axios.get("/welcome", { headers })
+          // axios.get("/products", { headers })
           //   .then(() => {
               // Redirigir al usuario a la página de productos
               window.location.href = "/products";

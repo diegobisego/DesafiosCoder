@@ -30,6 +30,7 @@ const alertDetailsProduct = async (
   });
 };
 
+// aca va metido el registro
 const alertRegister = () => {
   Swal.fire({
     title: "Registro",
@@ -72,25 +73,26 @@ const alertRegister = () => {
       axios
         .post("/api/session/register", newUser)
         .then((response) => {
-
-          if (response.data.success) {
-            Swal.fire({
-              position: "top",
-              icon: "success",
-              title: `${response.data.message}`,
-              showConfirmButton: false,
-              timer: 1500,
-              toast: true,
-            });
-          } else {
-            Swal.fire({
-              icon: "error",
-              title: "Error",
-              text: `${response.data.message}`,
-              footer:
-                '<a href="http://localhost:8080/login">Has click aqui para ir al logIn</a>',
-            });
-          }
+          debugger
+          // console.log(response.name)
+          // if (response.data.success) {
+          //   Swal.fire({
+          //     position: "top",
+          //     icon: "success",
+          //     title: `${response.data.message}`,
+          //     showConfirmButton: false,
+          //     timer: 1500,
+          //     toast: true,
+          //   });
+          // } else {
+          //   Swal.fire({
+          //     icon: "error",
+          //     title: "Error",
+          //     text: `${response.data.message}`,
+          //     footer:
+          //       '<a href="http://localhost:8080/login">Has click aqui para ir al logIn</a>',
+          //   });
+          // }
         })
         .catch((err) => `Hubo un error al agregar al usuario: ${err}`);
     }
@@ -112,7 +114,6 @@ const alertLogout = () => {
       axios
         .post("/logout")
         .then((response) => {
-          console.log(response)
           if (response.data.success) {
             window.location.replace("/login");
           }
