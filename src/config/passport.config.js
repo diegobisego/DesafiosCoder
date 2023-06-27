@@ -104,9 +104,9 @@ export const inicializePassport = () => {
       async (accessToken, refreshToken, profile, done) => {
         try {
           //tomo los datos que me sirven del profile, q son los datos q me manda github del perfil del usuario
-          const { name, email } = profile._json;
+          const { name, email } = JSON.stringify(profile._json);
 
-          const user = await userModel.findOne({ email }); // verifico si el usuario existe
+          const user = await newUser.loginUser({ email }); // verifico si el usuario existe
 
           if (user) {
             // si existe lo devuelvo
@@ -114,13 +114,13 @@ export const inicializePassport = () => {
           }
 
           // si no existe
-          const newUser = {
+          const newUserGit = {
             name,
             email,
             password: "",
           };
 
-          const result = await userModel.create(newUser);
+          const result = await userModel.create(newUserGit);
 
           // devuelvo el user
           done(null, result);
