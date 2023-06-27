@@ -31,6 +31,7 @@ router.post(
   passportCall('login'), // llamo a mi middleware
   async (req, res) => {
     try {
+    
       if (req.user) {
         const user = {
           name: req.user.name,
@@ -47,7 +48,10 @@ router.post(
             maxAge: 1000 * 60 * 60 * 24,
             httpOnly: true // indica que la cookie no se va a poder acceder por ningun medio salvo por http (unicamnete por backend)
           })
-          .sendStatus(200);
+          .json({
+            success:true,
+            message: 'Usuario encontrado con exito'
+          })
       }
       
     } catch (error) {

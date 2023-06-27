@@ -5,7 +5,7 @@ import UserManager from "./../dao/manager/mongoUsers.js";
 import GithubStrategy from "passport-github2";
 import { Strategy, ExtractJwt } from "passport-jwt";
 import { cookieStractor } from "../helpers/passportCall.js";
-import { createHash, validatePassword } from "../helpers/bcrypt.js";  
+import { createHash, validatePassword } from "../helpers/bcrypt.js";
 
 const newUser = new UserManager();
 
@@ -17,7 +17,7 @@ export const inicializePassport = () => {
   passport.use(
     "register",
     new LocalStrategy(
-      { passReqToCallback: true, usernameField: "email", session:false },
+      { passReqToCallback: true, usernameField: "email", session: false },
       async (req, email, password, done) => {
         try {
           const { name, lastName, role } = req.body; //desde body se pide todo menos usuario y pass
@@ -77,28 +77,13 @@ export const inicializePassport = () => {
           }
 
           const result = await newUser.loginUser(email, password);
-          if (result.success) {
-            // verifica validez password
-            const isValidPassword = await validatePassword(
-              password,
-              user.password
-            );
 
-            if (!isValidPassword)
-              return done(null, false, { message: "Incorrect credentials" });
-            //devuelvo los usuarios
-            const user = {
-              name: `${result.data.name} ${result.data.lastname}`,
-              email: result.data.email,
-              role: result.data.role,
-              id: result.data._id,
-            };
-            //aca todo ok
-            return done(null, user);
+          if (!result.success) {
+            return done(null, false, { message: result.message });
           }
 
-
-          done(null, false, { message: result.message });
+          //devuelvo los usuarios aca todo ok
+          return done(null, result.data);
         } catch (error) {
           console.log(`Error en ruta login: ${error}`);
         }
@@ -114,7 +99,7 @@ export const inicializePassport = () => {
         clientID: "Iv1.7033fac6a316272c", //quien es el cliente q esta utilizando esta estrategia
         clientSecret: "737d33aeefafdb2db25b1bd419526e7cc804645d", //clave generada en github
         callbackURL: "http://localhost:8080/api/session/githubcallback", // endpoint de session
-        session: false
+        session: false,
       },
       async (accessToken, refreshToken, profile, done) => {
         try {

@@ -18,8 +18,9 @@ loginForm.addEventListener("submit", (event) => {
   axios
     .post("/api/session/login", { email, password })
     .then((response) => {
-
-      if (!response.data.status) {
+      debugger
+      console.log(response.data)
+      if (!response.data.success) {
         // Configurar el encabezado personalizado
         // const headers = { Authorization: `Bearer ${response.data.token}` };
 
@@ -27,7 +28,7 @@ loginForm.addEventListener("submit", (event) => {
         // localStorage.setItem('authToken', response.data.token);
 
         // Se realiza la redireccion
-        Swal.fire('El usuario no existe')
+        Swal.fire(`${response.data.error}`)
       } else {
         window.location.href = "/welcome";
       }

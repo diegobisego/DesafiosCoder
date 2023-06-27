@@ -1,6 +1,7 @@
 import userModel from "../models/user.js";
 import dotenv from "dotenv";
 dotenv.config();
+import { validatePassword } from "../../helpers/bcrypt.js";
 
 class User {
   constructor() {}
@@ -47,26 +48,28 @@ class User {
   loginUser = async (email, password) => {
     const user = await userModel.findOne({ email });
 
-    if (user) {
-      if (user.password === password) {
-        return {
-          success: true,
-          message: "Usuario y contraseña correctas",
-          data: user,
-        };
-      } else {
-        return {
-          success: false,
-          message: "Contraseña incorrecta",
-        };
-      }
+    if (!user) {
+      return {
+        success: false,
+        message: "El usuario ingresado no existe",
+      };
+    }
+
+    //validacion con bycript
+    const isValidPassword = await validatePassword(password, user.password);
+
+    if (isValidPassword) {
+      return {
+        success: true,
+        message: "Usuario y contraseña correctas",
+        data: user,
+      };
     }
 
     return {
       success: false,
-      message: "El usuario ingresado no existe",
+      message: "Contraseña incorrecta",
     };
   };
 }
-
 export default User;
