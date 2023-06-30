@@ -9,7 +9,7 @@ const newUser = new UserManager();
 const router = Router();
 
 //ruta con passport para register
-router.post("/register", passport.authenticate("register", {failureRedirect: "/api/session/registerFail",}),async (_req, res) => {
+router.post("/register", passportCall('register'), async (_req, res) => {
     res.status(201).json({
       success: true,
       message: "Usuario creado con exito",
@@ -31,10 +31,9 @@ router.post(
   passportCall('login'), // llamo a mi middleware
   async (req, res) => {
     try {
-    
       if (req.user) {
         const user = {
-          name: req.user.name,
+          first_name: req.user.first_name,
           email: req.user.email,
           role: req.user.role,
           id: req.user.id,

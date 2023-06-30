@@ -1,4 +1,5 @@
 import userModel from "../models/user.js";
+
 import dotenv from "dotenv";
 dotenv.config();
 import { validatePassword } from "../../helpers/bcrypt.js";
@@ -9,7 +10,8 @@ class User {
   // create user
   createUser = async (newUser) => {
     try {
-      const { name, lastname, email, password, role } = newUser;
+
+      const { first_name, last_name, email,age, password, role, cartId } = newUser;
 
       const exist = await userModel.findOne({ email });
 
@@ -21,11 +23,14 @@ class User {
       }
 
       const result = await userModel.create({
-        name,
-        lastname,
+        first_name,
+        last_name,
         email,
+        age,
         password,
         role,
+        cartId
+
       });
 
       if (result) {

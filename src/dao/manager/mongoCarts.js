@@ -59,7 +59,7 @@ class CartManager {
   // add Cart
   addCart = async () => {
     try {
-      const newCart = await CartModel.create({ products: [] });
+      const newCart = await CartModel.create({ quantity: 1 , products: [] });
 
       return {
         success: true,
@@ -160,8 +160,6 @@ class CartManager {
       };
     }
   };
-  
-  
   
 
   // delete cart

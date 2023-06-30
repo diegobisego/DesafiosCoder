@@ -7,7 +7,7 @@ export const authToken = (req, res, next) => {
     if (!authHrader)
       res.status(401).send({ success: false, message: "No estas autorizado" }); // rechaza si no esta autorizado
     const token = authHrader.split(" ")[1]; // esto es porque el token viene con una palabra Bearer y solo necesitamos el token
-    
+
     //debo verificar si es valido el token
     Jwt.verify(token, "jwtSecret", (error, credentials) => {
       if (error) {

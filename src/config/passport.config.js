@@ -3,11 +3,13 @@ import local from "passport-local";
 import userModel from "../dao/models/user.js";
 import UserManager from "./../dao/manager/mongoUsers.js";
 import GithubStrategy from "passport-github2";
+import CartManager from './../dao/manager/mongoCarts.js'
 import { Strategy, ExtractJwt } from "passport-jwt";
 import { cookieStractor } from "../helpers/passportCall.js";
 import { createHash, validatePassword } from "../helpers/bcrypt.js";
 
 const newUser = new UserManager();
+const newCart = new CartManager();
 
 const LocalStrategy = local.Strategy; //estategia local, user + pass
 
@@ -20,21 +22,29 @@ export const inicializePassport = () => {
       { passReqToCallback: true, usernameField: "email", session: false },
       async (req, email, password, done) => {
         try {
-          const { name, lastName, role } = req.body; //desde body se pide todo menos usuario y pass
+          const { first_name, last_name, age, role } = req.body; //desde body se pide todo menos usuario y pass
 
           const exist = await userModel.findOne({ email }); //verifico si exite el correo
 
           if (exist) {
             return done(null, false, { message: "El usuario ya existe" }); // donde quiere devolverte un usuario en req.user (null: es el error, false: no devuelvo el user)
           }
+
+
+          // creo el carrito y traigo el id
+          const cart = await newCart.addCart()
+          const cartId = cart._id
+
           const hashedPassword = await createHash(password);
 
           const newUserRegisrer = {
-            name,
-            lastName,
+            first_name,
+            last_name,
             email,
+            age,
             password: hashedPassword,
             role,
+            cartId
           };
 
           const result = await newUser.createUser(newUserRegisrer);
@@ -132,7 +142,7 @@ export const inicializePassport = () => {
   );
 
   // verificacion token con passport
-  passport.use(
+   passport.use(
     "jwt",
     new Strategy(
       {
