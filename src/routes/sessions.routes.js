@@ -1,7 +1,7 @@
 import { Router } from "express";
 import passport from "passport";
 import { generateToken } from "../helpers/jwt.js";
-import { passportCall } from "../helpers/passportCall.js";
+import { passportCall, cookieStractor } from "../helpers/passportCall.js";
 
 import UserManager from "./../dao/manager/mongoUsers.js";
 const newUser = new UserManager();
@@ -32,6 +32,8 @@ router.post(
   async (req, res) => {
     try {
       if (req.user) {
+        
+
         const user = {
           first_name: req.user.first_name,
           email: req.user.email,
@@ -160,5 +162,17 @@ router.get(
     });
   }
 );
+
+
+router.get('/current', passportCall('jwt'), (req, res) => {
+  const token = cookieStractor(req);
+  const user = req.user;
+  const userWithToken = {
+      ...user,
+      token: token
+  };
+  res.send(userWithToken);
+});
+
 
 export default router;

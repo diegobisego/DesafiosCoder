@@ -11,7 +11,7 @@ class User {
   createUser = async (newUser) => {
     try {
 
-      const { first_name, last_name, email,age, password, role, cartId } = newUser;
+      const { first_name, last_name, email, age, password, role, cartId } = newUser;
 
       const exist = await userModel.findOne({ email });
 
@@ -52,6 +52,8 @@ class User {
 
   loginUser = async (email, password) => {
     const user = await userModel.findOne({ email });
+
+    console.log(user)
 
     if (!user) {
       return {

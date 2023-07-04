@@ -15,7 +15,7 @@ router.get("/login", isLogin, async (_req, res) => {
 
 // bienvenido
 router.get("/welcome", passportCall("jwt"), (req, res) => {
-  const name = req.user.user.name;
+  const name = req.user.user.first_name;
   res.render("welcome", {
     name,
   });
@@ -36,7 +36,7 @@ router.get("/products", requireLogin, passportCall("jwt"), async (req, res) => {
   try {
     const user = req.user.user;
 
-    const userLetter = user.name.charAt(0).toUpperCase();
+    const userLetter = user.first_name.charAt(0).toUpperCase();
 
     const { limit, page, sort, query } = req.query;
 

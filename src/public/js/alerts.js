@@ -35,9 +35,10 @@ const alertRegister = () => {
   Swal.fire({
     title: "Registro",
     html: `
-      <input type="text" id="name" class="swal2-input" placeholder="Nombre">
-      <input type="text" id="lastname" class="swal2-input" placeholder="Apellido">
-      <input type="email" id="login" class="swal2-input" placeholder="email">
+      <input type="text" id="first_name" class="swal2-input" placeholder="Nombre">
+      <input type="text" id="last_name" class="swal2-input" placeholder="Apellido">
+      <input type="Number" id="age" class="swal2-input" placeholder="Edad">
+      <input type="email" id="email" class="swal2-input" placeholder="email">
       <input type="password" id="password" class="swal2-input" placeholder="Contraseña">
     `,
     showCancelButton: true,
@@ -45,15 +46,16 @@ const alertRegister = () => {
     confirmButtonText: "Registrar",
     focusConfirm: false,
     preConfirm: () => {
-      const name = Swal.getPopup().querySelector("#name").value;
-      const lastName = Swal.getPopup().querySelector("#lastname").value;
-      const email = Swal.getPopup().querySelector("#login").value;
+      const first_name = Swal.getPopup().querySelector("#first_name").value;
+      const last_name = Swal.getPopup().querySelector("#last_name").value;
+      const age = Swal.getPopup().querySelector("#age").value;
+      const email = Swal.getPopup().querySelector("#email").value;
       const password = Swal.getPopup().querySelector("#password").value;
 
       // Expresión regular para validar el formato de correo electrónico
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-      if (!name || !lastName || !email || !password) {
+      if (!first_name || !last_name || !age || !email || !password) {
         Swal.showValidationMessage("Por favor, complete todos los datos");
         return false;
       }
@@ -65,7 +67,7 @@ const alertRegister = () => {
         return false;
       }
 
-      return { name, lastName, email, password };
+      return { first_name, last_name, age, email, password };
     },
   }).then((result) => {
     if (result.dismiss !== Swal.DismissReason.cancel) {
@@ -73,26 +75,24 @@ const alertRegister = () => {
       axios
         .post("/api/session/register", newUser)
         .then((response) => {
-          debugger
-          // console.log(response.name)
-          // if (response.data.success) {
-          //   Swal.fire({
-          //     position: "top",
-          //     icon: "success",
-          //     title: `${response.data.message}`,
-          //     showConfirmButton: false,
-          //     timer: 1500,
-          //     toast: true,
-          //   });
-          // } else {
-          //   Swal.fire({
-          //     icon: "error",
-          //     title: "Error",
-          //     text: `${response.data.message}`,
-          //     footer:
-          //       '<a href="http://localhost:8080/login">Has click aqui para ir al logIn</a>',
-          //   });
-          // }
+          if (response.data.success) {
+            Swal.fire({
+              position: "top",
+              icon: "success",
+              title: `${response.data.message}`,
+              showConfirmButton: false,
+              timer: 1500,
+              toast: true,
+            });
+          } else {
+            Swal.fire({
+              icon: "error",
+              title: "Error",
+              text: `${response.data.message}`,
+              footer:
+                '<a href="http://localhost:8080/login">Has click aqui para ir al logIn</a>',
+            });
+          }
         })
         .catch((err) => `Hubo un error al agregar al usuario: ${err}`);
     }

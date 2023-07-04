@@ -77,8 +77,8 @@ export const inicializePassport = () => {
             password === "adminCod3r123"
           ) {
             const user = {
-              name: `Admin`,
-              email: "adminCoder@coder.com",
+              first_name: `Admin`,
+              last_name: "adminCoder@coder.com",
               role: "Admin",
               id: 0,
             };
