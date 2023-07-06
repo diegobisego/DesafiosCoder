@@ -1,7 +1,6 @@
 //mongoose
 import productModel from "../models/products.js";
-import dotenv from "dotenv";
-dotenv.config();
+import config from "../../config.js";
 
 class ProductManager {
   constructor() {}
@@ -82,7 +81,7 @@ class ProductManager {
       // seteo link pagina previa
       let prevLink = "";
       if (hasPrevPage) {
-        prevLink = `${process.env.URL_BASE}/products?${limitLink}${pagePrevLink}${sortLink}${queryLink}`;
+        prevLink = `${config.app.URL_BASE}/products?${limitLink}${pagePrevLink}${sortLink}${queryLink}`;
       } else {
         prevLink = null;
       }
@@ -91,7 +90,7 @@ class ProductManager {
       let nextLink = "";
 
       if (hasNextPage) {
-        nextLink = `${process.env.URL_BASE}/products?${limitLink}${pageNextLink}${sortLink}${queryLink}`;
+        nextLink = `${config.app.URL_BASE}/products?${limitLink}${pageNextLink}${sortLink}${queryLink}`;
       } else {
         nextLink = null;
       }

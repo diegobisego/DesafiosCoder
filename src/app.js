@@ -3,12 +3,13 @@ import morgan from "morgan"; //morgan para debug
 import __dirname from "./dirname.js";
 const app = express();
 import mongoose from "mongoose";
-import dotenv from "dotenv";
-import session from "express-session";
-// import MongoStore from "connect-mongo";
-import passport from "passport";
 import { inicializePassport } from "./config/passport.config.js";
-dotenv.config();
+import config from './config.js'
+// import dotenv from "dotenv";
+// import session from "express-session";
+// import MongoStore from "connect-mongo";
+// import passport from "passport";
+// dotenv.config();
 
 
 
@@ -43,7 +44,7 @@ app.use(cookieParser());
 
 //mongod
 
-const MONGOURI = process.env.MONGO_URI;
+const MONGOURI = config.mongo.MONGO_URI;
 const connection = mongoose.connect(MONGOURI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
@@ -70,7 +71,7 @@ app.use("/", sessionRouter);
 import { Server } from "socket.io";
 import registerChatHandler from "./listeners/chatHandler.js";
 
-const PORT = process.env.PORT || 8080;
+const PORT = config.app.PORT
 const server = app.listen(PORT, () => console.log(`Listening on ${PORT}`));
 const io = new Server(server);
 
