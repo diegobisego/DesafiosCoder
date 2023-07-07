@@ -6,7 +6,8 @@ import GithubStrategy from "passport-github2";
 import CartManager from './../dao/manager/mongoCarts.js'
 import { Strategy, ExtractJwt } from "passport-jwt";
 import { cookieStractor } from "../helpers/passportCall.js";
-import { createHash, validatePassword } from "../helpers/bcrypt.js";
+import { createHash } from "../helpers/bcrypt.js";
+import config from "../config.js";
 
 const newUser = new UserManager();
 const newCart = new CartManager();
@@ -73,12 +74,12 @@ export const inicializePassport = () => {
         //passport solo debe devolver al usuario final, no es responsable de la sesion
         try {
           if (
-            email === "adminCoder@coder.com" &&
-            password === "adminCod3r123"
+            email === config.users.USER_ADMIN &&
+            password === config.users.PASS_PASS
           ) {
             const user = {
               first_name: `Admin`,
-              last_name: "adminCoder@coder.com",
+              last_name: config.users.USER_ADMIN,
               role: "Admin",
               id: 0,
             };

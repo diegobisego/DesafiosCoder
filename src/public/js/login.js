@@ -18,7 +18,6 @@ loginForm.addEventListener("submit", (event) => {
   axios
     .post("/api/session/login", { email, password })
     .then((response) => {
-      debugger
       console.log(response.data)
       if (!response.data.success) {
         // Configurar el encabezado personalizado
