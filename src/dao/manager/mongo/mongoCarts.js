@@ -1,7 +1,6 @@
 import ProductModel from "../../models/products.js";
 import CartModel from "../../models/carts.js";
 
-
 class CartManager {
   constructor() {}
 
@@ -59,7 +58,7 @@ class CartManager {
   // add Cart
   addCart = async () => {
     try {
-      const newCart = await CartModel.create({ quantity: 1 , products: [] });
+      const newCart = await CartModel.create({ products: [] });
 
       return {
         success: true,
@@ -83,6 +82,20 @@ class CartManager {
         return {
           success: false,
           message: "El producto no existe",
+        };
+      }
+
+      // verifica que el producto no exista ya agregado al carrito
+      const cartFind = await this.getCartById(cid);
+
+      const productIndex = cartFind.data.products.findIndex(
+        (product) => product._id.toString() === pid
+      );
+
+      if (productIndex !== -1) {
+        return {
+          success: false,
+          message: "El producto ya existe en el carrito",
         };
       }
 
@@ -112,22 +125,22 @@ class CartManager {
     }
   };
 
-  // update quantity product in cart
+  // update stock product in cart
   putProductInCart = async (cid, pid, stock) => {
     try {
       const cart = await this.getCartById(cid);
-  
+
       if (!cart.success) {
         return {
           success: false,
           message: "El carrito con el ID indicado no existe",
         };
       }
-  
+
       const productIndex = cart.data.products.findIndex(
         (product) => product._id.toString() === pid
       );
-  
+
       if (productIndex === -1) {
         return {
           success: false,
@@ -135,20 +148,20 @@ class CartManager {
         };
       }
       
+      const updatedCart = await CartModel.findOneAndUpdate(
+        { _id: cid, "products._id": pid },
+        { $set: { "products.$.stock": stock } },
+        { new: true }
+      );
+      
 
-
-
-
-      const updatedCart =  CartModel.updateOne({_id:cid, "products._id": pid},{$inc:{"products.$.stock":stock}})
-
-  
       if (!updatedCart) {
         return {
           success: false,
           message: "Error al actualizar el carrito",
         };
       }
-  
+
       return {
         success: true,
         message: "Producto actualizado con éxito",
@@ -160,7 +173,6 @@ class CartManager {
       };
     }
   };
-  
 
   // delete cart
   deleteCart = async (cid) => {

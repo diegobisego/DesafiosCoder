@@ -101,50 +101,64 @@ const postOneProduct = [
 
 // edita 1 producto
 const putOneProduct = async (req, res) => {
-  const { id } = req.params;
-  const object = req.body;
+  try {
+    const { id } = req.params;
+    const object = req.body;
 
-  //actualizacion de producto
-  const result = await ProductManager.updateProduct(id, object);
+    //actualizacion de producto
+    const result = await ProductManager.updateProduct(id, object);
 
-  //respuesta segun result
-  if (result.success) {
-    return res.status(200).json({
+    //respuesta segun result
+    if (result.success) {
+      return res.status(200).json({
+        success: result.success,
+        message: result.message,
+      });
+    }
+
+    return res.status(404).json({
       success: result.success,
       message: result.message,
     });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: `Se produjo un error en la petición: ${error}`,
+    });
   }
-
-  return res.status(404).json({
-    success: result.success,
-    message: result.message,
-  });
 };
 
 // eliminar un producto
-const deleteOneProduct = async (req,res) => {
+const deleteOneProduct = async (req, res) => {
+  try {
     const { id } = req.params;
 
-  const result = await ProductManager.deleteProduct(id);
+    const result = await ProductManager.deleteProduct(id);
 
-  //respuesta segun result
-  if (result.success) {
-    return res.status(200).json({
+    //respuesta segun result
+    if (result.success) {
+      return res.status(200).json({
+        success: result.success,
+        message: result.message,
+      });
+    }
+
+    return res.status(404).json({
       success: result.success,
       message: result.message,
     });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: `Se produjo un error en la petición: ${error}`,
+    });
   }
-
-  return res.status(404).json({
-    success: result.success,
-    message: result.message,
-  });
-}
+};
 
 export default {
   getOneProduct,
   getAllProducts,
   postOneProduct,
   putOneProduct,
-  deleteOneProduct
+  deleteOneProduct,
 };
