@@ -1,6 +1,6 @@
 //mongoose
-import productModel from "../models/products.js";
-import config from "../../config.js";
+import productModel from "../../models/products.js";
+import config from "../../../config.js";
 
 class ProductManager {
   constructor() {}
@@ -207,7 +207,7 @@ class ProductManager {
     }
 
     try {
-      const exist = await productModel.findById({ id });
+      const exist = await productModel.findById(id);
 
       if (!exist) {
         return {
@@ -216,7 +216,7 @@ class ProductManager {
         };
       }
 
-      await productModel.findOneAndUpdate({ code }, object);
+      await productModel.findByIdAndUpdate(id, object);
 
       return {
         success: true,
@@ -233,7 +233,7 @@ class ProductManager {
   // delete product
   deleteProduct = async (id) => {
     try {
-      const exist = await productModel.findByIdAndDelete({ id });
+      const exist = await productModel.findByIdAndDelete( id );
 
       if (exist) {
         return {

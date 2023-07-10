@@ -1,5 +1,4 @@
 import { generateToken } from "../helpers/jwt.js";
-import passport from "passport";
 import { cookieStractor } from "../helpers/passportCall.js";
 
 const loginUser = (req, res) => {

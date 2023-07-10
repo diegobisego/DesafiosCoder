@@ -1,6 +1,6 @@
 import { Router } from "express";
 // import ProductManager from "./../dao/manager/ProductManager.js";
-import ProductManager from "./../dao/manager/mongoProducts.js";
+import ProductManager from "./../dao/manager/mongo/mongoProducts.js";
 import { requireLogin, isLogin } from "../helpers/midSession.js";
 import { passportCall } from "../helpers/passportCall.js";
 

@@ -1,4 +1,4 @@
-import Chat from "../dao/manager/chatManager.js";
+import Chat from "../dao/manager/mongo/chatManager.js";
 
 const newChatManager = new Chat();
 

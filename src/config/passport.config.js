@@ -1,9 +1,9 @@
 import passport from "passport";
 import local from "passport-local";
 import userModel from "../dao/models/user.js";
-import UserManager from "./../dao/manager/mongoUsers.js";
+import UserManager from "./../dao/manager/mongo/mongoUsers.js";
 import GithubStrategy from "passport-github2";
-import CartManager from './../dao/manager/mongoCarts.js'
+import CartManager from './../dao/manager/mongo/mongoCarts.js'
 import { Strategy, ExtractJwt } from "passport-jwt";
 import { cookieStractor } from "../helpers/passportCall.js";
 import { createHash } from "../helpers/bcrypt.js";
