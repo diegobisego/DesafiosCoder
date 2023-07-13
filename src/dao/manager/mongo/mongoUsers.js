@@ -1,8 +1,8 @@
 import userModel from "../../models/user.js";
-
+import { validatePassword } from "../../../helpers/bcrypt.js";
 import dotenv from "dotenv";
 dotenv.config();
-import { validatePassword } from "../../../helpers/bcrypt.js";
+
 
 class User {
   constructor() {}

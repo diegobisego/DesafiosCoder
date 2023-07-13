@@ -33,7 +33,9 @@ class CartManager {
   // get cart by id
   getCartById = async (cid) => {
     try {
-      const cart = await CartModel.findOne({ _id: cid }).populate("products");
+      const cart = await CartModel.findOne({ _id: cid }).populate(
+        "products.product"
+      );
 
       if (cart) {
         return {
@@ -91,7 +93,7 @@ class CartManager {
       const productIndex = cartFind.data.products.findIndex(
         (product) => product._id.toString() === pid
       );
-
+      // me quede aca, ver porq no puedo agregar el prducto
       if (productIndex !== -1) {
         return {
           success: false,
@@ -101,7 +103,7 @@ class CartManager {
 
       const cart = await CartModel.findByIdAndUpdate(
         cid,
-        { $push: { products: product._id } },
+        { $push: { products: { product: product._id, quantity: 1 } } },
         { new: true }
       );
 
@@ -125,8 +127,8 @@ class CartManager {
     }
   };
 
-  // update stock product in cart
-  putProductInCart = async (cid, pid, stock) => {
+  // update quantity product in cart
+  putProductInCart = async (cid, pid, quantity) => {
     try {
       const cart = await this.getCartById(cid);
 
@@ -138,7 +140,7 @@ class CartManager {
       }
 
       const productIndex = cart.data.products.findIndex(
-        (product) => product._id.toString() === pid
+        (product) => product.product._id.toString() === pid
       );
 
       if (productIndex === -1) {
@@ -147,13 +149,12 @@ class CartManager {
           message: "El producto no existe dentro del carrito",
         };
       }
-      
+
       const updatedCart = await CartModel.findOneAndUpdate(
-        { _id: cid, "products._id": pid },
-        { $set: { "products.$.stock": stock } },
+        { _id: cid, "products.product": pid },
+        { $set: { "products.$.quantity": quantity } },
         { new: true }
       );
-      
 
       if (!updatedCart) {
         return {
@@ -166,7 +167,9 @@ class CartManager {
         success: true,
         message: "Producto actualizado con éxito",
       };
+
     } catch (error) {
+      console.log(error);
       return {
         success: false,
         message: `Error en manager: ${error}`,

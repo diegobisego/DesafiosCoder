@@ -16,7 +16,7 @@ router.post("/", cartsControllers.postCart);
 // ruta agregar producto a 1 carrito
 router.post("/:cid/product/:pid",cartsControllers.postProductInCart);
 
-// ruta cambiar la cantidad de un producto en 1 carrito
+// ruta que modifica el quantity de un producto en 1 carrito
 router.put("/:cid/products/:pid", cartsControllers.putProductInCart);
 
 // ruta borrar 1 carrito

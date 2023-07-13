@@ -44,7 +44,7 @@ class ProductManager {
     description,
     code,
     price,
-    stock,
+    quantity,
     category,
     thumbnails
   ) => {
@@ -54,7 +54,7 @@ class ProductManager {
       code,
       price,
       status: true,
-      stock,
+      quantity,
       category,
       thumbnails: thumbnails || [],
     };

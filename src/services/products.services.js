@@ -3,7 +3,9 @@ export default class UserService {
         this.dao = dao
     }
 
-    getAllUsers 
+    getOneProduct = (newUser) => {
+        return this.dao.createUser(newUser)
+    }
 
 
 

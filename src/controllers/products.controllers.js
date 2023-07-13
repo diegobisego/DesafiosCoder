@@ -63,7 +63,7 @@ const postOneProduct = [
       return res.status(422).json({ errors: errors.array() });
     }
     try {
-      const { title, description, code, price, stock, category, thumbnails } =
+      const { title, description, code, price, quantity, category, thumbnails } =
         req.body;
 
       const result = await ProductManager.addProduct(
@@ -71,7 +71,7 @@ const postOneProduct = [
         description,
         code,
         price,
-        stock,
+        quantity,
         category,
         thumbnails
       );

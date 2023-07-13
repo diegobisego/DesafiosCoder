@@ -106,9 +106,9 @@ const postProductInCart = async (req, res) => {
 const putProductInCart = async (req, res) => {
   try {
     const { cid, pid } = req.params;
-    const { stock } = req.body;
+    const { quantity } = req.body;
 
-    const result = await newCartsManager.putProductInCart(cid, pid, stock);
+    const result = await newCartsManager.putProductInCart(cid, pid, quantity);
 
     if (result.success) {
       return res.status(200).json({

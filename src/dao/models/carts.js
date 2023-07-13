@@ -4,7 +4,10 @@ const cartCollection = "carts";
 
 const cartSchema = new mongoose.Schema(
   {
-    products: [{ type: mongoose.Schema.Types.ObjectId, ref: "products" }],
+    products: [{
+      product: { type: mongoose.Schema.Types.ObjectId, ref: "products" },
+      quantity: Number
+    }],
   },
   { timestamps: { createdAt: "createDate", updatedAt: "updateDate" } }
 );

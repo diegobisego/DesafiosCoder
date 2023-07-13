@@ -3,7 +3,7 @@ const alertDetailsProduct = async (
   title,
   description,
   price,
-  stock,
+  quantity,
   thumbnails
 ) => {
   return new Promise((resolve, reject) => {
@@ -13,7 +13,7 @@ const alertDetailsProduct = async (
       html: `
           <p>Description: ${description}</p>
           <p>Price: $${price}</p>
-          <p>Stock: ${stock} Unidades</p>
+          <p>quantity: ${quantity} Unidades</p>
         `,
       showCancelButton: true,
       confirmButtonColor: "#3085d6",

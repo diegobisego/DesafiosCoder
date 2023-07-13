@@ -5,45 +5,19 @@ const app = express();
 import mongoose from "mongoose";
 import { inicializePassport } from "./config/passport.config.js";
 import config from './config.js'
-// import dotenv from "dotenv";
-// import session from "express-session";
-// import MongoStore from "connect-mongo";
-// import passport from "passport";
-// dotenv.config();
 
-
-
-//middlewares
+// middlewares
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(morgan("dev"));
 app.use(express.static(`${__dirname}/public`));
 
-// // cookies
+// cookies
 import cookieParser from "cookie-parser";
 app.use(cookieParser()); 
 
-// sessions
-// app.use(session({
-//   secret:'cursoCoder@', // palabra secreta para intercambiar informacion
-//   resave: false, // mantiene la sesion activa
-//   saveUninitialized: false // permite guardar cualquier objeto de session asi este vacia
-// }))
 
-// app.use(
-//   session({
-//     store: new MongoStore({
-//       mongoUrl: process.env.MONGO_URI,
-//       ttl: 3600
-//     }),
-//     secret: "cursoCoder@", // palabra secreta para intercambiar informacion
-//     resave: false, // mantiene la sesion activa
-//     saveUninitialized: false, // permite guardar cualquier objeto de session asi este vacia
-//   })
-// );
-
-//mongod
-
+// mongo
 const MONGOURI = config.mongo.MONGO_URI;
 const connection = mongoose.connect(MONGOURI, {
   useNewUrlParser: true,
@@ -52,7 +26,6 @@ const connection = mongoose.connect(MONGOURI, {
 });
 
 //passport
-// app.use(passport.initialize())
 inicializePassport()
 
 
