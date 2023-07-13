@@ -1,12 +1,11 @@
-import MongoProductManager from "../dao/manager/mongo/mongoProducts.js";
-const ProductManager = new MongoProductManager();
+import { ProductService } from "../services/index.js";
 import { body, validationResult } from "express-validator";
 
 // obtiene un producto
 const getOneProduct = async (req, res) => {
   try {
     const { id } = req.params;
-    const result = await ProductManager.getProductById(id);
+    const result = await ProductService.getOneProduct(id)
 
     if (!result) {
       return res.status(404).json({
@@ -32,7 +31,7 @@ const getAllProducts = async (req, res) => {
   try {
     const { limit, page, sort, query } = req.query;
 
-    const result = await ProductManager.getProducts(limit, page, sort, query);
+    const result = await ProductService.getAllProducts(limit, page, sort, query);
 
     res.status(200).json({
       success: result.success,
@@ -66,7 +65,7 @@ const postOneProduct = [
       const { title, description, code, price, quantity, category, thumbnails } =
         req.body;
 
-      const result = await ProductManager.addProduct(
+      const result = await ProductService.postOneProduct(
         title,
         description,
         code,
@@ -76,7 +75,7 @@ const postOneProduct = [
         thumbnails
       );
 
-      const arrayProductsMongo = await ProductManager.getProducts();
+      const arrayProductsMongo = await ProductService.getAllProducts();
       req.io.emit("arrayProductsMongo", arrayProductsMongo);
 
       if (result.success) {
@@ -103,10 +102,10 @@ const postOneProduct = [
 const putOneProduct = async (req, res) => {
   try {
     const { id } = req.params;
-    const object = req.body;
+    const product = req.body;
 
     //actualizacion de producto
-    const result = await ProductManager.updateProduct(id, object);
+    const result = await ProductService.putOneProduct(id, product);
 
     //respuesta segun result
     if (result.success) {
@@ -133,7 +132,7 @@ const deleteOneProduct = async (req, res) => {
   try {
     const { id } = req.params;
 
-    const result = await ProductManager.deleteProduct(id);
+    const result = await ProductService.deleteOneProduct(id);
 
     //respuesta segun result
     if (result.success) {

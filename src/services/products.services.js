@@ -1,12 +1,27 @@
-export default class UserService {
+export default class ClassProductService {
     constructor(dao) {
         this.dao = dao
     }
 
-    getOneProduct = (newUser) => {
-        return this.dao.createUser(newUser)
+    getOneProduct = (pid) => {
+        return this.dao.getProductById(pid)
+    }
+    
+    getAllProducts = () => {
+        return this.dao.getProducts()
     }
 
+    postOneProduct = (title, description, code, price, quantity, category, thumbnails) => {
+        return this.dao.addProduct(title, description, code, price, quantity, category, thumbnails)
+    }
+
+    putOneProduct = (pid, product) => {
+        return this.dao.updateProduct(pid, product)
+    }
+
+    deleteOneProduct = (pid) => {
+        return this.dao.deleteProduct(pid)
+    }
 
 
 }

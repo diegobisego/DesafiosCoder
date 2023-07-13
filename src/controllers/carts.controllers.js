@@ -1,10 +1,9 @@
-import mongoCarts from "./../dao/manager/mongo/mongoCarts.js";
-const newCartsManager = new mongoCarts();
+import { CartService } from "../services/index.js";
 
 // obtener todos los carritos
 const getAllCarts = async (_req, res) => {
   try {
-    const result = await newCartsManager.getCarts();
+    const result = await CartService.getAllCarts();
 
     if (result.success) {
       return res.status(200).json({
@@ -31,7 +30,7 @@ const getOneCart = async (req, res) => {
   try {
     const { cid } = req.params;
 
-    const result = await newCartsManager.getCartById(cid);
+    const result = await CartService.getOneCart(cid);
 
     if (result.success) {
       return res.status(200).json({
@@ -55,7 +54,7 @@ const getOneCart = async (req, res) => {
 // crear un carrito
 const postCart = async (_req, res) => {
   try {
-    const result = await newCartsManager.addCart();
+    const result = await CartService.postCart();
 
     if (result.success) {
       return res.status(201).json({
@@ -81,7 +80,7 @@ const postProductInCart = async (req, res) => {
   try {
     const { cid, pid } = req.params;
 
-    const result = await newCartsManager.postProductInCart(cid, pid);
+    const result = await CartService.postProductInCart(cid, pid);
 
     if (result.success) {
       return res.status(200).json({
@@ -108,7 +107,7 @@ const putProductInCart = async (req, res) => {
     const { cid, pid } = req.params;
     const { quantity } = req.body;
 
-    const result = await newCartsManager.putProductInCart(cid, pid, quantity);
+    const result = await CartService.putProductInCart(cid, pid, quantity);
 
     if (result.success) {
       return res.status(200).json({
@@ -135,7 +134,7 @@ const deleteCart = async (req, res) => {
   try {
     const { cid } = req.params;
 
-    const result = await newCartsManager.deleteCart(cid);
+    const result = await CartService.deleteCart(cid);
 
     if (result.success) {
       return res.status(204).send();
@@ -158,7 +157,7 @@ const deleteProductInCart = async (req, res) => {
   try {
     const { cid, pid } = req.params;
 
-    const result = await newCartsManager.deleteProductInCart(cid, pid);
+    const result = await CartService.deleteProductInCart(cid, pid);
 
     if (result.success) {
       return res.status(200).json({
