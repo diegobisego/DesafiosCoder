@@ -205,10 +205,9 @@ class CartManager {
   deleteProductInCart = async (cid, pid) => {
     try {
       const result = await CartModel.findByIdAndUpdate(cid, {
-        $pull: { products: { _id: { $eq: pid } } },
+        $pull: { products: { product: pid } },
       });
-
-      console.log(result);
+      
 
       if (result) {
         return {
