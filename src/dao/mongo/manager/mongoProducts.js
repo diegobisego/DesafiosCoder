@@ -1,5 +1,5 @@
 //mongoose
-import productModel from "../../models/products.js";
+import productModel from "./../models/products.js";
 import config from "../../../config.js";
 
 class ProductManager {

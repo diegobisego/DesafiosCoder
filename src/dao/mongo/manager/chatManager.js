@@ -1,4 +1,4 @@
-import chatModel from "../../models/chats.js";
+import chatModel from "./../models/chats.js";
 
 class Chat {
   constructor() {}

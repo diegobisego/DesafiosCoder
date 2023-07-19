@@ -1,4 +1,4 @@
-import userModel from "../../models/user.js";
+import userModel from "./../models/user.js";
 import { validatePassword } from "../../../helpers/bcrypt.js";
 import dotenv from "dotenv";
 dotenv.config();

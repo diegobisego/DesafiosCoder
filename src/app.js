@@ -5,12 +5,14 @@ const app = express();
 import mongoose from "mongoose";
 import { inicializePassport } from "./config/passport.config.js";
 import config from './config.js'
+import cors from 'cors'
 
 // middlewares
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(morgan("dev"));
 app.use(express.static(`${__dirname}/public`));
+app.use(cors())
 
 // cookies
 import cookieParser from "cookie-parser";
