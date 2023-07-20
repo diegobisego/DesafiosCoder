@@ -1,6 +1,7 @@
 //mongoose
 import productModel from "./../models/products.js";
-import config from "../../../config.js";
+import config from "../../../config/config.js";
+import newProductDTO from "../../../dtos/products/newProductDTO.js";
 
 class ProductManager {
   constructor() {}
@@ -72,11 +73,11 @@ class ProductManager {
       }
 
       //armando links
-      const limitLink = limit ? `limit=${limitOptions}` : ''
-      const pagePrevLink = prevPage ? `&page=${prevPage}` : ''
-      const pageNextLink = nextPage ? `&page=${nextPage}` : ''
-      const sortLink = sort ? `&sort=${sortPrice}` : ''
-      const queryLink = query ? `&query=${query}` : ''
+      const limitLink = limit ? `limit=${limitOptions}` : "";
+      const pagePrevLink = prevPage ? `&page=${prevPage}` : "";
+      const pageNextLink = nextPage ? `&page=${nextPage}` : "";
+      const sortLink = sort ? `&sort=${sortPrice}` : "";
+      const queryLink = query ? `&query=${query}` : "";
 
       // seteo link pagina previa
       let prevLink = "";
@@ -134,16 +135,15 @@ class ProductManager {
     category,
     thumbnails
   ) => {
-    const newProduct = {
+    const newProduct = new newProductDTO(
       title,
       description,
       code,
       price,
-      status: true,
       quantity,
       category,
-      thumbnails: thumbnails || [],
-    };
+      thumbnails
+    );
 
     try {
       //si no existe ningun productos
@@ -233,7 +233,7 @@ class ProductManager {
   // delete product
   deleteProduct = async (id) => {
     try {
-      const exist = await productModel.findByIdAndDelete( id );
+      const exist = await productModel.findByIdAndDelete(id);
 
       if (exist) {
         return {

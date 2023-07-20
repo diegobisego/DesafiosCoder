@@ -4,7 +4,7 @@ import __dirname from "./dirname.js";
 const app = express();
 import mongoose from "mongoose";
 import { inicializePassport } from "./config/passport.config.js";
-import config from './config.js'
+import config from './config/config.js'
 import cors from 'cors'
 
 // middlewares

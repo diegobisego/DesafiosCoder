@@ -1,16 +1,16 @@
 import { generateToken } from "../helpers/jwt.js";
 import { cookieStractor } from "../helpers/passportCall.js";
+import UserLoginDTO from "../dtos/users/loginUserDTO.js";
 
 const loginUser = (req, res) => {
   try {
     if (req.user) {
-      const user = {
-        first_name: req.user.first_name,
-        email: req.user.email,
-        role: req.user.role,
-        id: req.user.id,
-      };
-      //aca todo ok
+
+      const {first_name, email, role, id} = req.user
+
+      const user = new UserLoginDTO(first_name,email,role,id)
+
+      // aca todo ok
       const accessToken = generateToken(user);
 
       // envio desde una cookie
@@ -46,14 +46,9 @@ const logoutUser = (_req,res) => {
 }
 
 const loginWithGitHub = (req,res) => {
-  const user = req.user;
+  const {first_name, email, role, id} = req.user;
 
-    req.session.user = {
-      name: user.name,
-      email: user.email,
-      role: user.role,
-      id: user.id,
-    };
+    req.session.user = new UserLoginDTO(first_name, email, role, id)
 
     res.status(200).json({
       success: true,

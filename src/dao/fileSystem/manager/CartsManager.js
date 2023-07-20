@@ -38,8 +38,36 @@ class CartManager {
     }
   };
 
+  // get cart by id
+  getCartById = async (id) => {
+    try {
+      const result = await this.getCarts();
+      const carts = result.data;
+
+      // verifica si el codigo existe
+      const cartFind = carts.find((value) => value.id == id);
+
+      if (cartFind) {
+        return {
+          success: true,
+          message: "Carrito encontrado con exito",
+          data: cartFind,
+        };
+      }
+      return {
+        success: false,
+        message: `No se encontro el carrito con id: ${id}`,
+      };
+    } catch (error) {
+      return {
+        success: false,
+        message: `Error en la peticion del carrito: ${error}`,
+      };
+    }
+  };
+
   // add Carts
-  addCarts = async () => {
+  addCart = async () => {
     const newCarts = {
       products: this.products,
     };
@@ -101,36 +129,8 @@ class CartManager {
     }
   };
 
-  // get cart by id
-  getCartsById = async (id) => {
-    try {
-      const result = await this.getCarts();
-      const carts = result.data;
-
-      // verifica si el codigo existe
-      const cartFind = carts.find((value) => value.id == id);
-
-      if (cartFind) {
-        return {
-          success: true,
-          message: "Carrito encontrado con exito",
-          data: cartFind,
-        };
-      }
-      return {
-        success: false,
-        message: `No se encontro el carrito con id: ${id}`,
-      };
-    } catch (error) {
-      return {
-        success: false,
-        message: `Error en la peticion del carrito: ${error}`,
-      };
-    }
-  };
-
   //post products in carts
-  postProductsInCarts = async (cid, pid) => {
+  postProductInCart = async (cid, pid) => {
     try {
       //traigo productos
       const resultProducts = await this.newProductsManager.getProducts();
@@ -168,7 +168,6 @@ class CartManager {
         (product) => product.product == pid
       );
 
-
       //si es distinto a -1 el resultado,agrego el producto, sino le sumo 1
       if (productIndex !== -1) {
         newCarts[cartIndex].products[productIndex].quantity += 1;
@@ -178,7 +177,6 @@ class CartManager {
           quantity: 1,
         });
       }
-
 
       //realizo el writefile y retorno el resultado
       const result = await fs.promises

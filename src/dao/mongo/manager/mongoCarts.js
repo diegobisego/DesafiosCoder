@@ -103,9 +103,10 @@ class CartManager {
 
       const cart = await CartModel.findByIdAndUpdate(
         cid,
-        { $push: { products: { product: product._id, quantity: 1 } } },
+        { $push: { products: { product: { ...product, quantity: 1 } } } },
         { new: true }
       );
+      
 
       if (cart) {
         return {
@@ -150,11 +151,13 @@ class CartManager {
         };
       }
 
-      const updatedCart = await CartModel.findOneAndUpdate(
+      const updatedCart = await CartModel.updateOne(
         { _id: cid, "products.product": pid },
-        { $set: { "products.$.quantity": quantity } },
+        { $inc: { "products.$.quantity": quantity } },
         { new: true }
       );
+      
+      
 
       if (!updatedCart) {
         return {

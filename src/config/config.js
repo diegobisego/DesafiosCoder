@@ -17,7 +17,8 @@ dotenv.config({
 export default {
     app: {
         PORT: process.env.PORT || 8080,
-        URL_BASE: process.env.URL_BASE || 'localhost:8080'
+        URL_BASE: process.env.URL_BASE || 'localhost:8080',
+        PERSISTENCE: process.env.PERSISTENCE || 'MONGO'
     },
     mongo: {
         MONGO_URI: process.env.MONGO_URI || 'localhost:8080'
@@ -25,5 +26,14 @@ export default {
     users: {
         USER_ADMIN: process.env.USER_ADMIN,
         PASS_PASS: process.env.PASS_PASS
+    },
+    github: {
+        CLIENT_ID: process.env.CLIENT_ID,
+        CLIENT_SECRET: process.env.CLIENT_SECRET,
+        CALL_BACK_URL: process.env.CALL_BACK_URL,
+        SESSION: process.env.SESSION
+    },
+    token: {
+        TOKEN_SECRET: process.env.TOKEN_SECRET
     }
 }

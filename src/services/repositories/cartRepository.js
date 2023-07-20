@@ -1,4 +1,4 @@
-export default class ClassCartService {
+export default class CartRepository {
     constructor(dao){
         this.dao = dao
     }
@@ -15,12 +15,12 @@ export default class ClassCartService {
         return this.dao.addCart()
     }
 
-    postProductInCart = (cid, product) => {
-        return this.dao.updateProduct(cid, product)
+    postProductInCart = (cid, pid) => {
+        return this.dao.postProductInCart(cid, pid)
     }
 
     putProductInCart = (cid, pid, quantity) => {
-        return this.dao.deleteProduct(cid, pid, quantity)
+        return this.dao.putProductInCart(cid, pid, quantity)
     }
 
     deleteCart = (cid) => {

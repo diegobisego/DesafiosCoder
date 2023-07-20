@@ -3,11 +3,13 @@ import local from "passport-local";
 import userModel from "../dao/mongo/models/user.js";
 import UserManager from "./../dao/mongo/manager/mongoUsers.js";
 import GithubStrategy from "passport-github2";
-import CartManager from './../dao/mongo/manager/mongoCarts.js'
+import CartManager from "./../dao/mongo/manager/mongoCarts.js";
 import { Strategy, ExtractJwt } from "passport-jwt";
 import { cookieStractor } from "../helpers/passportCall.js";
 import { createHash } from "../helpers/bcrypt.js";
-import config from "../config.js";
+import NewUserDTO from "../dtos/users/newUserDTO.js";
+import UserAdminDTO from '../dtos/users/userAdminDTO.js'
+import config from "./config.js";
 
 const newUser = new UserManager();
 const newCart = new CartManager();
@@ -31,22 +33,16 @@ export const inicializePassport = () => {
             return done(null, false, { message: "El usuario ya existe" }); // donde quiere devolverte un usuario en req.user (null: es el error, false: no devuelvo el user)
           }
 
+          const user = { first_name, last_name, age, role };
 
           // creo el carrito y traigo el id
-          const cart = await newCart.addCart()
-          const cartId = cart._id
+          const cart = await newCart.addCart();
+          const cartId = cart._id;
 
           const hashedPassword = await createHash(password);
 
-          const newUserRegisrer = {
-            first_name,
-            last_name,
-            email,
-            age,
-            password: hashedPassword,
-            role,
-            cartId
-          };
+          // aca uso dtos
+          const newUserRegisrer = new NewUserDTO(user, hashedPassword, cartId);
 
           const result = await newUser.createUser(newUserRegisrer);
 
@@ -77,14 +73,8 @@ export const inicializePassport = () => {
             email === config.users.USER_ADMIN &&
             password === config.users.PASS_PASS
           ) {
-            const user = {
-              first_name: `Admin`,
-              last_name: config.users.USER_ADMIN,
-              role: "Admin",
-              id: 0,
-            };
-
-            return done(null, user);
+            const userAdmin = new UserAdminDTO(email);
+            return done(null, userAdmin);
           }
 
           const result = await newUser.loginUser(email, password);
@@ -107,10 +97,10 @@ export const inicializePassport = () => {
     "github",
     new GithubStrategy(
       {
-        clientID: "Iv1.7033fac6a316272c", //quien es el cliente q esta utilizando esta estrategia
-        clientSecret: "737d33aeefafdb2db25b1bd419526e7cc804645d", //clave generada en github
-        callbackURL: "http://localhost:8080/api/session/githubcallback", // endpoint de session
-        session: false,
+        clientID: config.github.CLIENT_ID, //quien es el cliente q esta utilizando esta estrategia
+        clientSecret: config.github.CLIENT_SECRET, //clave generada en github
+        callbackURL: config.github.CALL_BACK_URL, // endpoint de session
+        session: config.github.SESSION,
       },
       async (accessToken, refreshToken, profile, done) => {
         try {
@@ -143,12 +133,12 @@ export const inicializePassport = () => {
   );
 
   // verificacion token con passport
-   passport.use(
+  passport.use(
     "jwt",
     new Strategy(
       {
         jwtFromRequest: ExtractJwt.fromExtractors([cookieStractor]),
-        secretOrKey: "jwtSecret",
+        secretOrKey: config.token.TOKEN_SECRET,
       },
       async (payload, done) => {
         return done(null, payload);
