@@ -39,5 +39,12 @@ export default {
     email: {
         APP_MAIL: process.env.APP_MAIL,
         APP_PASSWORD: process.env.APP_PASSWORD
+    },
+    sms: {
+        TWILIO_NUMBER:process.env.TWILIO_NUMBER,
+        TWILIO_SID:process.env.TWILIO_SID,
+        TWILIO_TOKEN:process.env.TWILIO_TOKEN,
+        TWILIO_CLIENT_NUMBER: process.env.TWILIO_CLIENT_NUMBER
+
     }
 }

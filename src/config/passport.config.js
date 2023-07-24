@@ -25,7 +25,7 @@ export const inicializePassport = () => {
       { passReqToCallback: true, usernameField: "email", session: false },
       async (req, email, password, done) => {
         try {
-          const { first_name, last_name, age, role } = req.body; //desde body se pide todo menos usuario y pass
+          const { first_name, last_name, age } = req.body; //desde body se pide todo menos usuario y pass
 
           const exist = await userModel.findOne({ email }); //verifico si exite el correo
 
@@ -33,7 +33,7 @@ export const inicializePassport = () => {
             return done(null, false, { message: "El usuario ya existe" }); // donde quiere devolverte un usuario en req.user (null: es el error, false: no devuelvo el user)
           }
 
-          const user = { first_name, last_name, age, role };
+          const user = { first_name, last_name, age };
 
           // creo el carrito y traigo el id
           const cart = await newCart.addCart();
@@ -41,8 +41,12 @@ export const inicializePassport = () => {
 
           const hashedPassword = await createHash(password);
 
+          const templateUser = {email,hashedPassword,cartId,...user}
+
           // aca uso dtos
-          const newUserRegisrer = new NewUserDTO(user, hashedPassword, cartId);
+          const newUserRegisrer = new NewUserDTO(templateUser);
+
+          console.log(newUserRegisrer)
 
           const result = await newUser.createUser(newUserRegisrer);
 

@@ -10,7 +10,7 @@ import realTimeProductsRouter from './routes/realTimeProducts.routes.js'
 import mongoProducts from './routes/mongoProducts.routes.js' 
 import mongoCarts from './routes/mongoCarts.routes.js' 
 import sessions from './routes/sessions.routes.js' 
-import mail from './routes/mail.routes.js'
+import mailAndSMS from './routes/mailAndSMS.routes.js'
 
 
 //use de rutas
@@ -21,7 +21,7 @@ router.use('/api/health', healthRouter)
       .use('/api/products', mongoProducts)
       .use('/api/carts', mongoCarts)
       .use('/api/session', sessions)
-      .use('/api/mail', mail)
+      .use('/api', mailAndSMS)
 
       
 
