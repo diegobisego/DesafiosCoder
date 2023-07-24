@@ -35,5 +35,9 @@ export default {
     },
     token: {
         TOKEN_SECRET: process.env.TOKEN_SECRET
+    },
+    email: {
+        APP_MAIL: process.env.APP_MAIL,
+        APP_PASSWORD: process.env.APP_PASSWORD
     }
 }

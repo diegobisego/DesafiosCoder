@@ -61,6 +61,8 @@ app.use((req, res, next) => {
 import routes from "./index.js";
 app.use("/", routes);
 
+
+
 //socket chat
 io.on("connection", (socket) => {
   console.log("Socket conectado");
