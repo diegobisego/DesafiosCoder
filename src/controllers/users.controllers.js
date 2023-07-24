@@ -1,6 +1,8 @@
-import { generateToken } from "../helpers/jwt.js";
+import classTokenDTO from "../dtos/users/jwtDTO.js";
 import { cookieStractor } from "../helpers/passportCall.js";
 import UserLoginDTO from "../dtos/users/loginUserDTO.js";
+
+
 
 const loginUser = (req, res) => {
   try {
@@ -10,8 +12,10 @@ const loginUser = (req, res) => {
 
       const user = new UserLoginDTO(first_name,email,role,id)
 
+      const TokenDTO = new classTokenDTO(user)
+
       // aca todo ok
-      const accessToken = generateToken(user);
+      const accessToken = TokenDTO.generateToken();
 
       // envio desde una cookie
       return res
