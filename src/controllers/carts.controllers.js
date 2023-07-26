@@ -181,6 +181,16 @@ const deleteProductInCart = async (req, res) => {
   }
 };
 
+const purchaseProducts = async (req,res) => {
+
+  // busco el carrito
+  const {cid} = req.params
+  const findCart = await CartService.purchaseCart(cid);
+
+
+
+}
+
 export default {
   getAllCarts,
   getOneCart,
@@ -189,4 +199,5 @@ export default {
   // putProductInCart,
   deleteCart,
   deleteProductInCart,
+  purchaseProducts
 };

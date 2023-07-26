@@ -8,10 +8,7 @@ const router = Router();
 // ruta obtener carritos
 router.get("/", cartsControllers.getAllCarts);
 
-// ruta para para el purchase
-router.get('/:cid/purchase', (req,res) => {
-    
-})
+
 
 // ruta obtener 1 carrito
 router.get("/:cid", cartsControllers.getOneCart);
@@ -31,7 +28,8 @@ router.delete("/:cid", cartsControllers.deleteCart);
 // ruta borrar 1 producto de 1 carrito
 router.delete("/:cid/product/:pid", cartsControllers.deleteProductInCart);
 
-
+// ruta para para el purchase
+router.get('/:cid/purchase', cartsControllers.purchaseProducts)
 
 
 export default router;

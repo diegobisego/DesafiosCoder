@@ -66,3 +66,15 @@ document.addEventListener("DOMContentLoaded", function () {
   
   
 });
+
+
+
+//boton carrito
+const btnCarrito = document.getElementById('btnCarrito')
+
+btnCarrito.addEventListener('click', () => {
+
+  // const response = axios.get('')
+
+
+})

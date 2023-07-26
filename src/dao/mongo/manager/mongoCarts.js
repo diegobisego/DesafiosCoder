@@ -102,8 +102,6 @@ class CartManager {
         // Obtengo el producto existente del carrito
         const existingProduct = cartFind.data.products[productIndex];
 
-        console.log(existingProduct);
-
         // Aumenta la cantidad del producto según la cantidad que se pasa por código o en 1 si no se proporciona
         const newQuantity = existingProduct.quantity + (quantity || 1);
 
@@ -263,6 +261,26 @@ class CartManager {
         message: `Error en manager: ${error}`,
       };
     }
+  };
+
+  purchaseCart = async (cid) => {
+    const result = await this.getCartById(cid);
+    const cartProduts = result.data.products;
+
+    const productsOutStock = []
+    let totalPriceProducts = 0
+
+    cartProduts.forEach((element) => {
+      if (element.product.quantity < element.quantity) {
+        productsOutStock.push({idProduct:element.product._id})
+      }
+      totalPriceProducts += element.price
+    });
+
+    console.log(productsOutStock)
+    console.log(totalPriceProducts)
+
+
   };
 }
 
