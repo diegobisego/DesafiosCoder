@@ -2,6 +2,7 @@ import { Router } from "express";
 import passport from "passport";
 import { passportCall} from "../helpers/passportCall.js";
 import userController from './../controllers/users.controllers.js'
+import { authorizeRoles } from "../helpers/checkAdmin.js";
 
 const router = Router();
 
@@ -23,7 +24,8 @@ router.get("/github", passport.authenticate("github"), (_req, _res) => {});
 router.get("/githubcallback",passport.authenticate("github"),userController.loginWithGitHub);
 
 // ruta current para obtener el user y el token asociado
-router.get('/current', passportCall('jwt'), userController.currentJWT);
+router.get('/current', passportCall('jwt'), authorizeRoles(['Admin']), userController.currentJWT);
+
 
 
 export default router;

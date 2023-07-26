@@ -166,54 +166,54 @@ class CartManager {
     }
   };
 
-  // update quantity product in cart
-  putProductInCart = async (cid, pid, quantity) => {
-    try {
-      const cart = await this.getCartById(cid);
+  // update quantity product in cart (quedo todo dentro de postProductInCart)
+  // putProductInCart = async (cid, pid, quantity) => {
+  //   try {
+  //     const cart = await this.getCartById(cid);
 
-      if (!cart.success) {
-        return {
-          success: false,
-          message: "El carrito con el ID indicado no existe",
-        };
-      }
+  //     if (!cart.success) {
+  //       return {
+  //         success: false,
+  //         message: "El carrito con el ID indicado no existe",
+  //       };
+  //     }
 
-      const productIndex = cart.data.products.findIndex(
-        (product) => product.product._id.toString() === pid
-      );
+  //     const productIndex = cart.data.products.findIndex(
+  //       (product) => product.product._id.toString() === pid
+  //     );
 
-      if (productIndex === -1) {
-        return {
-          success: false,
-          message: "El producto no existe dentro del carrito",
-        };
-      }
+  //     if (productIndex === -1) {
+  //       return {
+  //         success: false,
+  //         message: "El producto no existe dentro del carrito",
+  //       };
+  //     }
 
-      const updatedCart = await CartModel.updateOne(
-        { _id: cid, "products.product": pid },
-        { $inc: { "products.$.quantity": quantity } },
-        { new: true }
-      );
+  //     const updatedCart = await CartModel.updateOne(
+  //       { _id: cid, "products.product": pid },
+  //       { $inc: { "products.$.quantity": quantity } },
+  //       { new: true }
+  //     );
 
-      if (!updatedCart) {
-        return {
-          success: false,
-          message: "Error al actualizar el carrito",
-        };
-      }
+  //     if (!updatedCart) {
+  //       return {
+  //         success: false,
+  //         message: "Error al actualizar el carrito",
+  //       };
+  //     }
 
-      return {
-        success: true,
-        message: "Producto actualizado con éxito",
-      };
-    } catch (error) {
-      console.log(error);
-      return {
-        success: false,
-        message: `Error en manager: ${error}`,
-      };
-    }
-  };
+  //     return {
+  //       success: true,
+  //       message: "Producto actualizado con éxito",
+  //     };
+  //   } catch (error) {
+  //     console.log(error);
+  //     return {
+  //       success: false,
+  //       message: `Error en manager: ${error}`,
+  //     };
+  //   }
+  // };
 
   // delete cart
   deleteCart = async (cid) => {

@@ -19,9 +19,9 @@ export default class CartRepository {
         return this.dao.postProductInCart(cid, pid, quantity, finalPrice)
     }
 
-    putProductInCart = (cid, pid, quantity) => {
-        return this.dao.putProductInCart(cid, pid, quantity)
-    }
+    // putProductInCart = (cid, pid, quantity) => {
+    //     return this.dao.putProductInCart(cid, pid, quantity)
+    // }
 
     deleteCart = (cid) => {
         return this.dao.deleteCart(cid)

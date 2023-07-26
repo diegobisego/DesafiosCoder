@@ -105,32 +105,32 @@ const postProductInCart = async (req, res) => {
 };
 
 // editar producto a 1 carrito
-const putProductInCart = async (req, res) => {
-  try {
-    const { cid, pid } = req.params;
-    const { quantity } = req.body;
+// const putProductInCart = async (req, res) => {
+//   try {
+//     const { cid, pid } = req.params;
+//     const { quantity } = req.body;
 
-    const result = await CartService.putProductInCart(cid, pid, quantity);
+//     const result = await CartService.putProductInCart(cid, pid, quantity);
 
-    if (result.success) {
-      return res.status(200).json({
-        success: result.success,
-        message: result.message,
-        data: result.data,
-      });
-    }
+//     if (result.success) {
+//       return res.status(200).json({
+//         success: result.success,
+//         message: result.message,
+//         data: result.data,
+//       });
+//     }
 
-    res.status(404).json({
-      success: result.success,
-      message: result.message,
-    });
-  } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: `Se produjo un error en la petición: ${error}`,
-    });
-  }
-};
+//     res.status(404).json({
+//       success: result.success,
+//       message: result.message,
+//     });
+//   } catch (error) {
+//     res.status(500).json({
+//       success: false,
+//       message: `Se produjo un error en la petición: ${error}`,
+//     });
+//   }
+// };
 
 // borra 1 carrito
 const deleteCart = async (req, res) => {
@@ -186,7 +186,7 @@ export default {
   getOneCart,
   postCart,
   postProductInCart,
-  putProductInCart,
+  // putProductInCart,
   deleteCart,
   deleteProductInCart,
 };

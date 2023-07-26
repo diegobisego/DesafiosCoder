@@ -1,5 +1,7 @@
 export default class UserAdminDTO {
   constructor(email) {
-    (this.first_name = email), (role = "Admin"), (id = 0);
+    (this.first_name = email), 
+    (this.role = "Admin"), 
+    (this.id = 0);
   }
 }

@@ -77,10 +77,7 @@ export const inicializePassport = () => {
       async (email, password, done) => {
         //passport solo debe devolver al usuario final, no es responsable de la sesion
         try {
-          if (
-            email === config.users.USER_ADMIN &&
-            password === config.users.PASS_PASS
-          ) {
+          if (email === config.users.USER_ADMIN && password === config.users.PASS_PASS) {
             const userAdmin = new UserAdminDTO(email);
             return done(null, userAdmin);
           }
