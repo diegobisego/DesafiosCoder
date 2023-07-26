@@ -18,7 +18,6 @@ loginForm.addEventListener("submit", (event) => {
   axios
     .post("/api/session/login", { email, password })
     .then((response) => {
-      console.log(response.data)
       if (!response.data.success) {
         // Configurar el encabezado personalizado
         // const headers = { Authorization: `Bearer ${response.data.token}` };

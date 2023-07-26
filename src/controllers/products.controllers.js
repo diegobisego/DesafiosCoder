@@ -29,6 +29,7 @@ const getOneProduct = async (req, res) => {
 // obtiene todos los productos
 const getAllProducts = async (req, res) => {
   try {
+
     const { limit, page, sort, query } = req.query;
 
     const result = await ProductService.getAllProducts(limit, page, sort, query);

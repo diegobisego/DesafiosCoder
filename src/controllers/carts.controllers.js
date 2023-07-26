@@ -79,13 +79,16 @@ const postCart = async (_req, res) => {
 const postProductInCart = async (req, res) => {
   try {
     const { cid, pid } = req.params;
+    const { quantity , finalPrice } = req.body
 
-    const result = await CartService.postProductInCart(cid, pid);
+    const result = await CartService.postProductInCart(cid, pid , quantity, finalPrice); 
+
 
     if (result.success) {
       return res.status(200).json({
         success: result.success,
         message: result.message,
+        payload: result.data
       });
     }
 

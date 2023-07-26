@@ -8,7 +8,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
       try {
         const response = await axios.get(`/api/products/${id}`);
-        const { _id, title, description, price, quantity, thumbnails } = response.data.data;
+        const {  title, description, price, quantity, thumbnails } = response.data.data;
         const result = await alertDetailsProduct(_id, title, description, price, quantity, thumbnails[0]);
         var productIds = JSON.parse(localStorage.getItem('productIds')) || [];
         productIds.push(result)

@@ -175,7 +175,6 @@ class ProductManager {
     try {
       const exist = await productModel.findById(id);
 
-      // console.log(productFind)
       if (exist) {
         return {
           success: true,

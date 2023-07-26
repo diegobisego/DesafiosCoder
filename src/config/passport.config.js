@@ -3,7 +3,7 @@ import local from "passport-local";
 import userModel from "../dao/mongo/models/user.js";
 import UserManager from "./../dao/mongo/manager/mongoUsers.js";
 import GithubStrategy from "passport-github2";
-import CartManager from "./../dao/mongo/manager/mongoCarts.js";
+import  {CartService}  from "../services/index.js";
 import { Strategy, ExtractJwt } from "passport-jwt";
 import { cookieStractor } from "../helpers/passportCall.js";
 import { createHash } from "../helpers/bcrypt.js";
@@ -12,7 +12,8 @@ import UserAdminDTO from '../dtos/users/userAdminDTO.js'
 import config from "./config.js";
 
 const newUser = new UserManager();
-const newCart = new CartManager();
+
+
 
 const LocalStrategy = local.Strategy; //estategia local, user + pass
 
@@ -36,18 +37,21 @@ export const inicializePassport = () => {
           const user = { first_name, last_name, age };
 
           // creo el carrito y traigo el id
-          const cart = await newCart.addCart();
-          const cartId = cart._id;
+          const cart = await CartService.postCart();
+          const cartId = cart.data._id;
 
+          // hasheo pass
           const hashedPassword = await createHash(password);
 
+          // creo el temoplate
           const templateUser = {email,hashedPassword,cartId,...user}
+
 
           // aca uso dtos
           const newUserRegisrer = new NewUserDTO(templateUser);
 
-          console.log(newUserRegisrer)
 
+          // creo el usuario
           const result = await newUser.createUser(newUserRegisrer);
 
           if (result) {

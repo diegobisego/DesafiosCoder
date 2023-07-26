@@ -76,7 +76,7 @@ class CartManager {
   };
 
   // post product in cart
-  postProductInCart = async (cid, pid) => {
+  postProductInCart = async (cid, pid, quantity, finalPrice) => {
     try {
       const product = await ProductModel.findById(pid);
 
@@ -90,23 +90,61 @@ class CartManager {
       // verifica que el producto no exista ya agregado al carrito
       const cartFind = await this.getCartById(cid);
 
-      const productIndex = cartFind.data.products.findIndex(
-        (product) => product._id.toString() === pid
+      let productIndex = -1;
+      const productsInCart = cartFind.data.products;
+
+      productIndex = productsInCart.findIndex(
+        (product) => product.product._id.toString() === pid
       );
-      // me quede aca, ver porq no puedo agregar el prducto
+
+      // Si el producto ya existe en el carrito, aumenta la cantidad y el precio
       if (productIndex !== -1) {
+        // Obtengo el producto existente del carrito
+        const existingProduct = cartFind.data.products[productIndex];
+
+        console.log(existingProduct);
+
+        // Aumenta la cantidad del producto según la cantidad que se pasa por código o en 1 si no se proporciona
+        const newQuantity = existingProduct.quantity + (quantity || 1);
+
+        // Calcula el nuevo precio unitario del producto en el carrito
+        const newUnitPrice = finalPrice / quantity;
+
+        // Calcula el nuevo precio total del producto en el carrito
+        const newPrice = newUnitPrice * newQuantity;
+
+        // Actualiza la cantidad y el precio del producto en el carrito
+        const cart = await CartModel.findOneAndUpdate(
+          { _id: cid, "products._id": existingProduct._id }, // Filtro para encontrar el carrito y el producto específico
+          {
+            $set: {
+              "products.$.quantity": newQuantity,
+              "products.$.price": newPrice,
+            },
+          },
+          { new: true }
+        );
+
         return {
-          success: false,
-          message: "El producto ya existe en el carrito",
+          success: true,
+          message:
+            "La cantidad y precio del producto se hn actualizado en el carrito",
+          data: cart,
         };
       }
 
+      const productInCart = {
+        product: pid,
+        quantity: quantity || 1,
+        price: finalPrice, // Agregar el precio del producto al carrito
+      };
+
+      console.log("producto: ", productInCart);
       const cart = await CartModel.findByIdAndUpdate(
         cid,
-        { $push: { products: { product: { ...product, quantity: 1 } } } },
+        { $push: { products: productInCart } },
         { new: true }
       );
-      
 
       if (cart) {
         return {
@@ -156,8 +194,6 @@ class CartManager {
         { $inc: { "products.$.quantity": quantity } },
         { new: true }
       );
-      
-      
 
       if (!updatedCart) {
         return {
@@ -170,7 +206,6 @@ class CartManager {
         success: true,
         message: "Producto actualizado con éxito",
       };
-
     } catch (error) {
       console.log(error);
       return {
@@ -210,7 +245,6 @@ class CartManager {
       const result = await CartModel.findByIdAndUpdate(cid, {
         $pull: { products: { product: pid } },
       });
-      
 
       if (result) {
         return {

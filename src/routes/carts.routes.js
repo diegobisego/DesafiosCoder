@@ -66,8 +66,6 @@ router.post('/:cid/product/:pid', async (req,res) => {
 
   const result = await newCartsManager.postProductsInCarts(cid,pid)
 
-  console.log(result)
-
   if (result.success) {
     return res.status(200).json({
       success: result.success,

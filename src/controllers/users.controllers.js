@@ -8,10 +8,8 @@ const loginUser = (req, res) => {
   try {
     if (req.user) {
 
-      const {first_name, email, role, id} = req.user
-
-      const user = new UserLoginDTO(first_name,email,role,id)
-
+      // dtos para user y token
+      const user = new UserLoginDTO(req.user)
       const TokenDTO = new classTokenDTO(user)
 
       // aca todo ok
@@ -64,9 +62,10 @@ const currentJWT = (req,res) => {
   const token = cookieStractor(req);
   const user = req.user;
   const userWithToken = {
-      ...user,
-      token: token
+    ...user,
+    token: token
   };
+
   res.send(userWithToken);
 }
 

@@ -5,30 +5,64 @@
     <span class="text-gray-500">Role: {{role}}</span>
   </div>
   <nav id="navUser" class="flex justify-end">
+    <!-- Botón del carrito -->
+    <button
+      id="btnCarrito"
+      class="flex items-center justify-center w-10 h-10 rounded-full bg-yellow-500 text-white mr-2 mt-2"
+    >
+      <span class="text-xl font-bold">🛒</span>
+    </button>
+
+    <!-- Botón del usuario -->
     <button
       id="btnUser"
-      class="flex items-center justify-center w-10 h-10 rounded-full bg-black text-white mr-2 mt-2">
+      class="flex items-center justify-center w-10 h-10 rounded-full bg-black text-white mr-2 mt-2"
+    >
       <span class="text-xl font-bold">{{userLetter}}</span>
     </button>
   </nav>
 </div>
 
-
-
 {{! end navbar }}
 
 <div class="container mx-auto">
-  <div class="grid grid-cols-3 gap-4" id="product-list">
+  <div class="grid grid-cols-4 gap-4" id="product-list">
     {{#each products.data}}
       <div class="bg-white rounded-lg shadow-lg p-6 m-4">
         <h2 class="text-xl font-bold mb-2">{{this.title}}</h2>
         <p class="text-gray-600">{{this.description}}</p>
-        <p class="text-green-600 font-bold mt-4">Price: ${{this.price}}</p>
+        <p class="text-green-600 font-bold mt-4" id="priceProduct-{{this._id}}">Price: ${{this.price}}</p>
         <button
           class="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded"
           id="btn-{{this._id}}"
         >
           Details
+        </button>
+
+        <!-- Botón de sumar cantidad -->
+        <div class="flex items-center mt-4">
+          <button
+            class="bg-transparent hover:bg-green-500 text-green-700 font-semibold hover:text-white py-2 px-4 border border-green-500 hover:border-transparent rounded-full"
+            id="btn-sum-{{this._id}}"
+          >
+            +
+          </button>
+          <span class="mx-4" id="cantBuy-{{this._id}}">2</span>
+          <!-- Número en medio, puedes cambiarlo según la cantidad actual -->
+          <button
+            class="bg-transparent hover:bg-red-500 text-red-700  font-semibold hover:text-white py-2 px-4 border border-red-500 hover:border-transparent rounded-full"
+            id="btn-subtract-{{this._id}}"
+          >
+            -
+          </button>
+        </div>
+
+        <!-- Botón de comprar -->
+        <button
+          class="mt-4 bg-blue-500 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded"
+          id="buy-btn-{{this._id}}"
+        >
+          Buy
         </button>
       </div>
     {{/each}}
@@ -63,3 +97,4 @@
 
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <script src="js/products.js" type="module"></script>
+<script src="js/carts.js" type="module"></script>

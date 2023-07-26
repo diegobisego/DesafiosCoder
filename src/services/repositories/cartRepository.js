@@ -15,8 +15,8 @@ export default class CartRepository {
         return this.dao.addCart()
     }
 
-    postProductInCart = (cid, pid) => {
-        return this.dao.postProductInCart(cid, pid)
+    postProductInCart = (cid, pid, quantity, finalPrice) => {
+        return this.dao.postProductInCart(cid, pid, quantity, finalPrice)
     }
 
     putProductInCart = (cid, pid, quantity) => {

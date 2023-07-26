@@ -6,7 +6,8 @@ function bienvenida() {
     "<span class='letter'>$&</span>"
   );
 
-  anime.timeline({ loop: false })
+  anime
+    .timeline({ loop: false })
     .add({
       targets: ".ml14 .line",
       scaleX: [0, 1],
@@ -32,29 +33,9 @@ function bienvenida() {
       easing: "easeOutExpo",
       delay: 1000,
       complete: function () {
-        // Obtener el token del almacenamiento local
-        // const authToken = localStorage.getItem("authToken");
-        
-        // Verificar si el token existe
-        // if (authToken) {
-          // Configurar el encabezado personalizado
-          // const headers = { Authorization: `Bearer ${authToken}` };
-
-          // Hacer una solicitud GET para redirigir a la página de bienvenida
-          // axios.get("/products", { headers })
-          //   .then(() => {
-              // Redirigir al usuario a la página de productos
-              window.location.href = "/products";
-            // })
-    //         .catch((error) => {
-    //           console.log(`Error en la solicitud GET a /welcome: ${error}`);
-    //         });
-    //     } else {
-    //       console.log("No se encontró el token en el almacenamiento local");
-    //     }
-    //   },
-    // });
+        window.location.href = "/products";
+      },
+    });
 }
-})}
 
 bienvenida();

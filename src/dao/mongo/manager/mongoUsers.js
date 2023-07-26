@@ -51,8 +51,8 @@ class User {
   };
 
   loginUser = async (email, password) => {
-    const user = await userModel.findOne({ email });
 
+    const user = await userModel.findOne({ email });
 
 
     if (!user) {
