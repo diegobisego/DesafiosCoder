@@ -68,7 +68,7 @@ export const inicializePassport = () => {
       }
     )
   );
-
+ 
   // passport login
   passport.use(
     "login",
