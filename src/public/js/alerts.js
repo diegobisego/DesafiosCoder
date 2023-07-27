@@ -16,17 +16,8 @@ const alertDetailsProduct = async (
           <p>quantity: ${quantity} Unidades</p>
         `,
       showCancelButton: true,
-      confirmButtonColor: "#3085d6",
       cancelButtonColor: "#d33",
-      confirmButtonText: "Add to Cart",
-    }).then((result) => {
-      if (result.isConfirmed) {
-        Swal.fire("Added product!", "Your product has been added.", "success");
-        resolve(_id);
-      } else {
-        resolve(false);
-      }
-    });
+    })
   });
 };
 

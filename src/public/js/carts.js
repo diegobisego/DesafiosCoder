@@ -69,12 +69,12 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
 
-//boton carrito
-const btnCarrito = document.getElementById('btnCarrito')
+// //boton carrito
+// const btnCarrito = document.getElementById('btnCarrito')
 
-btnCarrito.addEventListener('click', () => {
+// btnCarrito.addEventListener('click', () => {
 
-  // const response = axios.get('')
+//   // const response = axios.get('')
 
 
-})
+// })

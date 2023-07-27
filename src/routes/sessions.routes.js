@@ -2,7 +2,6 @@ import { Router } from "express";
 import passport from "passport";
 import { passportCall} from "../helpers/passportCall.js";
 import userController from './../controllers/users.controllers.js'
-import { authorizeRoles } from "../helpers/checkAdmin.js";
 
 const router = Router();
 

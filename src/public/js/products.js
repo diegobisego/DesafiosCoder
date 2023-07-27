@@ -1,14 +1,14 @@
 document.addEventListener("DOMContentLoaded", function () {
-  const buttons = document.querySelectorAll('[id^="btn-"]');
+  const buttons = document.querySelectorAll('[id^="btn-details-"]');
 
   buttons.forEach(function (button) {
     button.addEventListener("click", async function (event) {
       const buttonId = event.target.id;
-      const id = buttonId.slice(4);
-
+      const id = buttonId.slice(12);
+  
       try {
         const response = await axios.get(`/api/products/${id}`);
-        const {  title, description, price, quantity, thumbnails } = response.data.data;
+        const { _id, title, description, price, quantity, thumbnails } = response.data.data;
         const result = await alertDetailsProduct(_id, title, description, price, quantity, thumbnails[0]);
         var productIds = JSON.parse(localStorage.getItem('productIds')) || [];
         productIds.push(result)
