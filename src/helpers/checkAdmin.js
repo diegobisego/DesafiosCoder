@@ -1,7 +1,7 @@
 // Middleware para autorización y delimitar el acceso
 export function authorizeRoles(roles) {
     return (req, res, next) => {
-      console.log(req)
+      console.log(req.user)
       const user = req.user;
 
       // Verificar si el usuario tiene un rol que está permitido para acceder a esta ruta

@@ -2,6 +2,7 @@
 import { authorizeRoles } from "../helpers/checkAdmin.js";
 import { Router } from "express";
 import cartsControllers from "../controllers/carts.controllers.js";
+import { passportCall } from "../helpers/passportCall.js";
 const router = Router();
 
 
@@ -17,7 +18,7 @@ router.get("/:cid", cartsControllers.getOneCart);
 router.post("/", cartsControllers.postCart);
 
 // ruta agregar producto a 1 carrito
-router.post("/:cid/product/:pid",authorizeRoles(['Usuario']),cartsControllers.postProductInCart);
+router.post("/:cid/product/:pid",passportCall('jwt'),authorizeRoles(['Usuario']),cartsControllers.postProductInCart);
 
 // ruta que modifica el quantity de un producto en 1 carrito
 // router.put("/:cid/products/:pid", cartsControllers.putProductInCart);
