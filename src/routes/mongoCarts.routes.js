@@ -9,8 +9,6 @@ const router = Router();
 // ruta obtener carritos
 router.get("/", cartsControllers.getAllCarts);
 
-
-
 // ruta obtener 1 carrito
 router.get("/:cid", cartsControllers.getOneCart);
 

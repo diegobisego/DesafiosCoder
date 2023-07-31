@@ -12,7 +12,7 @@ router.get("/:id",  productsController.getOneProduct);
 router.get("/", productsController.getAllProducts);
 
 // ruta agregar un productos
-router.post("/", passportCall('jwt'),authorizeRoles(['Admin']), productsController.postOneProduct);
+router.post("/",  productsController.postOneProduct);
 
 // ruta editar un producto
 router.put("/:id", passportCall('jwt'),authorizeRoles(['Admin']), productsController.putOneProduct);

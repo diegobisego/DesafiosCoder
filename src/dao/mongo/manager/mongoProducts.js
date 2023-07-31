@@ -249,6 +249,7 @@ class ProductManager {
       return {
         success: false,
         message: "Hubo un error al eliminar el producto",
+        payload: error
       };
     }
   };
