@@ -1,5 +1,9 @@
 import ProductModel from "./../models/products.js";
+import userModel from "../models/user.js";
 import CartModel from "./../models/carts.js";
+import TicketModel from "../models/ticket.js";
+import { findClientByCartId } from "../../../helpers/findUserInCart.js";
+import { generateTicketCode, calculateTotalAmount } from "../../../helpers/tickets.js";
 
 class CartManager {
   constructor() {}
@@ -264,24 +268,104 @@ class CartManager {
   };
 
   purchaseCart = async (cid) => {
-    const result = await this.getCartById(cid);
-    const cartProduts = result.data.products;
-
-    const productsOutStock = []
-    let totalPriceProducts = 0
-
-    cartProduts.forEach((element) => {
-      if (element.product.quantity < element.quantity) {
-        productsOutStock.push({idProduct:element.product._id})
+    try {
+      // Obtener el carrito y sus productos
+      const cart = await CartModel.findById(cid).populate("products");
+  
+      // Verificar si el carrito existe
+      if (!cart) {
+        return {
+          success: false,
+          message: "Carrito no encontrado",
+        };
       }
-      totalPriceProducts += element.price
-    });
+  
+      // Array para almacenar los productos con stock
+      const productsWithEnoughStock = [];
+      const productsNotProcessed = [];
+  
+      // Procesar cada producto del carrito
+      for (const cartProduct of cart.products) {
+        const productId = cartProduct.product;
+        const quantityToPurchase = cartProduct.quantity;
+  
+        // Verificar si el producto existe en la base de datos
+        const product = await ProductModel.findById(productId);
+  
+        if (!product) {
+          return {
+            success: false,
+            message: "Producto no encontrado",
+          };
+        }
+  
+        // Verificar si hay suficiente stock para la compra
+        if (product.quantity >= quantityToPurchase) {
+          // Restar la cantidad del producto del stock
+          await ProductModel.updateOne(
+            { _id: productId },
+            { $inc: { quantity: -quantityToPurchase } }
+          );
+          productsWithEnoughStock.push(cartProduct);
+        } else {
+          // Si no hay suficiente stock, eliminar el producto del carrito
+          productsNotProcessed.push(productId);
+        }
+      }
+  
+      // Actualizar el carrito con los productos con stock
+      cart.products = productsWithEnoughStock;
+  
+      // Filtrar los productos no procesados en el carrito
+      const productsNotProcessedIds = productsNotProcessed.map((productId) =>
+        productId.toString()
+      );
 
-    console.log(productsOutStock)
-    console.log(totalPriceProducts)
+      cart.products = cart.products.filter(
+        (p) => !productsNotProcessedIds.includes(p.product.toString())
+      );
 
+      // Buscamos el id del cliente correspondiente al cart
+      const idClient = await findClientByCartId(cid)
 
+  
+      // Crear un nuevo ticket si la compra se completo con exito
+      let ticketData = null;
+      if (productsNotProcessed.length === 0) {
+        // Guardar informacion de la compra
+        ticketData = {
+          code: generateTicketCode(), 
+          purchase_datetime: new Date(),
+          amount: calculateTotalAmount(cart.products), 
+          purchaser: idClient, 
+        };
+  
+        // Crear el ticket 
+        await TicketModel.create(ticketData)
+  
+      }
+  
+      
+      // Guardar los productos sin stock en el carrito
+      await CartModel.updateOne(
+        { _id: cid },
+        { $set: { products: productsWithEnoughStock } }
+      );
+      
+
+  
+      return {
+        success: true,
+        message: "Proceso de compra finalizado exitosamente",
+        ticket: ticketData, // Devolver el ticket si se creó uno exitosamente
+      };
+    } catch (error) {
+      console.log("Error en el proceso de compra:", error);
+      return { success: false, message: "Error en el servidor" };
+    }
   };
+  
+  
 }
 
 export default CartManager;

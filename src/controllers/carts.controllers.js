@@ -181,12 +181,32 @@ const deleteProductInCart = async (req, res) => {
   }
 };
 
-const purchaseProducts = async (req,res) => {
+// ruta para comprar el carrito
+const purchaseCart = async (req,res) => {
 
-  // busco el carrito
-  const {cid} = req.params
-  const findCart = await CartService.purchaseCart(cid);
 
+  try {
+    const cartId = req.params.cid;
+
+    const result = await CartService.purchaseCart(cartId);
+
+    if (result.success) {
+      return res.status(200).json({
+        success: result.success,
+        message: result.message,
+      });
+    }
+
+    res.status(404).json({
+      success: result.success,
+      message: result.message,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: `Se produjo un error en la petición: ${error}`,
+    });
+  }
 
 
 }
@@ -199,5 +219,5 @@ export default {
   // putProductInCart,
   deleteCart,
   deleteProductInCart,
-  purchaseProducts
+  purchaseCart
 };

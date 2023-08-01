@@ -5,6 +5,13 @@
     <span class="text-gray-500">Role: {{role}}</span>
   </div>
   <nav id="navUser" class="flex justify-end">
+    <!-- Botón de agregar un producto -->
+    <button
+      class="mt-4 bg-blue-500 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded"
+      id="buttonsAddProduct"
+    >
+      Add Product
+    </button>
     <!-- Botón del carrito -->
     <button
       id="btnCarrito"
@@ -31,10 +38,13 @@
       <div class="bg-white rounded-lg shadow-lg p-6 m-4">
         <h2 class="text-xl font-bold mb-2">{{this.title}}</h2>
         <p class="text-gray-600">{{this.description}}</p>
-        <p class="text-green-600 font-bold mt-4" id="priceProduct-{{this._id}}">Price: ${{this.price}}</p>
+        <p
+          class="text-green-600 font-bold mt-4"
+          id="priceProduct-{{this._id}}"
+        >Price: ${{this.price}}</p>
         <button
           class="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded"
-          id="btn-{{this._id}}"
+          id="btn-details-{{this._id}}"
         >
           Details
         </button>
@@ -43,15 +53,15 @@
         <div class="flex items-center mt-4">
           <button
             class="bg-transparent hover:bg-green-500 text-green-700 font-semibold hover:text-white py-2 px-4 border border-green-500 hover:border-transparent rounded-full"
-            id="btn-sum-{{this._id}}"
+            data-id="btn-sum-{{this._id}}"
           >
             +
           </button>
-          <span class="mx-4" id="cantBuy-{{this._id}}">2</span>
+          <span class="mx-4" id="cantBuy-{{this._id}}">1</span>
           <!-- Número en medio, puedes cambiarlo según la cantidad actual -->
           <button
-            class="bg-transparent hover:bg-red-500 text-red-700  font-semibold hover:text-white py-2 px-4 border border-red-500 hover:border-transparent rounded-full"
-            id="btn-subtract-{{this._id}}"
+            class="bg-transparent hover:bg-red-500 text-red-700 font-semibold hover:text-white py-2 px-4 border border-red-500 hover:border-transparent rounded-full"
+            data-id="btn-subtract-{{this._id}}"
           >
             -
           </button>
@@ -63,6 +73,21 @@
           id="buy-btn-{{this._id}}"
         >
           Buy
+        </button>
+        <!-- Botón Edit -->
+        <button
+          class="bg-transparent hover:bg-yellow-500 text-yellow-700 font-semibold hover:text-white py-2 px-4 border border-yellow-500 hover:border-transparent rounded"
+          id="btn-edit-{{this._id}}"
+        >
+          Edit
+        </button>
+
+        <!-- Botón Delete -->
+        <button
+          class="bg-transparent hover:bg-red-500 text-red-700 font-semibold hover:text-white py-2 px-4 border border-red-500 hover:border-transparent rounded ml-2"
+          id="btn-delete-{{this._id}}"
+        >
+          Delete
         </button>
       </div>
     {{/each}}
