@@ -2,6 +2,7 @@ document.addEventListener("DOMContentLoaded", async function () {
   const buttonsBuy = document.querySelectorAll('[id^="buy-btn-"]');
   const buttonsEdit = document.querySelectorAll('[id^="btn-edit-"]');
   const buttonsDelete = document.querySelectorAll('[id^="btn-delete-"]');
+  const buttonsAddProduct = document.getElementById('buttonsAddProduct');
 
   const response = await axios.get(`/current`);
   const role = response.data.user.role;
@@ -14,9 +15,10 @@ document.addEventListener("DOMContentLoaded", async function () {
     buttonsDelete.forEach(function (button) {
       button.classList.add("hidden-btn");
     });
+    buttonsAddProduct.classList.add("hidden-btn")
   }
 
-  // boton para agrgar producto al carrito
+  // boton para agregar producto al carrito
   buttonsBuy.forEach(function (button) {
     button.addEventListener("click", async function (event) {
       const buttonId = event.target.id;
@@ -119,6 +121,6 @@ document.addEventListener("DOMContentLoaded", async function () {
 
 const btnAgregarProducto = document.getElementById('btnAgregarProducto')
 
-btnAgregarProducto.addEventListener('click', () => {
+buttonsAddProduct.addEventListener('click', () => {
   alertAddProduct()
 })

@@ -1,7 +1,9 @@
 document.addEventListener("DOMContentLoaded", function () {
   // Event listener para los botones de detalles de producto
   const buttons = document.querySelectorAll('[id^="btn-details-"]');
+  
 
+ 
   buttons.forEach(function (button) {
     button.addEventListener("click", async function (event) {
       const buttonId = event.target.id;
@@ -37,7 +39,7 @@ document.addEventListener("DOMContentLoaded", function () {
   const btnSum = document.querySelectorAll('[data-id^="btn-sum-"]');
   const btnSubtract = document.querySelectorAll('[data-id^="btn-subtract-"]');
 
-  // Manejar el clic en los botones de sumar
+  // Manejar el click en los botones de sumar
   btnSum.forEach((btn) => {
     btn.addEventListener("click", () => {
       const productId = btn.getAttribute("data-id").slice(8);
@@ -48,7 +50,7 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   });
 
-  // Manejar el clic en los botones de restar
+  // Manejar el click en los botones de restar
   btnSubtract.forEach((btn) => {
     btn.addEventListener("click", () => {
       const productId = btn.getAttribute("data-id").slice(13);
