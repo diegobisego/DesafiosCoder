@@ -1,4 +1,5 @@
 import { ProductService } from "../services/index.js";
+import { moksGenerateProducts } from "../moks/products.moks.js";
 import { body, validationResult } from "express-validator";
 
 // obtiene un producto
@@ -155,10 +156,18 @@ const deleteOneProduct = async (req, res) => {
   }
 };
 
+
+// Mock products faker
+const moksGenerateProducts = async (_req, res) => {
+  const dataMok = await moksGenerateProducts()
+  res.send(dataMok)
+}
+
 export default {
   getOneProduct,
   getAllProducts,
   postOneProduct,
   putOneProduct,
   deleteOneProduct,
+  moksGenerateProducts
 };
