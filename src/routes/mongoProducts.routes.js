@@ -21,7 +21,6 @@ router.put("/:id", passportCall('jwt'),authorizeRoles(['Admin']), productsContro
 // ruta eliminar 1 producto
 router.delete("/:id", passportCall('jwt'),authorizeRoles(['Admin']), productsController.deleteOneProduct);
 
-// ruta mocks products
-router.get('/mockingproducts', productsController.moksGenerateProducts)
+
 
 export default router;

@@ -158,7 +158,7 @@ const deleteOneProduct = async (req, res) => {
 
 
 // Mock products faker
-const moksGenerateProducts = async (_req, res) => {
+const moksProducts = async (_req, res) => {
   const dataMok = await moksGenerateProducts()
   res.send(dataMok)
 }
@@ -169,5 +169,5 @@ export default {
   postOneProduct,
   putOneProduct,
   deleteOneProduct,
-  moksGenerateProducts
+  moksProducts
 };
