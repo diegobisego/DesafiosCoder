@@ -4,24 +4,31 @@ import { body, validationResult } from "express-validator";
 
 // obtiene un producto
 const getOneProduct = async (req, res) => {
+  try {
     const { id } = req.params;
-    const result = await ProductService.getOneProduct(id)
+    const result = await ProductService.getOneProduct(id);
 
     res.status(result.status).json({
       success: result.success,
       messege: result.message,
       data: result.data,
     });
-
+  } catch (error) {
+    console.log(error);
+  }
 };
 
 // obtiene todos los productos
 const getAllProducts = async (req, res) => {
   try {
-
     const { limit, page, sort, query } = req.query;
 
-    const result = await ProductService.getAllProducts(limit, page, sort, query);
+    const result = await ProductService.getAllProducts(
+      limit,
+      page,
+      sort,
+      query
+    );
 
     res.status(200).json({
       success: result.success,
@@ -52,8 +59,15 @@ const postOneProduct = [
       return res.status(422).json({ errors: errors.array() });
     }
     try {
-      const { title, description, code, price, quantity, category, thumbnails } =
-        req.body;
+      const {
+        title,
+        description,
+        code,
+        price,
+        quantity,
+        category,
+        thumbnails,
+      } = req.body;
 
       const result = await ProductService.postOneProduct(
         title,
@@ -144,12 +158,11 @@ const deleteOneProduct = async (req, res) => {
   }
 };
 
-
 // Mock products faker
 const moksProducts = async (_req, res) => {
-  const dataMok = await moksGenerateProducts()
-  res.send(dataMok)
-}
+  const dataMok = await moksGenerateProducts();
+  res.send(dataMok);
+};
 
 export default {
   getOneProduct,
@@ -157,5 +170,5 @@ export default {
   postOneProduct,
   putOneProduct,
   deleteOneProduct,
-  moksProducts
+  moksProducts,
 };

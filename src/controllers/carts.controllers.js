@@ -32,16 +32,10 @@ const getOneCart = async (req, res) => {
 
     const result = await CartService.getOneCart(cid);
 
-    if (result.success) {
-      return res.status(200).json({
-        success: result.success,
-        message: result.message,
-        data: result.data,
-      });
-    }
-    res.status(404).json({
+    res.status(result.status).json({
       success: result.success,
-      message: result.message,
+      messege: result.message,
+      data: result.data,
     });
   } catch (error) {
     res.status(500).json({
@@ -79,16 +73,20 @@ const postCart = async (_req, res) => {
 const postProductInCart = async (req, res) => {
   try {
     const { cid, pid } = req.params;
-    const { quantity , finalPrice } = req.body
+    const { quantity, finalPrice } = req.body;
 
-    const result = await CartService.postProductInCart(cid, pid , quantity, finalPrice); 
-
+    const result = await CartService.postProductInCart(
+      cid,
+      pid,
+      quantity,
+      finalPrice
+    );
 
     if (result.success) {
       return res.status(200).json({
         success: result.success,
         message: result.message,
-        payload: result.data
+        payload: result.data,
       });
     }
 
@@ -182,9 +180,7 @@ const deleteProductInCart = async (req, res) => {
 };
 
 // ruta para comprar el carrito
-const purchaseCart = async (req,res) => {
-
-
+const purchaseCart = async (req, res) => {
   try {
     const cartId = req.params.cid;
 
@@ -207,9 +203,7 @@ const purchaseCart = async (req,res) => {
       message: `Se produjo un error en la petición: ${error}`,
     });
   }
-
-
-}
+};
 
 export default {
   getAllCarts,
@@ -219,5 +213,5 @@ export default {
   // putProductInCart,
   deleteCart,
   deleteProductInCart,
-  purchaseCart
+  purchaseCart,
 };

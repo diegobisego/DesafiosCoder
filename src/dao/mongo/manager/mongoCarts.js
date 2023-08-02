@@ -4,6 +4,9 @@ import CartModel from "./../models/carts.js";
 import TicketModel from "../models/ticket.js";
 import { findClientByCartId } from "../../../helpers/findUserInCart.js";
 import { generateTicketCode, calculateTotalAmount } from "../../../helpers/tickets.js";
+import ErrorFactory from "../../../services/repositories/errorRepository.js";
+import { cartsErrorCartNotFound } from "../../../constants/productsError.js";
+import { EErrors } from "../../../constants/EErrors.js";
 
 class CartManager {
   constructor() {}
@@ -46,18 +49,23 @@ class CartManager {
           success: true,
           message: "Carrito encontrado con éxito",
           data: cart,
+          status: 200,
         };
       }
 
-      return {
+      // Uso de errores
+      ErrorFactory.createError({
+        name: "Cart not found",
+        cause: cartsErrorCartNotFound(cid),
+        message: "Id cart incorrect",
+        code: EErrors.CART,
+        status: 404,
         success: false,
-        message: `No se encontró el carrito con ID: ${cid}`,
-      };
+        data: "Empty",
+      });
+
     } catch (error) {
-      return {
-        success: false,
-        message: `Error en la petición del carrito: ${error}`,
-      };
+      return error
     }
   };
 
