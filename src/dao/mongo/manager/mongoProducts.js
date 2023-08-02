@@ -2,6 +2,9 @@
 import productModel from "./../models/products.js";
 import config from "../../../config/config.js";
 import newProductDTO from "../../../dtos/products/newProductDTO.js";
+import ErrorFactory from "../../../services/repositories/errorRepository.js";
+import { productsErrorProductNotFound } from "../../../constants/productsError.js";
+import { EErrors } from "../../../constants/EErrors.js";
 
 class ProductManager {
   constructor() {}
@@ -180,18 +183,22 @@ class ProductManager {
           success: true,
           message: "Producto encontrado con exito",
           data: exist,
+          status: 200,
         };
       }
 
-      return {
+      // Uso de errores
+      ErrorFactory.createError({
+        name: "Product not found",
+        cause: productsErrorProductNotFound(id),
+        message: "Id product incorrect",
+        code: EErrors.PRODUCT_NOT_FOUND,
+        status: 404,
         success: false,
-        message: "El producto no fue encontrado",
-      };
+        data: "Empty",
+      });
     } catch (error) {
-      return {
-        success: false,
-        message: `Error en la peticion del producto: ${error}`,
-      };
+      return error;
     }
   };
 
@@ -249,7 +256,7 @@ class ProductManager {
       return {
         success: false,
         message: "Hubo un error al eliminar el producto",
-        payload: error
+        payload: error,
       };
     }
   };

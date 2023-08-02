@@ -6,6 +6,7 @@ import mongoose from "mongoose";
 import { inicializePassport } from "./config/passport.config.js";
 import config from './config/config.js'
 import cors from 'cors'
+import errorHandler from './middlewares/error.js'
 
 // middlewares
 app.use(express.json());
@@ -68,3 +69,6 @@ io.on("connection", (socket) => {
   console.log("Socket conectado");
   registerChatHandler(io, socket);
 });
+
+// errores
+app.use(errorHandler)

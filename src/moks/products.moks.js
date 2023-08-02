@@ -1,4 +1,4 @@
-import { faker } from "@faker-js/faker/locale/es_MX";
+import { faker } from "@faker-js/faker/locale/es";
 
 export const moksGenerateProducts = async () => {
     const productMocks = [];

@@ -4,27 +4,15 @@ import { body, validationResult } from "express-validator";
 
 // obtiene un producto
 const getOneProduct = async (req, res) => {
-  try {
     const { id } = req.params;
     const result = await ProductService.getOneProduct(id)
 
-    if (!result) {
-      return res.status(404).json({
-        success: false,
-        messege: "No se encontro el producto solicitado",
-      });
-    }
-
-    res.status(200).json({
+    res.status(result.status).json({
       success: result.success,
       messege: result.message,
       data: result.data,
     });
-  } catch (error) {
-    console.error(
-      `Se verifica un error al intentar obtener el producto: ${error}`
-    );
-  }
+
 };
 
 // obtiene todos los productos

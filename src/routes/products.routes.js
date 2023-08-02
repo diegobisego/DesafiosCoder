@@ -43,18 +43,20 @@ router.get("/:pid", async (req, res) => {
     const { pid } = req.params;
     const result = await products.getProductById(pid);
 
-    if (!result) {
-      return res.status(404).json({
-        success: false,
-        messege: "No se encontro el producto solicitado",
-      });
-    }
+    // if (!result) {
+    //   return res.status(404).json({
+    //     success: false,
+    //     messege: "No se encontro el producto solicitado",
+    //   });
+    // }
 
-    res.status(200).json({
-      success: result.success,
-      messege: result.message,
-      data: result.data,
-    });
+    console.log(result)
+
+    // res.status(200).json({
+    //   success: result.success,
+    //   messege: result.message,
+    //   data: result.data,
+    // });
   } catch (error) {
     console.error(
       `Se verifica un error al intentar obtener el producto: ${error}`
