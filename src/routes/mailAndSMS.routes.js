@@ -19,7 +19,7 @@ const transporter = nodemailer.createTransport({
 const twilioClient = twilio(config.sms.TWILIO_SID, config.sms.TWILIO_TOKEN);
 
 // ruta donde se activa el envio del correo, esto viene de /api/mail
-router.get("/mail", async (_req, res) => {
+router.get("/mail", async (req, res) => {
   try {
     const mailOptions = {
       from: "Diego Bisego <diegobisego@gmail.com>",
@@ -55,7 +55,8 @@ router.get("/mail", async (_req, res) => {
       }
     });
   } catch (error) {
-    console.log("Error al enviar el mail: " + error);
+    const logger = req.logger;
+    logger.error(`Se produjo un error en editar producto: ${error}`);
   }
 });
 

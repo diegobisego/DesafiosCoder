@@ -7,6 +7,7 @@ import { inicializePassport } from "./config/passport.config.js";
 import config from './config/config.js'
 import cors from 'cors'
 import errorHandler from './middlewares/error.js'
+import { attachLogger } from "./middlewares/logger.js";
 
 // middlewares
 app.use(express.json());
@@ -14,6 +15,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(morgan("dev"));
 app.use(express.static(`${__dirname}/public`));
 app.use(cors())
+app.use(attachLogger)
 
 // cookies
 import cookieParser from "cookie-parser";

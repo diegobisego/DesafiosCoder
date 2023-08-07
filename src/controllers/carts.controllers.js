@@ -38,9 +38,10 @@ const getOneCart = async (req, res) => {
       data: result.data,
     });
   } catch (error) {
+    const logger = req.logger;
     res.status(500).json({
       success: false,
-      message: `Se produjo un error en la petición: ${error}`,
+      message: logger.error(`Se produjo un error en editar producto: ${error}`),
     });
   }
 };
@@ -62,9 +63,10 @@ const postCart = async (_req, res) => {
       message: result.message,
     });
   } catch (error) {
+    const logger = req.logger;
     res.status(500).json({
       success: false,
-      message: `Se produjo un error en la petición: ${error}`,
+      message: logger.error(`Se produjo un error en editar producto: ${error}`),
     });
   }
 };
@@ -95,9 +97,10 @@ const postProductInCart = async (req, res) => {
       message: result.message,
     });
   } catch (error) {
+    const logger = req.logger;
     res.status(500).json({
       success: false,
-      message: `Se produjo un error en la petición: ${error}`,
+      message: logger.error(`Se produjo un error en editar producto: ${error}`),
     });
   }
 };
@@ -146,9 +149,10 @@ const deleteCart = async (req, res) => {
       message: result.message,
     });
   } catch (error) {
+    const logger = req.logger;
     res.status(500).json({
       success: false,
-      message: `Se produjo un error en la petición: ${error}`,
+      message: logger.error(`Se produjo un error en editar producto: ${error}`),
     });
   }
 };
@@ -172,9 +176,10 @@ const deleteProductInCart = async (req, res) => {
       message: result.message,
     });
   } catch (error) {
+    const logger = req.logger;
     res.status(500).json({
       success: false,
-      message: `Se produjo un error en la petición: ${error}`,
+      message: logger.error(`Se produjo un error en editar producto: ${error}`),
     });
   }
 };
@@ -198,9 +203,10 @@ const purchaseCart = async (req, res) => {
       message: result.message,
     });
   } catch (error) {
+    const logger = req.logger;
     res.status(500).json({
       success: false,
-      message: `Se produjo un error en la petición: ${error}`,
+      message: logger.error(`Se produjo un error en editar producto: ${error}`),
     });
   }
 };

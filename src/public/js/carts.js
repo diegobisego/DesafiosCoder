@@ -96,7 +96,8 @@ document.addEventListener("DOMContentLoaded", async function () {
       try {
         await alertEditProduct(id);
       } catch (error) {
-        console.error("Se produjo un error en editar producto: ", error);
+        const logger = req.logger;
+        logger.error(`Se produjo un error en editar producto: ${error}`);
       }
     });
   });

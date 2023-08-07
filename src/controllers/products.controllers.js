@@ -14,7 +14,8 @@ const getOneProduct = async (req, res) => {
       data: result.data,
     });
   } catch (error) {
-    console.log(error);
+    const logger = req.logger;
+    logger.error(`Se produjo el siguiente error: ${error}`);
   }
 };
 

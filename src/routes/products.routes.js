@@ -31,9 +31,8 @@ router.get("/", async (req, res) => {
 
 
   } catch (error) {
-    console.error(
-      `Se verifica un error al intentar obtener los productos: ${error}`
-    );
+    const logger = req.logger;
+    logger.error(`Se produjo un error en editar producto: ${error}`);
   }
 });
 

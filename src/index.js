@@ -12,6 +12,7 @@ import mongoCarts from './routes/mongoCarts.routes.js'
 import sessions from './routes/sessions.routes.js' 
 import mailAndSMS from './routes/mailAndSMS.routes.js'
 import moksRouter from './routes/moks.routes.js'
+import loggerTest from './routes/loggers.routes.js'
 
 
 //use de rutas
@@ -24,6 +25,7 @@ router.use('/api/health', healthRouter)
       .use('/api/session', sessions)
       .use('/api', mailAndSMS)
       .use('/mockingproducts', moksRouter)
+      .use('/loggerTest', loggerTest)
 
       
 

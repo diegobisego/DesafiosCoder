@@ -187,6 +187,7 @@ const alertEditProduct = async (id) => {
         }
       } catch (error) {
         Swal.fire("Verifica los campos, caracteres invalidos");
+        
         console.error("Error en alertEditProduct: ", error);
       }
     }

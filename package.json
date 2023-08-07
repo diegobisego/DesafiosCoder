@@ -6,6 +6,7 @@
   "type": "module",
   "scripts": {
     "dev": "nodemon src/app.js --mode dev",
+    "prod": "nodemon src/app.js",
     "build:css": "npx tailwindcss -i ./src/input.css -o ./dist/output.css"
   },
   "keywords": [],
@@ -35,7 +36,8 @@
     "passport-local": "^1.0.0",
     "socket.io": "^4.6.1",
     "sweetalert2": "^11.7.12",
-    "twilio": "^4.14.0"
+    "twilio": "^4.14.0",
+    "winston": "^3.10.0"
   },
   "devDependencies": {
     "morgan": "^1.10.0",
