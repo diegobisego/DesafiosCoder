@@ -38,7 +38,7 @@ export default class LoggerFactory {
             new winston.transports.Console({ level: "info" }),
             new winston.transports.File({
               level: "error",
-              filename: '/src/logs/errors.log',
+              filename: './src/logs/errors.log',
               format: winston.format.simple(),
             }),
           ],
