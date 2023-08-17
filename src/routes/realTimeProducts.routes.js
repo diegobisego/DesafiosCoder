@@ -6,7 +6,7 @@ const products = new ProductManager("src/db/products.json");
 
 router.get("/", async (req, res) => {
   
-  try {
+  try { 
 
     const arrayProducts = await products.getProducts();
 
