@@ -90,6 +90,66 @@ const alertRegister = () => {
   });
 };
 
+const alertRecuperar = () => {
+  Swal.fire({
+    title: "Recuperar Constraseña",
+    html: `
+      <input type="text" id="restoreEmail" class="swal2-input" placeholder="correo@correo.com">
+    `,
+    showCancelButton: true,
+    cancelButtonText: "Cancelar",
+    confirmButtonText: "recuperar",
+    focusConfirm: false,
+    preConfirm: () => {
+      const email = Swal.getPopup().querySelector("#restoreEmail").value;
+
+      // Expresión regular para validar el formato de correo electrónico
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+      if (!email) {
+        Swal.showValidationMessage("Por favor, complete correctamente el correo de restauracion");
+        return false;
+      }
+
+      if (!email.match(emailRegex)) {
+        Swal.showValidationMessage(
+          "El correo electrónico ingresado no es válido"
+        );
+        return false;
+      }
+
+      return { email };
+    },
+  }).then((result) => {
+    if (result.dismiss !== Swal.DismissReason.cancel) {
+      const email = result.value;
+      axios
+        .post("/api/session/restoreEmail", email)
+        .then((response) => {
+          if (response.data.success) {
+            Swal.fire({
+              position: "top",
+              icon: "success",
+              title: `${response.data.message}`,
+              showConfirmButton: false,
+              timer: 1500,
+              toast: true,
+            });
+          } else {
+            Swal.fire({
+              icon: "error",
+              title: "Error",
+              text: `${response.data.message}`,
+              footer:
+                '<a href="http://localhost:8080/login">Has click aqui para ir al logIn</a>',
+            });
+          }
+        })
+        .catch((err) => `Hubo un error al enviar el correo: ${err}`);
+    }
+  });
+};
+
 const alertLogout = () => {
   Swal.fire({
     title: "Desconexion",

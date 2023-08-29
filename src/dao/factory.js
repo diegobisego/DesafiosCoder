@@ -46,4 +46,20 @@ export default class PersistenceFactory {
         }
     return cartDAO
     }
+
+    // persistencia para users
+    static async getUserPersistence() {
+        let userDAO
+        switch (persistence) {
+            case 'MONGO':
+                const MONGOURI = config.mongo.MONGO_URI;
+                mongoose.connect(MONGOURI, {useNewUrlParser: true, useUnifiedTopology: true, dbName: "ecommerce"});
+                const {default: mongoUserDAO} = await import('./mongo/manager/mongoUsers.js')   
+                userDAO = new mongoUserDAO()
+                break;
+            default:
+                break;
+        }
+    return userDAO
+    }
 }

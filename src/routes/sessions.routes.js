@@ -25,6 +25,12 @@ router.get("/githubcallback",passport.authenticate("github"),userController.logi
 // ruta current para obtener el user y el token asociado
 router.get('/current', passportCall('jwt'), userController.currentJWT);
 
+// ruta para recuperar password
+router.post('/restoreEmail', userController.restoreEmail)
+
+// ruta donde redirecciona restore password
+router.post('/restorePassword', userController.restorePassword)
+
 
 
 export default router;

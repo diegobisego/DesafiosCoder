@@ -1,6 +1,11 @@
 import classTokenDTO from "../dtos/users/jwtDTO.js";
 import { cookieStractor } from "../helpers/passportCall.js";
 import UserLoginDTO from "../dtos/users/loginUserDTO.js";
+import { UserService } from "../services/index.js";
+import TokenDTO from "../dtos/users/jwtDTO.js";
+import MailingService from "../services/mailingService.js";
+import DTemplates from "../constants/DTemplates.js";
+
 
 
 
@@ -58,7 +63,7 @@ const loginWithGitHub = (req,res) => {
     });
 }
 
-const currentJWT = (req,res) => {
+const currentJWT = async (req,res) => {
   const token = cookieStractor(req);
   const user = req.user;
   const userWithToken = {
@@ -69,10 +74,56 @@ const currentJWT = (req,res) => {
   res.send(userWithToken);
 }
 
+const restoreEmail = async (req,res) => {
+  try {
+    const { email } = req.body
+
+    if (!email) {
+      return res.status(404).json({
+        success: false,
+        message: "No se ingreso ningun correo"
+      })
+    }
+
+    const exist = await UserService.existUser(email)
+
+    if(!exist){
+      return res.status(404).json({
+        success: false,
+        message: "No existe el correo en la base de datos"
+      })
+    }
+
+    // una vez pasen las validacion se crea un restoreToken
+    const classToken = new TokenDTO(email)
+    const restoreToken = classToken.generateToken()
+
+
+    // uso el servicio de mail una vez tokenizado
+    const mailingService = new MailingService()
+    const result = await mailingService.sendMail(email, DTemplates.RESTORE, {restoreToken})
+    
+    res.status(200).json({
+      success: true,
+      message: 'Correo enviado con exito'
+    })
+
+
+  } catch (error) {
+    console.log('ocurrio un error en el envio de mail: ' , error)
+  }
+}
+
+const restorePassword = async (req,res) => {
+  res.render('restorePassword')
+}
+
 export default {
     loginUser,
     registerUser,
     logoutUser,
     loginWithGitHub,
-    currentJWT
+    currentJWT,
+    restoreEmail,
+    restorePassword
 }

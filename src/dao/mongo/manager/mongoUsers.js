@@ -78,5 +78,26 @@ class User {
       message: "Contraseña incorrecta",
     };
   };
+
+  existUser = async (email) => {
+    const user = await userModel.findOne({ email });
+
+
+    if (!user) {
+      return {
+        success: false,
+        message: "El usuario ingresado no existe",
+      };
+    }
+
+    return {
+      success: true,
+      message: "Usuario encontrado con exito"
+    }
+    
+  }
+
 }
+
+
 export default User;
