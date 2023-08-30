@@ -118,6 +118,28 @@ const restorePassword = async (req,res) => {
   res.render('restorePassword')
 }
 
+const postRestorePassword = async (req,res) => {
+  console.log(req.body.data)
+  const {email, password} = req.body
+
+  // verifico si existe el mail
+  const exitEmail = await UserService.existUser(email)
+
+  if (exitEmail.success) {
+    const result = await UserService.changeUserPassword(email,password)
+    return res.status(200).json({
+      success:result.success,
+      message: result.message
+    })
+  }
+
+  res.status(400).json({
+    success: false,
+    message: "Usuario inexistente"
+  })
+
+}
+
 export default {
     loginUser,
     registerUser,
@@ -125,5 +147,6 @@ export default {
     loginWithGitHub,
     currentJWT,
     restoreEmail,
-    restorePassword
+    restorePassword,
+    postRestorePassword
 }

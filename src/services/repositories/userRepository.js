@@ -6,4 +6,11 @@ export default class UserRepository {
     existUser = (user) => {
         return this.dao.existUser(user);
     }
+
+    changeUserPassword = (email, password) => {
+        return this.dao.changeUserPassword(email , password);
+    }
+    
+
+
 }

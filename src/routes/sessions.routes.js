@@ -29,7 +29,10 @@ router.get('/current', passportCall('jwt'), userController.currentJWT);
 router.post('/restoreEmail', userController.restoreEmail)
 
 // ruta donde redirecciona restore password
-router.post('/restorePassword', userController.restorePassword)
+router.get('/restorePassword', userController.restorePassword)
+
+
+router.post('/restorePassword', userController.postRestorePassword)
 
 
 

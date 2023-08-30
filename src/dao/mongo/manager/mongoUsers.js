@@ -1,5 +1,5 @@
 import userModel from "./../models/user.js";
-import { validatePassword } from "../../../helpers/bcrypt.js";
+import { createHash, validatePassword } from "../../../helpers/bcrypt.js";
 import dotenv from "dotenv";
 dotenv.config();
 
@@ -96,6 +96,25 @@ class User {
     }
     
   }
+
+  changeUserPassword = async (email, password) => {
+    try {
+        const hashedPassword = await createHash(password); 
+        await userModel.updateOne({ email }, { $set: { password: hashedPassword } });
+
+        return {
+            success: true,
+            message: "Se realizó el cambio de contraseña correctamente"
+        };
+    } catch (error) {
+        console.log(error);
+        return {
+            success: false,
+            message: "Ocurrió un error al cambiar la contraseña"
+        };
+    }
+};
+
 
 }
 
