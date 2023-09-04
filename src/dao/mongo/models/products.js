@@ -11,7 +11,8 @@ const productSchema = new mongoose.Schema(
     status: Boolean,
     quantity: {type: Number, default: 1},
     category: String,
-    thumbnails: Array
+    thumbnails: Array,
+    owner: String
   },
   { timestamps: { createdAt: "createDate", updatedAt: "updateDate" } }
 );

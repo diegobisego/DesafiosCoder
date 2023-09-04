@@ -5,6 +5,8 @@ import { UserService } from "../services/index.js";
 import TokenDTO from "../dtos/users/jwtDTO.js";
 import MailingService from "../services/mailingService.js";
 import DTemplates from "../constants/DTemplates.js";
+import { validatePassword } from "../helpers/bcrypt.js";
+ 
 
 
 
@@ -119,13 +121,19 @@ const restorePassword = async (req,res) => {
 }
 
 const postRestorePassword = async (req,res) => {
-  console.log(req.body.data)
+
   const {email, password} = req.body
 
   // verifico si existe el mail
-  const exitEmail = await UserService.existUser(email)
+  const existEmail = await UserService.existUser(email)
 
-  if (exitEmail.success) {
+  const oldPasswordHashed = existEmail.payload.password
+
+  // verifica si es la misma pass q la guardada
+  const isMatch = await validatePassword(password, oldPasswordHashed);
+
+
+  if (existEmail.success && !isMatch) {
     const result = await UserService.changeUserPassword(email,password)
     return res.status(200).json({
       success:result.success,
@@ -135,7 +143,7 @@ const postRestorePassword = async (req,res) => {
 
   res.status(400).json({
     success: false,
-    message: "Usuario inexistente"
+    message: "Usuario inexistente o misma contraseña ingresada"
   })
 
 }

@@ -21,7 +21,6 @@ form.addEventListener('submit', async (evt) => {
     formDataObject.token = urlParams.token;
     
     try {
-        debugger
         const response = await axios.post('/api/session/restorePassword', formDataObject);  // Enviar los datos del formulario
         
         const result = response.data;

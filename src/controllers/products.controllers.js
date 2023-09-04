@@ -60,6 +60,7 @@ const postOneProduct = [
       return res.status(422).json({ errors: errors.array() });
     }
     try {
+      const owner = req.user.email;
       const {
         title,
         description,
@@ -77,7 +78,8 @@ const postOneProduct = [
         price,
         quantity,
         category,
-        thumbnails
+        thumbnails,
+        owner
       );
 
       const arrayProductsMongo = await ProductService.getAllProducts();
@@ -137,19 +139,36 @@ const deleteOneProduct = async (req, res) => {
   try {
     const { id } = req.params;
 
-    const result = await ProductService.deleteOneProduct(id);
+    // verifico si el rol es premium
+    const findProduct = await ProductService.findProduct(id);
+    const userRole = req.user.role;
 
-    //respuesta segun result
-    if (result.success) {
-      return res.status(200).json({
-        success: result.success,
-        message: result.message,
-      });
+    if (findProduct.owner === "premium" && userRole === "premium") {
+      const result = await ProductService.deleteOneProduct(id);
+      if (result.success) {
+        return res.status(200).json({
+          success: result.success,
+          message: result.message,
+        });
+      }
+    }
+
+    if (userRole === "Admin") {
+      // si no es premium es admin por defecto
+      const result = await ProductService.deleteOneProduct(id);
+
+      //respuesta segun result
+      if (result.success) {
+        return res.status(200).json({
+          success: result.success,
+          message: result.message,
+        });
+      }
     }
 
     return res.status(404).json({
-      success: result.success,
-      message: result.message,
+      success: 'False',
+      message: 'Usuario incorrecto',
     });
   } catch (error) {
     res.status(500).json({

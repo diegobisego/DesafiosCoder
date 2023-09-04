@@ -6,7 +6,8 @@ export default class newProductDTO {
     price,
     quantity,
     category,
-    thumbnails
+    thumbnails,
+    owner
   ) {
     this.title = title
     this.description = description
@@ -15,5 +16,6 @@ export default class newProductDTO {
     this.quantity = quantity
     this.category = category
     this.thumbnails = thumbnails || []
+    this.owner = owner
   }
 }

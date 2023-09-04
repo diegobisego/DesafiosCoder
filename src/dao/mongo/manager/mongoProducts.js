@@ -136,7 +136,9 @@ class ProductManager {
     price,
     quantity,
     category,
-    thumbnails
+    thumbnails,
+    userEmail,
+    owner
   ) => {
     const newProduct = new newProductDTO(
       title,
@@ -145,7 +147,9 @@ class ProductManager {
       price,
       quantity,
       category,
-      thumbnails
+      thumbnails,
+      userEmail,
+      owner
     );
 
     try {

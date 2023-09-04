@@ -7,7 +7,7 @@ export default class TokenDTO {
 
     // Genera el token, usando el user como la firma, el secret y el tiempo de expiración
     generateToken = () => {
-        const token = Jwt.sign({ user: this.user }, 'jwtSecret', { expiresIn: '24h' });
+        const token = Jwt.sign({ user: this.user }, 'jwtSecret', { expiresIn: '1h' });
         return token;
     }
 }

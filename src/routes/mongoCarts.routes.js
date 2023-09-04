@@ -1,4 +1,4 @@
-import { authorizeRoles } from "../helpers/checkAdmin.js";
+import { authorizeRoleUser } from "../helpers/authorizeRoles.js";
 import { Router } from "express";
 import cartsControllers from "../controllers/carts.controllers.js";
 import { passportCall } from "../helpers/passportCall.js";
@@ -17,7 +17,7 @@ router.post("/", cartsControllers.postCart);
 router.post(
   "/:cid/product/:pid",
   passportCall("jwt"),
-  authorizeRoles(["Usuario"]),
+  authorizeRoleUser(),
   cartsControllers.postProductInCart
 );
  

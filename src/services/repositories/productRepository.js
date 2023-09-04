@@ -11,8 +11,8 @@ export default class ProductRepository {
         return this.dao.getProducts()
     }
 
-    postOneProduct = (title, description, code, price, quantity, category, thumbnails) => {
-        return this.dao.addProduct(title, description, code, price, quantity, category, thumbnails)
+    postOneProduct = (title, description, code, price, quantity, category, thumbnails, owner) => {
+        return this.dao.addProduct(title, description, code, price, quantity, category, thumbnails, owner)
     }
 
     putOneProduct = (pid, product) => {

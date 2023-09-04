@@ -1,4 +1,4 @@
-import { authorizeRoles } from "../helpers/checkAdmin.js";
+import { authorizeRolesAdminPremium } from "../helpers/authorizeRoles.js";
 import { Router } from "express";
 const router = Router();
 import { passportCall } from "../helpers/passportCall.js";
@@ -13,13 +13,13 @@ router.get("/:id",  productsController.getOneProduct);
 router.get("/", productsController.getAllProducts);
 
 // ruta agregar un productos
-router.post("/", passportCall('jwt'),authorizeRoles(['Admin']), productsController.postOneProduct);
+router.post("/", passportCall('jwt'),authorizeRolesAdminPremium(), productsController.postOneProduct);
 
 // ruta editar un producto
-router.put("/:id", passportCall('jwt'),authorizeRoles(['Admin']), productsController.putOneProduct);
+router.put("/:id", passportCall('jwt'),authorizeRolesAdminPremium(), productsController.putOneProduct);
 
 // ruta eliminar 1 producto
-router.delete("/:id", passportCall('jwt'),authorizeRoles(['Admin']), productsController.deleteOneProduct);
+router.delete("/:id", passportCall('jwt'),authorizeRolesAdminPremium(), productsController.deleteOneProduct);
 
 
 

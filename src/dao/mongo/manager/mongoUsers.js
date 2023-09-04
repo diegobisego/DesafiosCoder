@@ -3,15 +3,14 @@ import { createHash, validatePassword } from "../../../helpers/bcrypt.js";
 import dotenv from "dotenv";
 dotenv.config();
 
-
 class User {
   constructor() {}
 
   // create user
   createUser = async (newUser) => {
     try {
-
-      const { first_name, last_name, email, age, password, role, cartId } = newUser;
+      const { first_name, last_name, email, age, password, role, cartId } =
+        newUser;
 
       const exist = await userModel.findOne({ email });
 
@@ -29,8 +28,7 @@ class User {
         age,
         password,
         role,
-        cartId
-
+        cartId,
       });
 
       if (result) {
@@ -51,9 +49,7 @@ class User {
   };
 
   loginUser = async (email, password) => {
-
     const user = await userModel.findOne({ email });
-
 
     if (!user) {
       return {
@@ -82,7 +78,6 @@ class User {
   existUser = async (email) => {
     const user = await userModel.findOne({ email });
 
-
     if (!user) {
       return {
         success: false,
@@ -92,31 +87,31 @@ class User {
 
     return {
       success: true,
-      message: "Usuario encontrado con exito"
-    }
-    
-  }
+      message: "Usuario encontrado con exito",
+      payload: user,
+    };
+  };
 
   changeUserPassword = async (email, password) => {
     try {
-        const hashedPassword = await createHash(password); 
-        await userModel.updateOne({ email }, { $set: { password: hashedPassword } });
+      const hashedPassword = await createHash(password);
+      await userModel.updateOne(
+        { email },
+        { $set: { password: hashedPassword } }
+      );
 
-        return {
-            success: true,
-            message: "Se realizó el cambio de contraseña correctamente"
-        };
+      return {
+        success: true,
+        message: "Se realizó el cambio de contraseña correctamente",
+      };
     } catch (error) {
-        console.log(error);
-        return {
-            success: false,
-            message: "Ocurrió un error al cambiar la contraseña"
-        };
+      console.log(error);
+      return {
+        success: false,
+        message: "Ocurrió un error al cambiar la contraseña",
+      };
     }
-};
-
-
+  };
 }
-
 
 export default User;
