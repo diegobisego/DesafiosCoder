@@ -11,4 +11,5 @@ TerceraPractica:
 
 Documentacion:
 
-1 - Se agrega dentro de docs/swagger.yaml el swagger con toda la docu de productos y carrito.
+1 - Swagger: Se agrega dentro de docs/swagger.yaml el swagger con toda la docu de productos y carrito.
+
