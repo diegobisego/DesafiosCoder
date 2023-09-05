@@ -1,0 +1,8 @@
+TerceraPractica:
+
+1 - Sistema de contraseñas: Se agrego un sistema de recuperacion de password dentro de views llamado restorePassword.handlebars, junto con restore.handlebars dentro de
+/template y su js en public/js/restorePassword.js
+
+2 - Auth: Se modifico el js dentro de helpers/authorizeRoles.js para agregar al usuario premium.
+
+3- Owner: Se modifico el dao para que productos contenga el owner de quien cree el producto. 
