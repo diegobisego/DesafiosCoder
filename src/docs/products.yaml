@@ -1,10 +1,290 @@
+openapi: 3.0.0
+info:
+  version: "1.0.0"
+  title: "API de Productos"
 paths:
   /api/products:
     get:
-      summary: Duevelve los productos.
+      summary: Devuelve los productos.
       tags:
         - Products
+      responses:
+        '200':
+          description: Se obtienen todos los productos correctamente.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Product'
+        '500':
+          description: Error en el servidor.
     post:
-      summary: Crea un nuevo producto
+      summary: Crea un nuevo producto.
       tags:
-        - Products  
+        - Products
+      responses:
+        '201':
+          description: Producto creado exitosamente.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+
+  /api/products/{id}:
+    get:
+      summary: Obtener un producto por ID
+      tags:
+        - Products
+      parameters:
+        - name: id
+          in: path
+          description: ID del producto a obtener
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Producto obtenido correctamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+        '404':
+          description: Producto no encontrado
+    put:
+      summary: Actualizar un producto por ID
+      tags:
+        - Products
+      parameters:
+        - name: id
+          in: path
+          description: ID del producto a actualizar
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Product'
+      responses:
+        '200':
+          description: Producto actualizado correctamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+        '404':
+          description: Producto no encontrado
+    delete:
+      summary: Eliminar un producto por ID
+      tags:
+        - Products
+      parameters:
+        - name: id
+          in: path
+          description: ID del producto a eliminar
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Producto eliminado correctamente
+        '404':
+          description: Producto no encontrado
+
+  /api/carts:
+    get:
+      summary: Obtener todos los carritos
+      tags:
+        - Carts
+      responses:
+        '200':
+          description: Carritos obtenidos correctamente
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Cart'
+        '500':
+          description: Error en el servidor
+    post:
+      summary: Crear un nuevo carrito
+      tags:
+        - Carts
+      responses:
+        '201':
+          description: Carrito creado exitosamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Cart'
+
+  /api/carts/{cid}:
+    get:
+      summary: Obtener un carrito por ID
+      tags:
+        - Carts
+      parameters:
+        - name: cid
+          in: path
+          description: ID del carrito a obtener
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Carrito obtenido correctamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Cart'
+        '404':
+          description: Carrito no encontrado
+    delete:
+      summary: Eliminar un carrito por ID
+      tags:
+        - Carts
+      parameters:
+        - name: cid
+          in: path
+          description: ID del carrito a eliminar
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Carrito eliminado correctamente
+        '404':
+          description: Carrito no encontrado
+
+  /api/carts/{cid}/product/{pid}:
+    post:
+      summary: Agregar producto a un carrito
+      tags:
+        - Carts
+      parameters:
+        - name: cid
+          in: path
+          description: ID del carrito al que se agrega el producto
+          required: true
+          schema:
+            type: string
+        - name: pid
+          in: path
+          description: ID del producto a agregar al carrito
+          required: true
+          schema:
+            type: string
+      responses:
+        '201':
+          description: Producto agregado al carrito exitosamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Cart'
+        '404':
+          description: Carrito o producto no encontrado
+    delete:
+      summary: Eliminar producto de un carrito
+      tags:
+        - Carts
+      parameters:
+        - name: cid
+          in: path
+          description: ID del carrito del que se elimina el producto
+          required: true
+          schema:
+            type: string
+        - name: pid
+          in: path
+          description: ID del producto a eliminar del carrito
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Producto eliminado del carrito correctamente
+        '404':
+          description: Carrito o producto no encontrado
+
+  /api/carts/{cid}/purchase:
+    get:
+      summary: Realizar la compra de un carrito
+      tags:
+        - Carts
+      parameters:
+        - name: cid
+          in: path
+          description: ID del carrito a comprar
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Compra realizada exitosamente
+        '404':
+          description: Carrito no encontrado
+
+
+components:
+  schemas:
+    Product:
+      type: object
+      properties:
+        title:
+          type: string
+          description: Nombre del Producto
+        description:
+          type: string
+          description: Descripción del Producto
+        code:
+          type: string
+          description: Código del Producto
+        price:
+          type: number
+          description: Precio del Producto
+        status:
+          type: boolean
+          description: Estado del Producto (Activo/Inactivo)
+        quantity:
+          type: number
+          description: Cantidad disponible del Producto
+          default: 1
+        category:
+          type: string
+          description: Categoría del Producto
+        thumbnails:
+          type: array
+          description: Lista de miniaturas del Producto
+          items:
+            type: string
+            description: URL de la miniatura
+        owner:
+          type: string
+          description: Propietario del Producto
+    Cart:
+      type: object
+      properties:
+        products:
+          type: array
+          description: Lista de productos en el carrito
+          items:
+            type: object
+            properties:
+              product:
+                type: string
+                description: ID del producto en el carrito
+              quantity:
+                type: number
+                description: Cantidad del producto en el carrito
+                default: 1
+              price:
+                type: number
+                description: Precio del producto en el carrito
+      required:
+        - products
+      additionalProperties: false
