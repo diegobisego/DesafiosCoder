@@ -8,6 +8,8 @@ import config from './config/config.js'
 import cors from 'cors'
 import errorHandler from './middlewares/error.js'
 import { attachLogger } from "./middlewares/logger.js";
+import swaggerUiExpress from "swagger-ui-express";
+import { specs } from "./docs/swagger.js";
 
 // middlewares
 app.use(express.json());
@@ -16,6 +18,7 @@ app.use(morgan("dev"));
 app.use(express.static(`${__dirname}/public`));
 app.use(cors())
 app.use(attachLogger)
+app.use('/docs', swaggerUiExpress.serve, swaggerUiExpress.setup(specs))
 
 // cookies
 import cookieParser from "cookie-parser";

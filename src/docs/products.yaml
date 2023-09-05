@@ -1,0 +1,10 @@
+paths:
+  /api/products:
+    get:
+      summary: Duevelve los productos.
+      tags:
+        - Products
+    post:
+      summary: Crea un nuevo producto
+      tags:
+        - Products  
