@@ -6,3 +6,9 @@ TerceraPractica:
 2 - Auth: Se modifico el js dentro de helpers/authorizeRoles.js para agregar al usuario premium.
 
 3- Owner: Se modifico el dao para que productos contenga el owner de quien cree el producto. 
+
+
+
+Documentacion:
+
+1 - Se agrega dentro de docs/swagger.yaml el swagger con toda la docu de productos y carrito.
