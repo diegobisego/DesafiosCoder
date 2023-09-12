@@ -13,3 +13,7 @@ Documentacion:
 
 1 - Swagger: Se agrega dentro de docs/swagger.yaml el swagger con toda la docu de productos y carrito.
 
+
+testing:
+
+1 - Se agrego una carpeta test donde estan los testing solicitado.
