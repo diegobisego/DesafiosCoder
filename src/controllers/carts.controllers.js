@@ -51,10 +51,13 @@ const postCart = async (_req, res) => {
   try {
     const result = await CartService.postCart();
 
+    console.log('resultado: ', result.data._id )
+
     if (result.success) {
       return res.status(201).json({
         success: result.success,
         message: result.message,
+        payload: result.data._id
       });
     }
 
@@ -85,7 +88,7 @@ const postProductInCart = async (req, res) => {
     );
 
     if (result.success) {
-      return res.status(200).json({
+      return res.status(201).json({
         success: result.success,
         message: result.message,
         payload: result.data,

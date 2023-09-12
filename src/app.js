@@ -77,3 +77,5 @@ io.on("connection", (socket) => {
 
 // errores
 app.use(errorHandler)
+
+export default app

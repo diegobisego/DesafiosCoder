@@ -2,6 +2,7 @@ import { ProductService } from "../services/index.js";
 import { moksGenerateProducts } from "../moks/products.moks.js";
 import { body, validationResult } from "express-validator";
 
+
 // obtiene un producto
 const getOneProduct = async (req, res) => {
   try {
@@ -140,16 +141,13 @@ const deleteOneProduct = async (req, res) => {
     const { id } = req.params;
 
     // verifico si el rol es premium
-    const findProduct = await ProductService.findProduct(id);
+    const findProduct = await ProductService.getOneProduct(id);
     const userRole = req.user.role;
 
     if (findProduct.owner === "premium" && userRole === "premium") {
       const result = await ProductService.deleteOneProduct(id);
       if (result.success) {
-        return res.status(200).json({
-          success: result.success,
-          message: result.message,
-        });
+        return res.sendStatus(204);
       }
     }
 
@@ -159,16 +157,13 @@ const deleteOneProduct = async (req, res) => {
 
       //respuesta segun result
       if (result.success) {
-        return res.status(200).json({
-          success: result.success,
-          message: result.message,
-        });
+        return res.sendStatus(204);
       }
     }
 
     return res.status(404).json({
-      success: 'False',
-      message: 'Usuario incorrecto',
+      success: "False",
+      message: "Usuario incorrecto",
     });
   } catch (error) {
     res.status(500).json({
