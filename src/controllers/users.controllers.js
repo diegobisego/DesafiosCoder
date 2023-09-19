@@ -48,11 +48,24 @@ const registerUser = (_req,res) => {
         message: "Usuario creado con exito",
       });
 }
+const logoutUser = async (req, res) => {
+  try {
+    const {id} = req.user.user; 
 
-const logoutUser = (_req,res) => {
-  res.clearCookie("authToken"); // Elimina la cookie de sesión en el cliente
-  res.status(200).json({ success: true, message: "Sesión destruida exitosamente" });
-}
+    // Actualizar la propiedad last_connection después del cierre de sesión
+    await UserService.logoutUpdate(id);
+
+    res.clearCookie("authToken"); // Elimina la cookie de sesión en el cliente
+    res
+      .status(200)
+      .json({ success: true, message: "Sesión destruida exitosamente" });
+  } catch (error) {
+    res.status(404).json({
+      success: false,
+      message: `Ocurrio un error al intentar desloguearse: ${error}`,
+    });
+  }
+};
 
 const loginWithGitHub = (req,res) => {
   const {first_name, email, role, id} = req.user;
@@ -148,6 +161,22 @@ const postRestorePassword = async (req,res) => {
 
 }
 
+const changeRoleUser = async (req, res) => {
+  const { uid } = req.params; 
+
+  console.log('id: ', uid)
+
+  try {
+    const result = await UserService.changeRole(uid);
+    console.log(result);
+    res.status(200).json({ message: "Rol cambiado con éxito" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Error al cambiar el rol del usuario" });
+  }
+};
+
+
 export default {
     loginUser,
     registerUser,
@@ -156,5 +185,6 @@ export default {
     currentJWT,
     restoreEmail,
     restorePassword,
-    postRestorePassword
+    postRestorePassword,
+    changeRoleUser
 }

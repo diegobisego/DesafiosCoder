@@ -12,7 +12,7 @@ router.post("/register", passportCall('register'), userController.registerUser);
 router.post("/login", passportCall('login'), userController.loginUser);
 
 // ruta para destruir la sesión
-router.post("/logout", userController.logoutUser);
+router.post("/logout", passportCall('jwt'), userController.logoutUser);
 
 // ******** GITHUB authenticate ********
 

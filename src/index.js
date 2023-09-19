@@ -13,6 +13,7 @@ import sessions from './routes/sessions.routes.js'
 import mailAndSMS from './routes/mailAndSMS.routes.js'
 import moksRouter from './routes/moks.routes.js'
 import loggerTest from './routes/loggers.routes.js'
+import userRouter from './routes/users.routes.js'
 
 
 //use de rutas
@@ -26,6 +27,7 @@ router.use('/api/health', healthRouter)
       .use('/api', mailAndSMS)
       .use('/mockingproducts', moksRouter)
       .use('/loggerTest', loggerTest)
+      .use('/api/users', userRouter)
 
       
 

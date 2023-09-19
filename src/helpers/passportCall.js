@@ -8,6 +8,7 @@ export const passportCall = (strategy) => {
         passport.authenticate(strategy, async (error,user, info) => {
             if (error) return next(error)  // si hay error
             if (!user) {
+                res.clearCookie("authToken");
                 res.status(200).send({status: false, error: info.message?info.message: info.toString()}) // false en user
             }
             req.user = user  //si existe, lo devuleve en req.user

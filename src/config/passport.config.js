@@ -3,17 +3,15 @@ import local from "passport-local";
 import userModel from "../dao/mongo/models/user.js";
 import UserManager from "./../dao/mongo/manager/mongoUsers.js";
 import GithubStrategy from "passport-github2";
-import  {CartService}  from "../services/index.js";
+import { CartService } from "../services/index.js";
 import { Strategy, ExtractJwt } from "passport-jwt";
 import { cookieStractor } from "../helpers/passportCall.js";
 import { createHash } from "../helpers/bcrypt.js";
 import NewUserDTO from "../dtos/users/newUserDTO.js";
-import UserAdminDTO from '../dtos/users/userAdminDTO.js'
+import UserAdminDTO from "../dtos/users/userAdminDTO.js";
 import config from "./config.js";
 
 const newUser = new UserManager();
-
-
 
 const LocalStrategy = local.Strategy; //estategia local, user + pass
 
@@ -44,12 +42,10 @@ export const inicializePassport = () => {
           const hashedPassword = await createHash(password);
 
           // creo el temoplate
-          const templateUser = {email,hashedPassword,cartId,...user}
-
+          const templateUser = { email, hashedPassword, cartId, ...user };
 
           // aca uso dtos
           const newUserRegisrer = new NewUserDTO(templateUser);
-
 
           // creo el usuario
           const result = await newUser.createUser(newUserRegisrer);
@@ -68,7 +64,7 @@ export const inicializePassport = () => {
       }
     )
   );
- 
+
   // passport login
   passport.use(
     "login",
@@ -77,7 +73,10 @@ export const inicializePassport = () => {
       async (email, password, done) => {
         //passport solo debe devolver al usuario final, no es responsable de la sesion
         try {
-          if (email === config.users.USER_ADMIN && password === config.users.PASS_PASS) {
+          if (
+            email === config.users.USER_ADMIN &&
+            password === config.users.PASS_PASS
+          ) {
             const userAdmin = new UserAdminDTO(email);
             return done(null, userAdmin);
           }
@@ -87,6 +86,12 @@ export const inicializePassport = () => {
           if (!result.success) {
             return done(null, false, { message: result.message });
           }
+
+          // Actualizar la propiedad last_connection después del inicio de sesión
+          const userId = result.data._id; 
+          await userModel.findByIdAndUpdate(userId, {
+            last_connection: new Date(),
+          });
 
           //devuelvo los usuarios aca todo ok
           return done(null, result.data);
