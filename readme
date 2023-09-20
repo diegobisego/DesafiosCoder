@@ -18,3 +18,12 @@ testing:
 
 1 - Se agrego una carpeta test donde estan los testing solicitado.
  
+
+
+Cuarta Entrega:
+
+1 - Se crea la ruta de user premium para cambiar el role de usuario a premium y viceversa 
+
+2 - Se modifica el modelo de users. Se agrega documents y last_connection
+
+3 - Se crea la ruta con metodo post para subir los archivos con multer
