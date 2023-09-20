@@ -10,4 +10,8 @@ router.get('/premium/:uid', usersControllers.changeRoleUser);
 // Ruta para subir documentos
 router.post('/:uid/documents', upload.array('documents', 5), usersControllers.uploadDocuments);
 
+// ruta para obtener todos los usuarios
+
+router.get('/all', usersControllers.getAllUsers)
+
 export default router;
