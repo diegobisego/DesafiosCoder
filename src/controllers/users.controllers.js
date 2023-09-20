@@ -48,6 +48,7 @@ const registerUser = (_req,res) => {
         message: "Usuario creado con exito",
       });
 }
+
 const logoutUser = async (req, res) => {
   try {
     const {id} = req.user.user; 
@@ -194,27 +195,10 @@ const uploadDocuments = async (req, res) => {
   const uploadedFiles = req.files; // Archivos subidos por el usuario
   const documents = []; // Array para almacenar los documentos subidos
 
-  // Verifica si el usuario existe
-  const user = await UserModel.findById(userId);
-
-  if (!user) {
-    return res.status(404).json({ error: 'Usuario no encontrado' });
-  }
-
-  // Agrega los documentos subidos al array de documentos del usuario
-  uploadedFiles.forEach((file) => {
-    documents.push({
-      name: file.originalname, // Nombre del documento
-      reference: file.filename, // Referencia al archivo subido (nombre del archivo en el sistema)
-    });
-  });
-
-  // Agrega los documentos al usuario
-  user.documents = [...user.documents, ...documents];
-
+  
   // Guarda los cambios en la base de datos
   try {
-    await user.save();
+    await UserService.uploadDocuments(userId,uploadedFiles,documents);
     res.status(200).json({ message: 'Documentos subidos y agregados al usuario con éxito' });
   } catch (error) {
     console.error(error);
@@ -222,7 +206,17 @@ const uploadDocuments = async (req, res) => {
   }
 };
 
+const getAllUsers = async (req, res) => {
+  try {
+    // Obtén todos los usuarios y proyecta solo los campos necesarios
+    const users = await UserService.getAllUsers();
 
+    res.status(200).json(users);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Error al obtener los usuarios' });
+  }
+};
 
 
 
@@ -237,5 +231,6 @@ export default {
     restorePassword,
     postRestorePassword,
     changeRoleUser,
-    uploadDocuments
+    uploadDocuments,
+    getAllUsers
 }

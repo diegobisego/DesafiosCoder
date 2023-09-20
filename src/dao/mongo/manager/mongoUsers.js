@@ -167,6 +167,45 @@ class User {
       };
     }
   };
-}
+
+  getAllUsers = async () => {
+    try {
+      // Obtén todos los usuarios y proyecta solo los campos necesarios
+      const users = await userModel.find({}, 'first_name last_name email role');
+  
+      res.status(200).json(users);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'Error al obtener los usuarios' });
+    }
+  }
+
+  uploadDocuments = async (userId,uploadedFiles,documents) => {
+    try {
+      // Verifica si el usuario existe usando findById
+      const user = await userModel.findById(userId);
+  
+      if (!user) {
+        return res.status(404).json({ error: 'Usuario no encontrado' });
+      }
+  
+      // Agrega los documentos subidos al array de documentos del usuario
+      uploadedFiles.forEach((file) => {
+        documents.push({
+          name: file.originalname, // Nombre del documento
+          reference: file.filename, // Referencia al archivo subido (nombre del archivo en el sistema)
+        });
+      });
+  
+      // Actualiza el array de documentos del usuario usando findByIdAndUpdate
+      await userModel.findByIdAndUpdate(userId, { $push: { documents: { $each: documents } } });
+  
+      res.status(200).json({ message: 'Documentos subidos y agregados al usuario con éxito' });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'Error al guardar los documentos en el usuario' });
+    }
+  }
+} 
 
 export default User;
