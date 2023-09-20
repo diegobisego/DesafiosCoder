@@ -18,6 +18,10 @@ export default class UserRepository {
     logoutUpdate = (id) => {
         return this.dao.logoutUpdate(id)
     }
+
+    uploadDocuments = () => {
+        return this.dao.uploadDocuments()
+    }
     
 
 

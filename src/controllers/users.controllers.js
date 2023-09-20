@@ -162,19 +162,69 @@ const postRestorePassword = async (req,res) => {
 }
 
 const changeRoleUser = async (req, res) => {
-  const { uid } = req.params; 
-
-  console.log('id: ', uid)
+  const { uid } = req.params;
 
   try {
+    // Verifica si el usuario ha cargado todos los documentos requeridos antes de proceder
+    const user = await UserService.getUserById(uid);
+    const requiredDocuments = ['Identificación', 'Comprobante de domicilio', 'Comprobante de estado de cuenta'];
+
+    const userDocuments = user.documents.map(doc => doc.name);
+
+    const hasAllRequiredDocuments = requiredDocuments.every(doc => userDocuments.includes(doc));
+
+    // Verifica si el usuario ya es "Premium" o no ha cargado todos los documentos requeridos
+    if (user.role === 'premium' || !hasAllRequiredDocuments) {
+      return res.status(400).json({ error: 'El usuario no puede cambiar su rol a "premium" en este momento' });
+    }
+
+    // Cambia el rol del usuario a "premium"
     const result = await UserService.changeRole(uid);
-    console.log(result);
-    res.status(200).json({ message: "Rol cambiado con éxito" });
+
+    res.status(200).json({ message: "Rol cambiado a premium con éxito" });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Error al cambiar el rol del usuario" });
   }
 };
+
+
+const uploadDocuments = async (req, res) => {
+  const userId = req.params.uid; // ID del usuario desde la URL
+  const uploadedFiles = req.files; // Archivos subidos por el usuario
+  const documents = []; // Array para almacenar los documentos subidos
+
+  // Verifica si el usuario existe
+  const user = await UserModel.findById(userId);
+
+  if (!user) {
+    return res.status(404).json({ error: 'Usuario no encontrado' });
+  }
+
+  // Agrega los documentos subidos al array de documentos del usuario
+  uploadedFiles.forEach((file) => {
+    documents.push({
+      name: file.originalname, // Nombre del documento
+      reference: file.filename, // Referencia al archivo subido (nombre del archivo en el sistema)
+    });
+  });
+
+  // Agrega los documentos al usuario
+  user.documents = [...user.documents, ...documents];
+
+  // Guarda los cambios en la base de datos
+  try {
+    await user.save();
+    res.status(200).json({ message: 'Documentos subidos y agregados al usuario con éxito' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Error al guardar los documentos en el usuario' });
+  }
+};
+
+
+
+
 
 
 export default {
@@ -186,5 +236,6 @@ export default {
     restoreEmail,
     restorePassword,
     postRestorePassword,
-    changeRoleUser
+    changeRoleUser,
+    uploadDocuments
 }
