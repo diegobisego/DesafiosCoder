@@ -7,6 +7,7 @@ import { generateTicketCode, calculateTotalAmount } from "../../../helpers/ticke
 import ErrorFactory from "../../../services/repositories/errorRepository.js";
 import { cartsErrorCartNotFound } from "../../../constants/productsError.js";
 import { EErrors } from "../../../constants/EErrors.js";
+import { config } from "dotenv";
 
 class CartManager {
   constructor() {}
@@ -275,16 +276,16 @@ class CartManager {
     }
   };
 
-  purchaseCart = async (cid) => {
+  purchaseCart = async (cid, emailDestination) => {
     try {
       // Obtener el carrito y sus productos
-      const cart = await CartModel.findById(cid).populate("products");
+      const cart = await CartModel.findById(cid).populate('products');
   
       // Verificar si el carrito existe
       if (!cart) {
         return {
           success: false,
-          message: "Carrito no encontrado",
+          message: 'Carrito no encontrado',
         };
       }
   
@@ -303,7 +304,7 @@ class CartManager {
         if (!product) {
           return {
             success: false,
-            message: "Producto no encontrado",
+            message: 'Producto no encontrado',
           };
         }
   
@@ -328,48 +329,75 @@ class CartManager {
       const productsNotProcessedIds = productsNotProcessed.map((productId) =>
         productId.toString()
       );
-
+  
       cart.products = cart.products.filter(
         (p) => !productsNotProcessedIds.includes(p.product.toString())
       );
-
-      // Buscamos el id del cliente correspondiente al cart
-      const idClient = await findClientByCartId(cid)
-
   
-      // Crear un nuevo ticket si la compra se completo con exito
+      // Buscar el id del cliente correspondiente al cart
+      const idClient = await findClientByCartId(cid);
+  
+      // Crear un nuevo ticket si la compra se completó con éxito
       let ticketData = null;
       if (productsNotProcessed.length === 0) {
-        // Guardar informacion de la compra
+        // Guardar información de la compra
         ticketData = {
-          code: generateTicketCode(), 
+          code: generateTicketCode(), // Genera el código del ticket
           purchase_datetime: new Date(),
-          amount: calculateTotalAmount(cart.products), 
-          purchaser: idClient, 
+          amount: calculateTotalAmount(cart.products), // Calcula el monto total del carrito
+          purchaser: idClient, // ID del comprador (ajusta según tu modelo)
         };
   
-        // Crear el ticket 
-        await TicketModel.create(ticketData)
+        // Crear el ticket
+        await TicketModel.create(ticketData);
   
+        // Configura el transporter de Nodemailer (ajusta según tu proveedor de correo)
+        const transporter = nodemailer.createTransport({
+          service: 'Gmail',
+          auth: {
+            user: config.email.APP_MAIL, // Reemplaza con tu dirección de correo
+            pass: config.email.APP_PASSWORD, // Reemplaza con tu contraseña
+          },
+        });
+  
+        // Contenido del correo electrónico
+        const mailOptions = {
+          from: config.email.APP_MAIL,
+          to: emailDestination, // Reemplaza con la dirección del destinatario
+          subject: 'Compra realizada con éxito',
+          text: `Gracias por tu compra. Adjunto encontrarás tu ticket de compra.`,
+          attachments: [
+            {
+              filename: 'ticket.pdf', // Nombre del archivo adjunto
+              path: 'ruta_del_archivo.pdf', // Ruta al archivo PDF del ticket
+            },
+          ],
+        };
+  
+        // Envía el correo electrónico
+        transporter.sendMail(mailOptions, (error, info) => {
+          if (error) {
+            console.error('Error al enviar el correo electrónico:', error);
+          } else {
+            console.log('Correo electrónico enviado:', info.response);
+          }
+        });
       }
   
-      
       // Guardar los productos sin stock en el carrito
       await CartModel.updateOne(
         { _id: cid },
         { $set: { products: productsWithEnoughStock } }
       );
-      
-
   
       return {
         success: true,
-        message: "Proceso de compra finalizado exitosamente",
-        ticket: ticketData, // Devolver el ticket si se creó uno exitosamente
+        message: 'Proceso de compra finalizado exitosamente',
+        ticket: ticketData,
       };
     } catch (error) {
-      console.log("Error en el proceso de compra:", error);
-      return { success: false, message: "Error en el servidor" };
+      console.log('Error en el proceso de compra:', error);
+      return { success: false, message: 'Error en el servidor' };
     }
   };
   

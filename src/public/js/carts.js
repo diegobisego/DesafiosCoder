@@ -2,7 +2,7 @@ document.addEventListener("DOMContentLoaded", async function () {
   const buttonsBuy = document.querySelectorAll('[id^="buy-btn-"]');
   const buttonsEdit = document.querySelectorAll('[id^="btn-edit-"]');
   const buttonsDelete = document.querySelectorAll('[id^="btn-delete-"]');
-  const buttonsAddProduct = document.getElementById('buttonsAddProduct');
+  const buttonsAddProduct = document.getElementById("buttonsAddProduct");
 
   const response = await axios.get(`/current`);
   const role = response.data.user.role;
@@ -15,7 +15,7 @@ document.addEventListener("DOMContentLoaded", async function () {
     buttonsDelete.forEach(function (button) {
       button.classList.add("hidden-btn");
     });
-    buttonsAddProduct.classList.add("hidden-btn")
+    buttonsAddProduct.classList.add("hidden-btn");
   }
 
   // boton para agregar producto al carrito
@@ -115,13 +115,16 @@ document.addEventListener("DOMContentLoaded", async function () {
       }
     });
   });
-
-  
-
 });
 
-const btnAgregarProducto = document.getElementById('btnAgregarProducto')
+const btnAgregarProducto = document.getElementById("btnAgregarProducto");
+const btnCarrito = document.getElementById("btnCarrito");
 
-buttonsAddProduct.addEventListener('click', () => {
-  alertAddProduct()
-})
+buttonsAddProduct.addEventListener("click", () => {
+  alertAddProduct();
+});
+
+// mostrar carrito
+btnCarrito.addEventListener("click", () => {
+  getCartFromCurrent();
+});

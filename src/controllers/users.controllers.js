@@ -206,7 +206,7 @@ const uploadDocuments = async (req, res) => {
   }
 };
 
-const getAllUsers = async (req, res) => {
+const getAllUsers = async (_req, res) => {
   try {
     // Obtén todos los usuarios y proyecta solo los campos necesarios
     const users = await UserService.getAllUsers();

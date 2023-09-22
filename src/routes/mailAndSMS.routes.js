@@ -3,6 +3,7 @@ import nodemailer from "nodemailer";
 import twilio from "twilio";
 import { Router } from "express";
 import __dirname from "../dirname.js";
+import { passportCall } from "../helpers/passportCall.js";
 const router = Router();
 
 // configura la creacion del correo (llevarlo a service desp)
@@ -72,5 +73,62 @@ router.get("/sms", async (req, res) => {
 
   res.send({ success: true, payload: result });
 });
+
+
+// Servidor - Ruta para realizar la compra y enviar el correo
+router.post("/realizar-compra", passportCall('jwt'), async (req, res) => {
+  try {
+    // Accede a los datos del usuario desde req.user
+    const { first_name, email } = req.user.user; // Accede a los datos del usuario actual
+
+    // ... Lógica para realizar la compra ...
+
+    // Calcula el monto total de la compra (reemplaza esto con tu lógica real)
+    const totalAmount = calculateTotalAmount(req.body.cart.products);
+
+    // Genera un código de ticket (reemplaza esto con tu lógica real)
+    const ticketCode = generateTicketCode();
+
+    // Envia el correo de confirmación al correo del usuario actual
+    const userEmail = email; // Utiliza el correo del usuario actual
+
+    // Lógica para enviar el correo
+    const mailOptions = {
+      from: "Tu Nombre <tuemail@gmail.com>",
+      to: userEmail,
+      subject: "Confirmación de Compra",
+      html: `
+        <p>¡Gracias por tu compra, ${first_name}!</p>
+        <p>Tu compra ha sido procesada exitosamente.</p>
+        <p>Detalles de la compra:</p>
+        <ul>
+          <li>Monto Total: $${totalAmount.toFixed(2)}</li>
+          <li>Código de Ticket: ${ticketCode}</li>
+        </ul>
+        <p>¡Esperamos verte de nuevo pronto!</p>
+      `,
+    };
+
+    // Envía el correo utilizando el transporter configurado previamente
+    transporter.sendMail(mailOptions, (error, info) => {
+      if (error) {
+        console.error("Error al enviar el correo de confirmación:", error);
+        // Maneja el error apropiadamente, por ejemplo, enviando una respuesta de error al cliente
+        res.status(500).send({ success: false, message: 'Error al enviar el correo de confirmación' });
+      } else {
+        // ... Más lógica de compra ...
+
+        // Envía una respuesta de éxito al cliente
+        res.send({ success: true, message: 'Compra realizada con éxito' });
+      }
+    });
+
+  } catch (error) {
+    console.error('Error al realizar la compra:', error);
+    res.status(500).send({ success: false, message: 'Error al realizar la compra' });
+  }
+});
+
+
 
 export default router;

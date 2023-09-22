@@ -107,7 +107,9 @@ const alertRecuperar = () => {
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
       if (!email) {
-        Swal.showValidationMessage("Por favor, complete correctamente el correo de restauracion");
+        Swal.showValidationMessage(
+          "Por favor, complete correctamente el correo de restauracion"
+        );
         return false;
       }
 
@@ -247,7 +249,7 @@ const alertEditProduct = async (id) => {
         }
       } catch (error) {
         Swal.fire("Verifica los campos, caracteres invalidos");
-        
+
         console.error("Error en alertEditProduct: ", error);
       }
     }
@@ -299,7 +301,7 @@ const alertDeleteProduct = async (id) => {
 
 const alertAddProduct = async () => {
   const { value: formValues } = await Swal.fire({
-    title: 'Agregar Nuevo Producto',
+    title: "Agregar Nuevo Producto",
     html: `
       <input id="swal-input-title" class="swal2-input" placeholder="Título" required>
       <input id="swal-input-description" class="swal2-input" placeholder="Descripción" required>
@@ -310,20 +312,23 @@ const alertAddProduct = async () => {
       <input id="swal-input-thumbnails" class="swal2-input" placeholder="URLs de imágenes separadas por comas" required>
     `,
     showCancelButton: true,
-    confirmButtonText: 'Agregar',
-    cancelButtonText: 'Cancelar',
+    confirmButtonText: "Agregar",
+    cancelButtonText: "Cancelar",
     focusConfirm: false,
     preConfirm: () => {
       return {
-        title: document.getElementById('swal-input-title').value,
-        description: document.getElementById('swal-input-description').value,
-        code: document.getElementById('swal-input-code').value,
-        price: document.getElementById('swal-input-price').value,
-        quantity: document.getElementById('swal-input-quantity').value,
-        category: document.getElementById('swal-input-category').value,
-        thumbnails: document.getElementById('swal-input-thumbnails').value.split(',').map(url => url.trim())
-      }
-    }
+        title: document.getElementById("swal-input-title").value,
+        description: document.getElementById("swal-input-description").value,
+        code: document.getElementById("swal-input-code").value,
+        price: document.getElementById("swal-input-price").value,
+        quantity: document.getElementById("swal-input-quantity").value,
+        category: document.getElementById("swal-input-category").value,
+        thumbnails: document
+          .getElementById("swal-input-thumbnails")
+          .value.split(",")
+          .map((url) => url.trim()),
+      };
+    },
   });
 
   if (formValues) {
@@ -334,23 +339,135 @@ const alertAddProduct = async () => {
       price: formValues.price,
       quantity: formValues.quantity,
       category: formValues.category,
-      thumbnails: formValues.thumbnails
+      thumbnails: formValues.thumbnails,
     };
 
     try {
       // Realizar la petición POST con Axios
-      const response = await axios.post('/api/products', newProducto);
+      const response = await axios.post("/api/products", newProducto);
 
       if (response.data.success) {
         // Si la respuesta es exitosa, actualizar la vista o realizar cualquier acción necesaria
-        console.log('Producto agregado exitosamente:', response.data.message);
+        console.log("Producto agregado exitosamente:", response.data.message);
       } else {
         // Manejar errores si es necesario
-        console.error('Error al agregar el producto:', response.data.message);
+        console.error("Error al agregar el producto:", response.data.message);
       }
     } catch (error) {
       // Manejar errores de conexión o problemas con la petición
-      console.error('Se produjo un error en la petición:', error);
+      console.error("Se produjo un error en la petición:", error);
     }
   }
 };
+
+const getCartFromCurrent = async () => {
+  try {
+    // Realiza una solicitud GET al endpoint /current para traer los datos del usuario actual
+    const response = await axios.get("/current");
+
+    if (response.status !== 200) {
+      throw new Error("No se pudo obtener la información del usuario.");
+    }
+
+    // lo guardo en una constante
+    const user = response.data.user;
+
+    // Datos del usuario
+    const {emailDestination, cartId} = user
+
+    // get al carrito del usuario
+    const cart = await axios.get(`/api/carts/${cartId}`)
+
+    const cartProdcuts = cart.data.data.products
+
+   
+    // // Llama a la función alertCart con los datos necesarios
+    alertCart(cartProdcuts, cartId,  emailDestination);
+  } catch (error) {
+    console.error(error.message);
+    // Maneja el error apropiadamente, por ejemplo, mostrando un mensaje de error al usuario
+  }
+};
+
+
+// Función para mostrar el carrito y permitir eliminar productos
+const alertCart = async (cartProdcuts, cartId,  emailDestination) => {
+  const swalWithBootstrapButtons = await Swal.mixin({
+    customClass: {
+      confirmButton: "btn btn-success",
+      cancelButton: "btn btn-danger",
+    },
+    buttonsStyling: false,
+  });
+
+  // Verificar si hay productos en el carrito
+  if (cartProdcuts) {
+    // Construir el mensaje del carrito
+    let cartMessage = "<ul>";
+    cartProdcuts.forEach((product, index) => {
+      cartMessage += `<li>${index + 1}. Nombre: ${
+        product.product.title
+      }, Precio: $${product.product.price}, Cantidad: ${
+        product.quantity
+      }, Total: $${product.price}</li>`;
+    });
+    cartMessage += "</ul>";
+
+    swalWithBootstrapButtons
+      .fire({
+        title: "Detalle del Carrito",
+        html: cartMessage,
+        icon: "info",
+        showCancelButton: true,
+        confirmButtonText: "Comprar",
+        cancelButtonText: "Volver",
+      })
+      .then((result) => {
+        if (result.isConfirmed) {
+          // Realiza la llamada a la API para realizar la compra
+          axios
+            .post(`/api/carts/${cartId}/purchase`, {
+              emailDestination
+            })
+            .then((response) => {
+              console.log('respuesta de la api: ', response)
+              // Verifica la respuesta de la API
+              if (response.data.success) {
+                // Si la compra se realizó con éxito, muestra un mensaje de éxito
+                Swal.fire(
+                  "¡Compra realizada!",
+                  "Tu orden ha sido procesada.",
+                  "success"
+                );
+              } else {
+                // Si la compra falló, muestra un mensaje de error
+                Swal.fire(
+                  "Error",
+                  "Hubo un problema al procesar tu orden.",
+                  "error"
+                );
+              }
+            })
+            .catch((error) => {
+              // Si ocurre un error en la llamada a la API, muestra un mensaje de error
+              console.error("Error al realizar la compra:", error);
+              Swal.fire(
+                "Error",
+                "Hubo un problema al procesar tu orden.",
+                "error"
+              );
+            });
+        }
+      });
+  } else {
+    // Si no hay productos en el carrito
+    swalWithBootstrapButtons.fire({
+      title: "Carrito Vacío",
+      text: "No hay productos en el carrito.",
+      icon: "info",
+      confirmButtonText: "Cerrar",
+    });
+  }
+};
+
+
