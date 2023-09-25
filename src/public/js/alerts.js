@@ -371,9 +371,10 @@ const getCartFromCurrent = async () => {
 
     // lo guardo en una constante
     const user = response.data.user;
-
+debugger
     // Datos del usuario
-    const {emailDestination, cartId} = user
+    const {email, cartId} = user
+
 
     // get al carrito del usuario
     const cart = await axios.get(`/api/carts/${cartId}`)
@@ -382,16 +383,14 @@ const getCartFromCurrent = async () => {
 
    
     // // Llama a la función alertCart con los datos necesarios
-    alertCart(cartProdcuts, cartId,  emailDestination);
+    alertCart(cartProdcuts, cartId,  email);
   } catch (error) {
     console.error(error.message);
     // Maneja el error apropiadamente, por ejemplo, mostrando un mensaje de error al usuario
   }
 };
 
-
-// Función para mostrar el carrito y permitir eliminar productos
-const alertCart = async (cartProdcuts, cartId,  emailDestination) => {
+const alertCart = async (cartProdcuts, cartId,  email) => {
   const swalWithBootstrapButtons = await Swal.mixin({
     customClass: {
       confirmButton: "btn btn-success",
@@ -427,7 +426,7 @@ const alertCart = async (cartProdcuts, cartId,  emailDestination) => {
           // Realiza la llamada a la API para realizar la compra
           axios
             .post(`/api/carts/${cartId}/purchase`, {
-              emailDestination
+              email
             })
             .then((response) => {
               console.log('respuesta de la api: ', response)
@@ -469,5 +468,7 @@ const alertCart = async (cartProdcuts, cartId,  emailDestination) => {
     });
   }
 };
+
+
 
 

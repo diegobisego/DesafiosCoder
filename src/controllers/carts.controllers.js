@@ -191,9 +191,9 @@ const deleteProductInCart = async (req, res) => {
 const purchaseCart = async (req, res) => {
   try {
     const cartId = req.params.cid;
-    const emailDestination = req.body
+    const {email} = req.body
 
-    const result = await CartService.purchaseCart(cartId, emailDestination);
+    const result = await CartService.purchaseCart(cartId, email);
 
     if (result.success) {
       return res.status(200).json({

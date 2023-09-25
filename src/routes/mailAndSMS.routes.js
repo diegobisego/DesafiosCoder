@@ -7,7 +7,7 @@ import { passportCall } from "../helpers/passportCall.js";
 const router = Router();
 
 // configura la creacion del correo (llevarlo a service desp)
-const transporter = nodemailer.createTransport({
+export const transporter = nodemailer.createTransport({
   service: "gmail",
   port: 587,
   auth: {

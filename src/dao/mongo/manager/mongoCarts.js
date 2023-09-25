@@ -1,5 +1,6 @@
 import ProductModel from "./../models/products.js";
-import userModel from "../models/user.js";
+import PDFDocument from 'pdfkit'
+import fs from 'fs'
 import CartModel from "./../models/carts.js";
 import TicketModel from "../models/ticket.js";
 import { findClientByCartId } from "../../../helpers/findUserInCart.js";
@@ -7,7 +8,9 @@ import { generateTicketCode, calculateTotalAmount } from "../../../helpers/ticke
 import ErrorFactory from "../../../services/repositories/errorRepository.js";
 import { cartsErrorCartNotFound } from "../../../constants/productsError.js";
 import { EErrors } from "../../../constants/EErrors.js";
-import { config } from "dotenv";
+import config from "../../../config/config.js";
+import nodemailer from "nodemailer";
+import __dirname from "../../../dirname.js";
 
 class CartManager {
   constructor() {}
@@ -150,7 +153,6 @@ class CartManager {
         price: finalPrice, // Agregar el precio del producto al carrito
       };
 
-      console.log("producto: ", productInCart);
       const cart = await CartModel.findByIdAndUpdate(
         cid,
         { $push: { products: productInCart } },
@@ -276,7 +278,7 @@ class CartManager {
     }
   };
 
-  purchaseCart = async (cid, emailDestination) => {
+  purchaseCart = async (cid, email) => {
     try {
       // Obtener el carrito y sus productos
       const cart = await CartModel.findById(cid).populate('products');
@@ -351,7 +353,25 @@ class CartManager {
         // Crear el ticket
         await TicketModel.create(ticketData);
   
-        // Configura el transporter de Nodemailer (ajusta según tu proveedor de correo)
+        // Crear un nuevo documento PDF
+        const doc = new PDFDocument();
+  
+        // Configurar el nombre del archivo y la ruta donde se guardará
+        const pdfFileName = 'ticket.pdf';
+        const pdfFilePath = `${__dirname}/${pdfFileName}`;
+  
+        // Agregar contenido al PDF
+        doc.text('Detalle de la compra:');
+        doc.text(`Código del ticket: ${ticketData.code}`);
+        doc.text(`Fecha de compra: ${ticketData.purchase_datetime}`);
+        doc.text(`Monto total: $${ticketData.amount}`);
+        doc.text(`Comprador: ${ticketData.purchaser}`);
+  
+        // Finalizar y guardar el PDF
+        doc.pipe(fs.createWriteStream(pdfFilePath));
+        doc.end();
+  
+        // Configurar el transporter de Nodemailer (ajusta según tu proveedor de correo)
         const transporter = nodemailer.createTransport({
           service: 'Gmail',
           auth: {
@@ -363,13 +383,13 @@ class CartManager {
         // Contenido del correo electrónico
         const mailOptions = {
           from: config.email.APP_MAIL,
-          to: emailDestination, // Reemplaza con la dirección del destinatario
+          to: email, // Reemplaza con la dirección del destinatario
           subject: 'Compra realizada con éxito',
           text: `Gracias por tu compra. Adjunto encontrarás tu ticket de compra.`,
           attachments: [
             {
-              filename: 'ticket.pdf', // Nombre del archivo adjunto
-              path: 'ruta_del_archivo.pdf', // Ruta al archivo PDF del ticket
+              filename: pdfFileName, // Nombre del archivo adjunto
+              path: pdfFilePath, // Ruta al archivo PDF del ticket
             },
           ],
         };

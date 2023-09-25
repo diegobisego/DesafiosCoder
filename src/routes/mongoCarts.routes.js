@@ -31,6 +31,6 @@ router.delete("/:cid", cartsControllers.deleteCart);
 router.delete("/:cid/product/:pid", cartsControllers.deleteProductInCart);
 
 // ruta para para el purchase
-router.get("/:cid/purchase", cartsControllers.purchaseCart);
+router.post("/:cid/purchase", cartsControllers.purchaseCart);
 
 export default router;
