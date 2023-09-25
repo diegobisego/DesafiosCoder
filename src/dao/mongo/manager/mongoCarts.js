@@ -1,10 +1,13 @@
 import ProductModel from "./../models/products.js";
-import PDFDocument from 'pdfkit'
-import fs from 'fs'
+import PDFDocument from "pdfkit";
+import fs from "fs";
 import CartModel from "./../models/carts.js";
 import TicketModel from "../models/ticket.js";
 import { findClientByCartId } from "../../../helpers/findUserInCart.js";
-import { generateTicketCode, calculateTotalAmount } from "../../../helpers/tickets.js";
+import {
+  generateTicketCode,
+  calculateTotalAmount,
+} from "../../../helpers/tickets.js";
 import ErrorFactory from "../../../services/repositories/errorRepository.js";
 import { cartsErrorCartNotFound } from "../../../constants/productsError.js";
 import { EErrors } from "../../../constants/EErrors.js";
@@ -67,9 +70,8 @@ class CartManager {
         success: false,
         data: "Empty",
       });
-
     } catch (error) {
-      return error
+      return error;
     }
   };
 
@@ -281,13 +283,13 @@ class CartManager {
   purchaseCart = async (cid, email) => {
     try {
       // Obtener el carrito y sus productos
-      const cart = await CartModel.findById(cid).populate('products');
+      const cart = await CartModel.findById(cid).populate("products");
   
       // Verificar si el carrito existe
       if (!cart) {
         return {
           success: false,
-          message: 'Carrito no encontrado',
+          message: "Carrito no encontrado",
         };
       }
   
@@ -306,7 +308,7 @@ class CartManager {
         if (!product) {
           return {
             success: false,
-            message: 'Producto no encontrado',
+            message: "Producto no encontrado",
           };
         }
   
@@ -336,7 +338,7 @@ class CartManager {
         (p) => !productsNotProcessedIds.includes(p.product.toString())
       );
   
-      // Buscar el id del cliente correspondiente al cart
+      // Buscar el id del cliente correspondiente al carrito
       const idClient = await findClientByCartId(cid);
   
       // Crear un nuevo ticket si la compra se completó con éxito
@@ -357,11 +359,11 @@ class CartManager {
         const doc = new PDFDocument();
   
         // Configurar el nombre del archivo y la ruta donde se guardará
-        const pdfFileName = 'ticket.pdf';
+        const pdfFileName = "ticket.pdf";
         const pdfFilePath = `${__dirname}/${pdfFileName}`;
   
         // Agregar contenido al PDF
-        doc.text('Detalle de la compra:');
+        doc.text("Detalle de la compra:");
         doc.text(`Código del ticket: ${ticketData.code}`);
         doc.text(`Fecha de compra: ${ticketData.purchase_datetime}`);
         doc.text(`Monto total: $${ticketData.amount}`);
@@ -373,7 +375,7 @@ class CartManager {
   
         // Configurar el transporter de Nodemailer (ajusta según tu proveedor de correo)
         const transporter = nodemailer.createTransport({
-          service: 'Gmail',
+          service: "Gmail",
           auth: {
             user: config.email.APP_MAIL, // Reemplaza con tu dirección de correo
             pass: config.email.APP_PASSWORD, // Reemplaza con tu contraseña
@@ -384,7 +386,7 @@ class CartManager {
         const mailOptions = {
           from: config.email.APP_MAIL,
           to: email, // Reemplaza con la dirección del destinatario
-          subject: 'Compra realizada con éxito',
+          subject: "Compra realizada con éxito",
           text: `Gracias por tu compra. Adjunto encontrarás tu ticket de compra.`,
           attachments: [
             {
@@ -397,30 +399,26 @@ class CartManager {
         // Envía el correo electrónico
         transporter.sendMail(mailOptions, (error, info) => {
           if (error) {
-            console.error('Error al enviar el correo electrónico:', error);
+            console.error("Error al enviar el correo electrónico:", error);
           } else {
-            console.log('Correo electrónico enviado:', info.response);
+            console.log("Correo electrónico enviado:", info.response);
           }
         });
       }
   
-      // Guardar los productos sin stock en el carrito
-      await CartModel.updateOne(
-        { _id: cid },
-        { $set: { products: productsWithEnoughStock } }
-      );
+      // Vaciar el carrito después de realizar la compra
+      await CartModel.updateOne({ _id: cid }, { $set: { products: [] } });
   
       return {
         success: true,
-        message: 'Proceso de compra finalizado exitosamente',
+        message: "Proceso de compra finalizado exitosamente",
         ticket: ticketData,
       };
     } catch (error) {
-      console.log('Error en el proceso de compra:', error);
-      return { success: false, message: 'Error en el servidor' };
+      console.log("Error en el proceso de compra:", error);
+      return { success: false, message: "Error en el servidor" };
     }
   };
-  
   
 }
 

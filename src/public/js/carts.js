@@ -71,10 +71,9 @@ document.addEventListener("DOMContentLoaded", async function () {
 
         // Verificar la respuesta del servidor
         if (resultBuy.data.success) {
-          console.log(
-            "Resultado luego de agregar el producto:",
-            resultBuy.data
-          );
+          // alerta
+          Swal.fire('Prodcuto agregado con exito')
+          cantElement.innerHTML = 1
         } else {
           console.log(
             "Error al agregar el producto al carrito:",
