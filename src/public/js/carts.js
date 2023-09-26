@@ -72,7 +72,7 @@ document.addEventListener("DOMContentLoaded", async function () {
         // Verificar la respuesta del servidor
         if (resultBuy.data.success) {
           // alerta
-          Swal.fire('Prodcuto agregado con exito')
+          Swal.fire('Producto agregado con exito')
           cantElement.innerHTML = 1
         } else {
           console.log(

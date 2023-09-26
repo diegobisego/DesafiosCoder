@@ -8,7 +8,8 @@
     "dev": "nodemon src/app.js --mode dev",
     "prod": "nodemon src/app.js",
     "build:css": "npx tailwindcss -i ./src/input.css -o ./dist/output.css",
-    "test": "mocha test/supertest.test.js"
+    "test": "mocha test/supertest.test.js",
+    "start": "node src/app.js"
   },
   "keywords": [],
   "author": "",
