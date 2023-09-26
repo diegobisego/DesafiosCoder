@@ -4,6 +4,9 @@
   "description": "",
   "main": "app.js",
   "type": "module",
+  "engines": {
+    "node": ">14 <17"
+  },
   "scripts": {
     "dev": "nodemon src/app.js --mode dev",
     "prod": "nodemon src/app.js",
